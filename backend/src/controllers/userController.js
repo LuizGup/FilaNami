@@ -70,5 +70,5 @@ module.exports = {
   getUserByIdHandler,
   createUserHandler,
   updateUserHandler,
-  deleteUserHandler,
+  deleteUserHandler
 };
