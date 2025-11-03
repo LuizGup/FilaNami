@@ -20,6 +20,11 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
 }));
 
+// rotas
+const userRoutes = require('./routes/userRoute');
+
+app.use('/api/users', userRoutes);
+
 // apenas teste
 app.get('/', (req, res) => {
     res.send('Rodando a API da Fila NAMI!');
