@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SelectService from "./components/SelectService";
 import GerenciarSenhas from "./pages/Funcionario/GerenciarSenhas";
+import SelectSector from "./components/SelectSector";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/user" element={<h1>Página do Funcionario</h1>} />
         <Route path="/user/gerencia" element={<GerenciarSenhas />} />
         <Route path="/toten" element={<SelectService />} />
+        <Route path="/sector" element={<SelectSector />} />
         <Route path="/admin" element={<h1>Página do Admin</h1>} />
         <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
       </Routes>

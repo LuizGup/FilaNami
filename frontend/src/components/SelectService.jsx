@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // 🚨 1. IMPORTAR O useNavigate
 
 // Os ícones não precisam mudar de cor aqui, pois o fundo do card será neutro.
 const ICON_COMMON = <i className="bi bi-person-fill fs-1 text-primary"></i>; // Ícone Padrão
@@ -37,13 +38,19 @@ const ServiceCard = ({ icon, title, description, isPriority, onClick, iconClass,
   );
 };
 
-// ... (O componente SelectService permanece o mesmo, pois o trabalho foi no ServiceCard)
 const SelectService = () => {
-  // ... (handleSelection e o resto do código)
-  const handleSelection = (serviceType) => {
-    // Lógica de navegação ou estado aqui
-    console.log(`Serviço selecionado: ${serviceType}`);
-  };
+    // 🚨 2. INICIALIZAR O useNavigate
+    const navigate = useNavigate();
+    
+    // ... (handleSelection e o resto do código)
+    const handleSelection = (serviceType) => {
+        // Lógica de navegação ou estado aqui
+        
+        // 🚨 MUDANÇA AQUI: Navega para a rota /sector
+        navigate('/sector');
+        
+        console.log(`Serviço selecionado: ${serviceType}`);
+    };
 
   return (
     <div className="container-fluid bg-light min-vh-100 d-flex flex-column justify-content-center align-items-center p-4">
