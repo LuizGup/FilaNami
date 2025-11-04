@@ -2,12 +2,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SelectService from "./components/SelectService";
 import GerenciarSenhas from "./pages/Funcionario/GerenciarSenhas";
 import SelectSector from "./components/SelectSector";
-
+import Login from "./pages/Login/index";
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<h1>Página Inicial</h1>} />
+        <Route path="/login" element={<Login />} />
         <Route path="/login" element={<h1>Página de Login</h1>} />
         <Route path="/sign-up" element={<h1>Página de Registro</h1>} />
         <Route path="/user" element={<h1>Página do Funcionario</h1>} />
