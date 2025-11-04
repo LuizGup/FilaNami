@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,17 +10,122 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ------------------------------------
+// ENUMS
+// ------------------------------------
+
 enum UserType {
   ADMIN
   DEFAULT_USER
 }
 
+enum Prioridade {
+  COMUM
+  PRIORIDADE
+  PLUSEIGHTY // Correspondente a "plusEighty"
+}
+
+enum StatusSenha {
+  AGUARDANDO
+  EM_ATENDIMENTO // Correspondente a "emAtendimento"
+  EM_SERVICO     // Correspondente a "emServico"
+  CONCLUIDO      // Correspondente a "concluido"
+}
+
+// ------------------------------------
+// MODELS (Tabelas do Diagrama)
+// ------------------------------------
+
+// Modelo inicial que você forneceu
 model User {
-  id          Int     @id @default(autoincrement())
-  name        String
-  email       String  @unique 
-  password    String
-  userType    UserType?  @default(DEFAULT_USER)
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  password  String
+  userType  UserType? @default(DEFAULT_USER)
 
   @@map("USUARIOS")
+}
+
+// Mapeia para a tabela GUICHE
+model Guiche {
+  id_guiche       Int        @id @default(autoincrement()) @map("id_guiche")
+  numero_guiche   Int        @map("numero_guiche")
+  senha           String     // Senha de login do guichê
+  
+  // Relacionamento com SETORES (Muitos Guichês para Um Setor)
+  id_setor        Int        @map("id_setor")
+  setor           Setor      @relation(fields: [id_setor], references: [id_setor])
+
+  // Relacionamento com SENHAS (Um Guichê pode chamar Muitas Senhas - Lado 1:N)
+  senhas_atendidas Senha[]    @relation("GuicheAtendente")
+  
+  // Relacionamento com HISTORICO (Um Guichê tem Muitos Históricos)
+  historicos      Historico[]
+
+  @@map("GUICHE")
+}
+
+// Mapeia para a tabela SETORES
+model Setor {
+  id_setor Int      @id @default(autoincrement()) @map("id_setor")
+  setor    String   @map("setor")
+
+  // Relacionamento com GUICHE (Um Setor tem Muitos Guichês - Lado 1:N)
+  guiches Guiche[]
+
+  @@map("SETORES")
+}
+
+// Mapeia para a tabela SENHAS
+model Senha {
+  id_senha         Int          @id @default(autoincrement()) @map("id_senha")
+  
+  // id_guiche FK (O Guichê que atendeu/chamou a senha)
+  // O seu diagrama mostra uma relação N:M ou 1:N, mas o nome do campo sugere o guichê de atendimento.
+  // Ajustando a modelagem: O Guichê que atende.
+  id_guiche_atendente String?      @map("id_guiche") // Campo no diagrama é String, mas Guiche.id_guiche é Int. Mudei para Int
+  id_guiche_atend Int? @map("id_guiche")
+  guiche_atendente Guiche? @relation("GuicheAtendente", fields: [id_guiche_atend], references: [id_guiche])
+
+  setor_destino    String       @map("setor_destino")
+  setor_atual      String       @map("setor_atual")
+  senha            String       @map("senha") // Número da ficha (ex: "A001")
+  prioridade       Prioridade   @map("prioridade")
+  
+  // Tipos de data recomendados: DateTime
+  data_emissao     DateTime     @default(now()) @map("data_emissao") // Padrão: data e hora atual
+  data_conclusao   DateTime?    @map("data_conclusao") // Pode ser nula se ainda não concluída
+  
+  status           StatusSenha  @map("status")
+
+  // Relacionamento com HISTORICO (Uma Senha tem Muitos Históricos)
+  historicos       Historico[]
+  
+  @@map("SENHAS")
+}
+
+// Mapeia para a tabela HISTORICO
+model Historico {
+  id_historico Int @id @default(autoincrement()) @map("id_historico")
+  
+  // id_guiche FK
+  id_guiche    Int   @map("id_guiche")
+  guiche       Guiche @relation(fields: [id_guiche], references: [id_guiche])
+  
+  // id_senhas FK
+  id_senha     Int   @map("id_senhas") // Mudei de id_paciente para id_senha, pois o diagrama aponta para SENHAS
+  senha        Senha @relation(fields: [id_senha], references: [id_senha])
+  
+  @@map("HISTORICO")
+}
+
+// Mapeia para a tabela ADMIN
+// Se a tabela ADMIN é separada de 'User', ela é definida assim:
+model Admin {
+  id_admin Int    @id @default(autoincrement()) @map("id_admin")
+  email    String @unique @map("email")
+  senha    String @map("senha")
+
+  @@map("ADMIN")
 }
