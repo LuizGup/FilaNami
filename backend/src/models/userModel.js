@@ -1,7 +1,7 @@
 const prisma = require("../prisma");
 
 const getAllUsersModel = async () => {
-  const users = await prisma.User.findMany({
+  const users = await prisma.Usuario.findMany({
     orderBy: {
       id: "asc",
     },
@@ -10,7 +10,7 @@ const getAllUsersModel = async () => {
 };
 
 const getUserByIdModel = async (id) => {
-  const user = await prisma.User.findUnique({
+  const user = await prisma.Usuario.findUnique({
     where: {
       id: id,
     },
@@ -19,7 +19,7 @@ const getUserByIdModel = async (id) => {
 };
 
 const createUserModel = async (name, email, password, userType) => {
-  const newUser = await prisma.User.create({
+  const newUser = await prisma.Usuario.create({
     data: {
       name,
       email,
@@ -31,7 +31,7 @@ const createUserModel = async (name, email, password, userType) => {
 };
 
 const updateUserModel = async (id, dataToUpdate) => {
-  const updatedUser = await prisma.User.update({
+  const updatedUser = await prisma.Usuario.update({
     where: {
       id: id,
     },
@@ -43,7 +43,7 @@ const updateUserModel = async (id, dataToUpdate) => {
 };
 
 const deleteUserModel = async (id) => {
-  await prisma.User.delete({
+  await prisma.Usuario.delete({
     where: {
       id: id,
     },
