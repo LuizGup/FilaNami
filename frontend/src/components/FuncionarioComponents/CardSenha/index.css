@@ -1,0 +1,54 @@
+/* Estilização para o componente CardSenha */
+.card-senha-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease-in-out;
+  border: 1px solid #eee;
+}
+
+.card-senha-container:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.card-senha-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.senha-numero {
+  font-size: 1.25rem; /* 20px */
+  font-weight: 600;
+  color: #333;
+}
+
+.senha-tempo {
+  font-size: 0.875rem; /* 14px */
+  color: #777;
+}
+
+.card-senha-guiche {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 2px;
+}
+
+.guiche-label {
+  font-size: 0.875rem; /* 14px */
+  color: #777;
+}
+
+.guiche-valor {
+  font-size: 1.125rem; /* 18px */
+  font-weight: 600;
+  color: #333;
+}

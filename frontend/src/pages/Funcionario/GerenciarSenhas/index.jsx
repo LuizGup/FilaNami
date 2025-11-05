@@ -1,71 +1,84 @@
-import CardSenha from "../../../components/FuncionarioComponents/CardSenha";
+import "./index.css"
+import { mockSenhas } from "../../../data/mockSenhas";
 import NavbarFuncionario from "../../../components/FuncionarioComponents/NavbarFuncionario";
-import "./index.css";
-
+import CardSenha from "../../../components/FuncionarioComponents/CardSenha";
 function GerenciarSenhas() {
-return (
+  const senhasEsperando = mockSenhas.filter(
+    (s) => s.status === "Esperando"
+  );
+  const senhasFeito = mockSenhas.filter((s) => s.status === "Feito");
+
+  return (
     <>
-        <section className="gerenciar-senhas-container d-flex flex-column align-items-center justify-content-center">
+      <section className="gerenciar-senhas-container">
         <NavbarFuncionario />
+
+        {/* Usa container-fluid para ocupar mais espaço, como no mockup */}
+        <div className="container-fluid mt-4" style={{paddingLeft: '2rem', paddingRight: '2rem'}}>
+          <div className="d-flex justify-content-between align-items: center mb-3">
             <h2>Status Senha</h2>
+            <span className="last-updated">Last updated: Just now</span>
+          </div>
 
-            <div className="container text-center">
-                <div className="row row-cols-3">
-                    <div
-                        className="col"
-                        style={{ border: "2px dashed #e74c3c", padding: "12px", marginBottom: "8px" }}
-                    >
-                        <div className="row mb-3" style={{ border: "1px dotted #3498db", padding: "6px" }}>
-                            teste
-                        </div>
-                        <div className="row mb-3" style={{ border: "1px dotted #3498db", padding: "6px" }}>
-                            teste 2
-                        </div>
-                        <div className="row mb-3" style={{ border: "1px dotted #3498db", padding: "6px" }}>
-                            teste 3
-                        </div>
-                    </div>
-
-                    <div
-                        className="col"
-                        style={{ border: "2px dashed #27ae60", padding: "12px", marginBottom: "8px" }}
-                    >
-                        <div className="row mb-3" style={{ border: "1px dotted #8e44ad", padding: "6px" }}>
-                            teste A
-                        </div>
-                        <div className="row mb-3" style={{ border: "1px dotted #8e44ad", padding: "6px" }}>
-                            teste B
-                        </div>
-                        <div className="row mb-3" style={{ border: "1px dotted #8e44ad", padding: "6px" }}>
-                            teste C
-                        </div>
-                    </div>
-
-                    <div
-                        className="col"
-                        style={{ border: "2px dashed #f39c12", padding: "12px", marginBottom: "8px" }}
-                    >
-                        <div className="row mb-3" style={{ border: "1px dotted #2c3e50", padding: "6px" }}>
-                            teste X
-                        </div>
-                        <div className="row mb-3" style={{ border: "1px dotted #2c3e50", padding: "6px" }}>
-                            teste Y
-                        </div>
-                        <div className="row mb-3" style={{ border: "1px dotted #2c3e50", padding: "6px" }}>
-                            teste Z
-                        </div>
-                    </div>
+          {/* Container das Colunas Kanban */}
+          <div className="row g-4">
+            
+            {/* Coluna Esperando */}
+            <div className="col-md-6">
+              <div className="senha-coluna">
+                <div className="coluna-header esperando">
+                  <span>🏆 Esperando</span>
+                  <span className="coluna-count">{senhasEsperando.length}</span>
                 </div>
+                <div className="coluna-body">
+                  {senhasEsperando.map((senha) => (
+                    <CardSenha
+                      key={senha.id}
+                      numero={senha.numero}
+                      status={senha.status}
+                      tempo={senha.tempo}
+                      guicheLabel={senha.guicheLabel}
+                      guicheValor={senha.guicheValor}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <CardSenha />
-            <div className="d-flex flex-row align-items-center justify-content-center gap-4 mt-4">
-                <button className="btn btn-primary">Chamar Próxima Senha</button>
-                <button className="btn btn-secondary">Repetir Senha</button>
+            {/* Coluna Feito */}
+            <div className="col-md-6">
+              <div className="senha-coluna">
+                <div className="coluna-header feito">
+                  <span>✅ Feito</span>
+                  <span className="coluna-count">{senhasFeito.length}</span>
+                </div>
+                <div className="coluna-body">
+                  {senhasFeito.map((senha) => (
+                    <CardSenha
+                      key={senha.id}
+                      numero={senha.numero}
+                      status={senha.status}
+                      tempo={senha.tempo}
+                      guicheLabel={senha.guicheLabel}
+                      guicheValor={senha.guicheValor}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
-        </section>
+
+          </div>
+        </div>
+
+        {/* Botões de Ação */}
+        <div className="botoes-acao-container">
+          <button className="btn btn-acao-primary">Chamar Próximo</button>
+          <button className="btn btn-acao-secondary">Chamar Novamente</button>
+          <button className="btn btn-acao-danger">Remover Senha</button>
+        </div>
+      </section>
     </>
-);
+  );
 }
 
 export default GerenciarSenhas;
