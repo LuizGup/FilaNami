@@ -22,8 +22,10 @@ app.use(cors({
 
 // rotas
 const userRoutes = require('./routes/userRoute');
+const senhaRoutes = require('./routes/senhaRoute');
 
 app.use('/api/users', userRoutes);
+app.use('/api/senhas', senhaRoutes);
 
 // apenas teste
 app.get('/', (req, res) => {
