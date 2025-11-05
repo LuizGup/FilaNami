@@ -4,7 +4,7 @@ const {
   createGuicheModel,
   updateGuicheModel,
   deleteGuicheModel,
-} = require("../models/guicheModel"); // Ajuste o caminho se o nome for guiche.model.js
+} = require("../service/guicheModel"); // Ajuste o caminho se o nome for guiche.model.js
 
 const getAllGuichesHandler = async (req, res) => {
   try {
