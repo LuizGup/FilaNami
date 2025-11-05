@@ -56,3 +56,11 @@ module.exports = {
   updateGuicheModel,
   deleteGuicheModel,
 };
+
+
+// json exemplo de criar guiche:
+// {
+//   "numeroGuiche": 1,
+//   "senha": "senha123",
+//   "idSetor": 2
+// }
