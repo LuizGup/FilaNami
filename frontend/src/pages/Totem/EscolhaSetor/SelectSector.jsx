@@ -1,7 +1,7 @@
 // SelectSector.jsx
 import { useNavigate } from 'react-router-dom';
 // 💡 IMPORTAÇÃO DO COMPONENTE REUTILIZÁVEL
-import ServiceCard from './ServiceCard';
+import ServiceCard from '../../../components/GenericCard';
 
 // Ícone (Definido uma única vez)
 const ICON_SECTOR = <i className="bi bi-hospital fs-1 text-primary"></i>;

@@ -1,7 +1,7 @@
 
 import { useNavigate } from 'react-router-dom';
 // 💡 IMPORTAÇÃO DO COMPONENTE REUTILIZÁVEL
-import ServiceCard from './ServiceCard'; 
+import ServiceCard from '../../../components/GenericCards'; 
 
 // Ícones (Definidos uma única vez)
 const ICON_COMMON = <i className="bi bi-person-fill fs-1 text-primary"></i>;
