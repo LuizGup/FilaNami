@@ -4,7 +4,7 @@ const {
   createUserModel,
   updateUserModel,
   deleteUserModel,
-} = require("../models/userModel");
+} = require("../service/userModel");
 
 const getAllUsersHandler = async (req, res) => {
   try {

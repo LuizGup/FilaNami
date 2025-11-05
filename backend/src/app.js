@@ -16,9 +16,11 @@ app.use(cors({
 
 // --- Rotas ---
 const userRoutes = require('./routes/userRoute');
-const guicheRoutes = require('./routes/guicheRoute'); // Importa as rotas do guichê
+const senhaRoutes = require('./routes/senhaRoute');
+const guicheRoutes = require('./routes/guicheRoute');
 
 app.use('/api/users', userRoutes);
+app.use('/api/senhas', senhaRoutes);
 app.use('/api/guiches', guicheRoutes); // Define o endpoint base para as rotas do guichê
 
 // apenas teste
