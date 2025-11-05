@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import SelectService from "./components/SelectService";
+import SelectService from "./pages/Totem/EscolhaPrioridade/SelectService";
 import GerenciarSenhas from "./pages/Funcionario/GerenciarSenhas";
-import SelectSector from "./components/SelectSector";
+import SelectSector from "./pages/Totem/EscolhaSetor/SelectSector";
 import Login from "./pages/Login/index";
 function App() {
   return (

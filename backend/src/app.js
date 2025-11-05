@@ -7,29 +7,25 @@ const app = express();
 app.use(express.json());
 
 
-// habilita CORS para o frontend em http://localhost:5173
+// Habilita CORS para o frontend
+// Removi as chamadas duplicadas e deixei apenas uma configuração.
 app.use(cors({
-    origin: "http://localhost:5173"
+    origin: 'http://localhost:5173', // Permite requisições do frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
 }));
 
-// se quiser liberar para qualquer origem durante o desenvolvimento, use:
-// app.use(cors());
-
-app.use(cors({
-  origin: 'http://localhost:5173', // Permite requisições do frontend
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-}));
-
-// rotas
+// --- Rotas ---
 const userRoutes = require('./routes/userRoute');
 const senhaRoutes = require('./routes/senhaRoute');
+const guicheRoutes = require('./routes/guicheRoute');
 
 app.use('/api/users', userRoutes);
 app.use('/api/senhas', senhaRoutes);
+app.use('/api/guiches', guicheRoutes); // Define o endpoint base para as rotas do guichê
 
 // apenas teste
 app.get('/', (req, res) => {
-    res.send('Rodando a API da Fila NAMI!');
+    res.send('Rodando a API da Fila NAMI!');
 });
 
 module.exports = app;
