@@ -1,6 +1,6 @@
 // ./src/controllers/senha.controller.js
 
-const SenhaService = require('../service/senhaService');
+const SenhaService = require('../services/senhaService');
 const { Prioridade } = require('@prisma/client');
 
 class SenhaController {
