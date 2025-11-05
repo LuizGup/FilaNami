@@ -1,0 +1,16 @@
+.navbar-funcionario {
+      background-color: #343a40; /* bg-dark */
+      padding: 1rem 2rem; /* Mais padding horizontal */
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .navbar-user {
+      font-size: 1rem;
+    }
