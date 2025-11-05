@@ -86,13 +86,6 @@ function Login() {
               />
             </div>
 
-            {/* Link "Esqueci a senha" */}
-            <div className="d-flex justify-content-end">
-              <a style={styles.forgotLink} href="#">
-                Esqueceu a senha?
-              </a>
-            </div>
-
             {/* Botão de Login */}
             <div>
               <button 
