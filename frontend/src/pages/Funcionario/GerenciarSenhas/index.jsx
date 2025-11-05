@@ -73,8 +73,7 @@ function GerenciarSenhas() {
         {/* Botões de Ação */}
         <div className="botoes-acao-container">
           <button className="btn btn-acao-primary">Chamar Próximo</button>
-          <button className="btn btn-acao-secondary">Chamar Novamente</button>
-          <button className="btn btn-acao-danger">Remover Senha</button>
+          <button className="btn btn-acao-primary">Chamar Novamente</button>
         </div>
       </section>
     </>
