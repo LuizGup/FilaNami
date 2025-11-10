@@ -1,0 +1,549 @@
+{
+	"info": {
+		"_postman_id": "a9f5d3a2-b1e8-4b9f-9f3b-877f0a6e3c5a",
+		"name": "API Fila NAMI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Usuarios",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Luiz Carlos\",\n  \"email\": \"luiz@example.com\",\n  \"password\": \"senha123\",\n  \"userType\": \"ADMIN\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Luiz Carlos Monteiro\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Guiches",
+			"item": [
+				{
+					"name": "Get All Guiches",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/guiches",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"guiches"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Guiche By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/guiches/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"guiches",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Guiche",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"numeroGuiche\": 1,\n  \"senha\": \"guiche_atendente_senha\", \n  \"idSetor\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/guiches",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"guiches"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Guiche",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"numeroGuiche\": 101,\n  \"idSetor\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/guiches/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"guiches",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Guiche",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/guiches/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"guiches",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Setores",
+			"item": [
+				{
+					"name": "Get All Setores",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/setores",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"setores"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Setor By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/setores/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"setores",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Setor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"setor\": \"Recepção\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/setores",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"setores"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Setor (PATCH)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"setor\": \"Triagem\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/setores/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"setores",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Setor",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/setores/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"setores",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Senhas",
+			"item": [
+				{
+					"name": "Get All Senhas (Monitor)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/senhas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"senhas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Senha By Id (Monitor)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/senhas/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"senhas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Nova Senha (Totem)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"setorDestino\": \"Recepção\",\n  \"prioridade\": \"COMUM\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/senhas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"senhas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Chamar Próxima (Guichê)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"idGuiche\": 1,\n  \"idSetor\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/senhas/chamar",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"senhas",
+								"chamar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Concluir Atendimento (Guichê)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/senhas/1/concluir",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"senhas",
+								"1",
+								"concluir"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}
