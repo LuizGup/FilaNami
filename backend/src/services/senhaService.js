@@ -3,12 +3,11 @@
 const prisma = require('../prisma'); 
 const { Prioridade, StatusSenha } = require('@prisma/client');
 
-class SenhaService {
 
   /**
    * REQUISITO 1: Criar nova senha
    */
-  async create(data) {
+  const create = async(data) => {
     // -> [MUDANÇA] 'setor_destino' agora é 'setorDestino'
     const { setorDestino, prioridade } = data;
 
@@ -60,7 +59,7 @@ class SenhaService {
    * REQUISITO 2: Chamar próxima senha
    */
   // -> [MUDANÇA] 'id_guiche' agora é 'idGuiche'
-  async callNext(idGuiche, setor) {
+  const callNext = async(idGuiche, setor) =>{
     
     return prisma.$transaction(async (tx) => {
       
@@ -109,7 +108,7 @@ class SenhaService {
   /**
    * Concluir um atendimento
    */
-  async complete(id_senha) {
+  const complete = async (id_senha) => {
     return prisma.senha.update({
       // -> [MUDANÇA] 'id_senha' agora é 'idSenha'
       where: { idSenha: Number(id_senha) },
@@ -124,7 +123,7 @@ class SenhaService {
   /**
    * Buscar por ID
    */
-  async getById(id_senha) {
+  const getById = async (id_senha) => {
     return prisma.senha.findUnique({
       // -> [MUDANÇA] 'id_senha' agora é 'idSenha'
       where: { idSenha: Number(id_senha) },
@@ -136,7 +135,7 @@ class SenhaService {
   /**
    * Listar todos com filtros
    */
-  async getAll(status, setor) {
+  const getAll = async (status, setor) => {
     const where = {};
     if (status) where.status = status;
     // -> [MUDANÇA] 'setor_atual' agora é 'setorAtual'
@@ -148,6 +147,11 @@ class SenhaService {
       orderBy: { dataEmissao: 'desc' },
     });
   }
-}
 
-module.exports = new SenhaService();
+module.exports = {
+  create,
+  callNext,
+  complete,
+  getById,
+  getAll,
+};

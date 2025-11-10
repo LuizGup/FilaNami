@@ -1,24 +1,23 @@
 // ./src/router/senha.routes.js
 
 const { Router } = require('express');
-const SenhaController = require('../controllers/senhaController');
-
+const { create, callNext, complete, getAll, getById } = require('../controllers/senhaController');
 const router = Router();
 
 // --- Definição das Rotas de Senha ---
 
 // Rotas do Totem (Criação)
-router.post('/', SenhaController.create);
+router.post('/', create);
 
 // Rotas do Guichê (Chamada e Conclusão)
-router.post('/chamar', SenhaController.callNext);
-router.put('/:id/concluir', SenhaController.complete);
+router.post('/chamar', callNext);
+router.put('/:id/concluir', complete);
 
 // Rotas de Monitoramento/Listagem
-router.get('/', SenhaController.getAll);
-router.get('/:id', SenhaController.getById);
+router.get('/', getAll);
+router.get('/:id', getById);
 
 // (Opcional: Rota de cancelamento)
-// router.delete('/:id/cancelar', SenhaController.cancel); // Você precisaria adicionar a função 'cancel' no controller
+// router.delete('/:id/cancelar', cancel); // Você precisaria adicionar a função 'cancel' no controller
 
 module.exports = router;

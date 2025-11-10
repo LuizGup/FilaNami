@@ -3,12 +3,11 @@
 const SenhaService = require('../services/senhaService');
 const { Prioridade } = require('@prisma/client');
 
-class SenhaController {
 
   /**
    * POST /api/senhas
    */
-  async create(req, res) {
+  const create = async (req, res) => {
     try {
       // -> [MUDANÇA] 'setor_destino' agora é 'setorDestino'
       let { setorDestino, prioridade } = req.body; 
@@ -37,7 +36,7 @@ class SenhaController {
   /**
    * POST /api/senhas/chamar
    */
-  async callNext(req, res) {
+  const callNext = async (req, res) => {
     try {
       // -> [MUDANÇA] 'id_guiche' agora é 'idGuiche'
       const { idGuiche, setor } = req.body;
@@ -61,7 +60,7 @@ class SenhaController {
   /**
    * PUT /api/senhas/:id/concluir
    */
-  async complete(req, res) {
+  const complete = async(req, res) => {
     try {
       const { id } = req.params; // 'id' aqui é só o nome do parâmetro da rota
       const senha = await SenhaService.complete(Number(id)); // Passamos o valor
@@ -74,7 +73,7 @@ class SenhaController {
   /**
    * GET /api/senhas
    */
-  async getAll(req, res) {
+  const getAll = async(req, res) => {
     try {
       const { status, setor } = req.query;
       const senhas = await SenhaService.getAll(status, setor);
@@ -87,7 +86,7 @@ class SenhaController {
   /**
    * GET /api/senhas/:id
    */
-  async getById(req, res) {
+  const getById = async (req, res) => {
     try {
       const { id } = req.params; // 'id' é o nome do parâmetro
       const senha = await SenhaService.getById(Number(id)); // Passamos o valor
@@ -99,6 +98,12 @@ class SenhaController {
       res.status(500).json({ error: 'Erro ao buscar senha.', details: error.message });
     }
   }
-}
 
-module.exports = new SenhaController();
+
+module.exports = {
+  create,
+  callNext,
+  complete,
+  getAll,
+  getById,
+}
