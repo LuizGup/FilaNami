@@ -125,7 +125,7 @@ function GerenciarSenhas() {
             </div>
           </div>
 
-          <div className="col-col-md-4">
+          <div className="col-md-4">
             <div className="senha-coluna">
               <div className="coluna-header feito">
                 <span>✅ Feito</span>
@@ -157,7 +157,6 @@ function GerenciarSenhas() {
           Chamar Próximo
         </button>
         <button className="btn btn-acao-secondary">Chamar Novamente</button>
-        <button className="btn btn-acao-danger">Remover Senha</button>
       </div>
     </section>
   );
