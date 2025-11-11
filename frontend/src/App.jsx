@@ -12,7 +12,7 @@ function App() {
         <Route path="/login" element={<h1>Página de Login</h1>} />
         <Route path="/sign-up" element={<h1>Página de Registro</h1>} />
         <Route path="/user" element={<h1>Página do Funcionario</h1>} />
-        <Route path="/user/gerencia" element={<GerenciarSenhas />} />
+        <Route path="/user/gerenciar" element={<GerenciarSenhas />} />
         <Route path="/toten" element={<SelectService />} />
         <Route path="/sector" element={<SelectSector />} />
         <Route path="/admin" element={<h1>Página do Admin</h1>} />
