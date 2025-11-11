@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { io } from "socket.io-client"; // Importa o socket.io-client
 
 import {
   getAllSenhas,
@@ -20,25 +21,53 @@ function GerenciarSenhas() {
       const data = await getAllSenhas();
       setSenhas(data);
       setLastUpdated(new Date().toLocaleTimeString('pt-BR'));
-      console.log("Senhas atualizadas:", data);
+      console.log("Senhas iniciais carregadas:", data);
     } catch (error) {
       console.error("Erro ao buscar senhas:", error);
     }
   };
 
+  // useEffect ATUALIZADO (A SOLUÇÃO ESTÁ AQUI)
   useEffect(() => {
+    // 1. Conecta ao socket QUANDO o componente monta
+    const socket = io("http://localhost:3000"); 
+
+    // 2. Busca os dados iniciais
     fetchSenhas();
-  }, []); 
+
+    // 3. Define o handler de atualização
+    const handleSenhaUpdate = (update) => {
+      const { action, data } = update;
+      console.log("Socket: Recebeu evento 'senhaUpdate'", update);
+
+      if (action === 'create') {
+        setSenhas(prevSenhas => [...prevSenhas, data]);
+      }
+      
+      if (action === 'update') {
+        setSenhas(prevSenhas =>
+          prevSenhas.map(s => (s.idSenha === data.idSenha ? data : s))
+        );
+      }
+    };
+
+    // 4. Começa a "escutar" o evento
+    socket.on('senhaUpdate', handleSenhaUpdate);
+
+    // 5. FUNÇÃO DE LIMPEZA (A MÁGICA)
+    // Isso roda quando o componente "desmonta" (ou recarrega no dev)
+    return () => {
+      console.log("Desconectando socket...");
+      socket.off('senhaUpdate', handleSenhaUpdate); // Remove o listener
+      socket.disconnect(); // Desconecta o socket
+    };
+  }, []); // O array vazio [] garante que isso rode apenas uma vez por montagem
 
 
+  // Handlers (sem 'fetchSenhas')
   const handleChamarProximo = async () => {
     try {
-      const senhaChamada = await chamarProximaSenha();
-      if (senhaChamada) {
-        await fetchSenhas();
-      } else {
-        console.log("Nenhuma senha para chamar.");
-      }
+      await chamarProximaSenha();
     } catch (error) {
       console.error("Erro no 'handleChamarProximo':", error);
     }
@@ -47,11 +76,12 @@ function GerenciarSenhas() {
   const handleConcluir = async (idSenha) => {
     try {
       await concluirSenha(idSenha);
-      await fetchSenhas();
     } catch (error) {
       console.error(`Erro ao concluir senha ${idSenha}:`, error);
     }
   };
+
+  // --- O resto do seu componente (filtros e JSX) permanece o mesmo ---
 
   const senhasEsperando = senhas.filter(
     (s) => s.status === "AGUARDANDO"
@@ -76,7 +106,7 @@ function GerenciarSenhas() {
       <div className="container-fluid mt-4" style={{ paddingLeft: '2rem', paddingRight: '2rem' }}>
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h2>Status Senha</h2>
-          <span className="last-updated">Last updated: {lastUpdated}</span>
+          <span className="last-updated">Real-time updates enabled</span>
         </div>
 
         <div className="row g-4">
@@ -103,6 +133,7 @@ function GerenciarSenhas() {
             </div>
           </div>
 
+          {/* Coluna Em Atendimento */}
           <div className="col-md-4">
             <div className="senha-coluna">
               <div className="coluna-header em-atendimento">
@@ -125,6 +156,7 @@ function GerenciarSenhas() {
             </div>
           </div>
 
+          {/* Coluna Feito */}
           <div className="col-md-4">
             <div className="senha-coluna">
               <div className="coluna-header feito">

@@ -3,30 +3,35 @@
 const SenhaService = require('../services/senhaService');
 const { Prioridade } = require('@prisma/client');
 
-
   /**
    * POST /api/senhas
    */
   const create = async (req, res) => {
     try {
-      // -> [MUDANÇA] 'setor_destino' agora é 'setorDestino'
-      let { setorDestino, prioridade } = req.body; 
-
-      // -> [MUDANÇA] Verificando 'setorDestino'
+      let { setorDestino, prioridade } = req.body;
+      
+      // Validações (exemplo)
       if (!setorDestino || !prioridade) {
         return res.status(400).json({ error: 'setorDestino e prioridade são obrigatórios.' });
       }
-
-      prioridade = prioridade.toUpperCase(); 
-      
+      prioridade = prioridade.toUpperCase();
       if (!Object.values(Prioridade).includes(prioridade)) {
         return res.status(400).json({ 
           error: 'Prioridade inválida. Use COMUM, PRIORIDADE ou PLUSEIGHTY.' 
         });
       }
       
-      // -> [MUDANÇA] Passando 'setorDestino' para o service
       const novaSenha = await SenhaService.create({ setorDestino, prioridade }); 
+      
+      // --- LOG DE DEBUG ---
+      if (req.io) {
+        console.log("CONTROLLER: 'req.io' encontrado. Emitindo 'senhaUpdate' (create)...");
+        req.io.emit('senhaUpdate', { action: 'create', data: novaSenha });
+      } else {
+        console.error("CONTROLLER ERRO: 'req.io' está UNDEFINED!");
+      }
+      // --- FIM DO LOG ---
+
       res.status(201).json(novaSenha);
     } catch (error) {
       res.status(500).json({ error: 'Erro ao gerar senha.', details: error.message });
@@ -38,22 +43,29 @@ const { Prioridade } = require('@prisma/client');
    */
   const callNext = async (req, res) => {
     try {
-      // -> [MUDANÇA] 'id_guiche' agora é 'idGuiche'
       const { idGuiche, setor } = req.body;
-
-      // -> [MUDANÇA] Verificando 'idGuiche'
+      
       if (!idGuiche || !setor) {
         return res.status(400).json({ error: 'idGuiche e setor são obrigatórios.' });
       }
 
-      // -> [MUDANÇA] Passando 'idGuiche'
       const senhaChamada = await SenhaService.callNext(Number(idGuiche), setor);
+
+      // --- LOG DE DEBUG ---
+      if (req.io && senhaChamada) {
+        console.log("CONTROLLER: 'req.io' encontrado. Emitindo 'senhaUpdate' (update/callNext)...");
+        req.io.emit('senhaUpdate', { action: 'update', data: senhaChamada });
+      } else if (!req.io) {
+        console.error("CONTROLLER ERRO: 'req.io' está UNDEFINED!");
+      }
+      // --- FIM DO LOG ---
+
       res.status(200).json(senhaChamada);
     } catch (error) {
-      if (error.message.includes('Nenhuma senha')) {
-        return res.status(404).json({ message: error.message });
-      }
-      res.status(500).json({ error: 'Erro ao chamar senha.', details: error.message });
+        if (error.message.includes('Nenhuma senha')) {
+          return res.status(404).json({ message: error.message });
+        }
+        res.status(500).json({ error: 'Erro ao chamar senha.', details: error.message });
     }
   }
 
@@ -64,10 +76,21 @@ const { Prioridade } = require('@prisma/client');
     try {
       const { id } = req.params; // 'id' aqui é só o nome do parâmetro da rota
       const senha = await SenhaService.complete(Number(id)); // Passamos o valor
+
+      // --- ATUALIZAÇÃO DO SOCKET.IO ---
+      // Emite um evento para todos os clientes conectados
+      if (req.io) {
+        console.log("CONTROLLER: 'req.io' encontrado. Emitindo 'senhaUpdate' (update/complete)...");
+        req.io.emit('senhaUpdate', { action: 'update', data: senha });
+      } else {
+        console.error("CONTROLLER ERRO: 'req.io' está UNDEFINED (em complete)!");
+      }
+      // --- FIM DA ATUALIZAÇÃO ---
+
       res.status(200).json(senha);
     } catch (error) {
       res.status(500).json({ error: 'Erro ao concluir senha.', details: error.message });
-    }
+    } // <--- O "L" FOI REMOVIDO DAQUI
   }
 
   /**
@@ -88,7 +111,7 @@ const { Prioridade } = require('@prisma/client');
    */
   const getById = async (req, res) => {
     try {
-      const { id } = req.params; // 'id' é o nome do parâmetro
+    const { id } = req.params; // 'id' é o nome do parâmetro
       const senha = await SenhaService.getById(Number(id)); // Passamos o valor
       if (!senha) {
         return res.status(404).json({ message: 'Senha não encontrada.' });
@@ -99,11 +122,10 @@ const { Prioridade } = require('@prisma/client');
     }
   }
 
-
 module.exports = {
   create,
   callNext,
-  complete,
+  complete, 
   getAll,
   getById,
 }
