@@ -1,8 +1,15 @@
+// ./src/server.js
+
 const http = require('http');
-const app = require('./app');
 const { Server } = require("socket.io");
+const app = require('./app'); 
 
 const portaServidor = process.env.portaServidor || 3000;
+
+const userRoutes = require('./routes/userRoute');
+const senhaRoutes = require('./routes/senhaRoute');
+const guicheRoutes = require('./routes/guicheRoute');
+const setorRoutes = require('./routes/setorRoute');
 
 const server = http.createServer(app);
 
@@ -16,6 +23,15 @@ const io = new Server(server, {
 app.use((req, res, next) => {
   req.io = io;
   next();
+});
+
+app.use('/api/users', userRoutes);
+app.use('/api/senhas', senhaRoutes);
+app.use('/api/guiches', guicheRoutes);
+app.use('/api/setores', setorRoutes); 
+
+app.get('/', (req, res) => {
+  res.send('Rodando a API da Fila NAMI!');
 });
 
 io.on('connection', (socket) => {
