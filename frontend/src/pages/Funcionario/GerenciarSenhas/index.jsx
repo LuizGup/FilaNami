@@ -13,21 +13,30 @@ import CardSenha from "../../../components/FuncionarioComponents/CardSenha";
 import "./index.css";
 
 function GerenciarSenhas() {
-  const [senhas, setSenhas] = useState([]);
+  const [senhas, setSenhas] = useState([]); // Inicia como array vazio
   const [lastUpdated, setLastUpdated] = useState("Never");
 
+  // CORREÇÃO 1: fetchSenhas agora garante um array em caso de erro
   const fetchSenhas = async () => {
     try {
       const data = await getAllSenhas();
-      setSenhas(data);
+      
+      // Garante que 'data' é um array antes de setar
+      if (Array.isArray(data)) {
+        setSenhas(data);
+      } else {
+        console.warn("A API não retornou um array. Setando array vazio.");
+        setSenhas([]); // Garante que o estado é um array
+      }
       setLastUpdated(new Date().toLocaleTimeString('pt-BR'));
       console.log("Senhas iniciais carregadas:", data);
     } catch (error) {
       console.error("Erro ao buscar senhas:", error);
+      setSenhas([]); // Garante que o estado é um array mesmo em caso de erro
     }
   };
 
-  // useEffect ATUALIZADO (A SOLUÇÃO ESTÁ AQUI)
+  // CORREÇÃO 2: useEffect agora lida com 'delete' e valida o 'update'
   useEffect(() => {
     // 1. Conecta ao socket QUANDO o componente monta
     const socket = io("http://localhost:3000"); 
@@ -35,8 +44,15 @@ function GerenciarSenhas() {
     // 2. Busca os dados iniciais
     fetchSenhas();
 
-    // 3. Define o handler de atualização
+    // 3. Define o handler de atualização (COMPLETO)
     const handleSenhaUpdate = (update) => {
+      
+      // Validação: Garante que o update é válido
+      if (!update || !update.action || !update.data) {
+        console.warn("Socket: Recebeu evento 'senhaUpdate' malformado:", update);
+        return; // Ignora o evento
+      }
+
       const { action, data } = update;
       console.log("Socket: Recebeu evento 'senhaUpdate'", update);
 
@@ -49,13 +65,19 @@ function GerenciarSenhas() {
           prevSenhas.map(s => (s.idSenha === data.idSenha ? data : s))
         );
       }
+
+      // Adiciona o 'delete' que estava faltando
+      if (action === 'delete') {
+        setSenhas(prevSenhas =>
+          prevSenhas.filter(s => s.idSenha !== data.idSenha)
+        );
+      }
     };
 
     // 4. Começa a "escutar" o evento
     socket.on('senhaUpdate', handleSenhaUpdate);
 
-    // 5. FUNÇÃO DE LIMPEZA (A MÁGICA)
-    // Isso roda quando o componente "desmonta" (ou recarrega no dev)
+    // 5. FUNÇÃO DE LIMPEZA
     return () => {
       console.log("Desconectando socket...");
       socket.off('senhaUpdate', handleSenhaUpdate); // Remove o listener
@@ -64,10 +86,11 @@ function GerenciarSenhas() {
   }, []); // O array vazio [] garante que isso rode apenas uma vez por montagem
 
 
-  // Handlers (sem 'fetchSenhas')
+  // Handlers (não precisam mais do fetchSenhas)
   const handleChamarProximo = async () => {
     try {
-      await chamarProximaSenha();
+      // O backend vai emitir o 'senhaUpdate'
+      await chamarProximaSenha(); 
     } catch (error) {
       console.error("Erro no 'handleChamarProximo':", error);
     }
@@ -75,13 +98,14 @@ function GerenciarSenhas() {
 
   const handleConcluir = async (idSenha) => {
     try {
+      // O backend vai emitir o 'senhaUpdate'
       await concluirSenha(idSenha);
     } catch (error) {
       console.error(`Erro ao concluir senha ${idSenha}:`, error);
     }
   };
 
-  // --- O resto do seu componente (filtros e JSX) permanece o mesmo ---
+  // --- Filtros (Agora são seguros, pois 'senhas' é sempre um array) ---
 
   const senhasEsperando = senhas.filter(
     (s) => s.status === "AGUARDANDO"
