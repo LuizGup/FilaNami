@@ -16,13 +16,14 @@ const getAllUsersHandler = async (req, res) => {
 };
 
 const getUserByIdHandler = async (req, res) => {
-  const { id } = parseInt(req.params.id);
+  const id = parseInt(req.params.id);
   try {
     const user = await getUserByIdModel(id);
     if (!user) {
       res.status(404).json({ error: "User not found" });
-    } 
+    } else {
     return res.status(200).json(user);
+    }
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve user" });
   }
@@ -44,7 +45,7 @@ const createUserHandler = async (req, res) => {
 };
 
 const updateUserHandler = async (req, res) => {
-  const { id } = parseInt(req.params.id);
+  const id = parseInt(req.params.id);
   const dataToUpdate = req.body;
 
   try {
@@ -56,7 +57,7 @@ const updateUserHandler = async (req, res) => {
 };
 
 const deleteUserHandler = async (req, res) => {
-  const { id } = parseInt(req.params.id);
+  const id = parseInt(req.params.id);
   try {
     await deleteUserModel(id);
     res.status(204).send();
