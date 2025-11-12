@@ -1,152 +1,86 @@
 // ./src/services/senha.service.js
 
-const prisma = require('../prisma'); 
-const { Prioridade, StatusSenha } = require('@prisma/client');
+const prisma = require('../prisma');
+const { StatusSenha } = require('@prisma/client');
 
+/**
+ * REQUISITO 1: Criar nova senha
+ * (Agora é um DAO puro: apenas insere os dados pré-calculados pelo controller)
+ */
+const create = async (data) => {
+  // O 'data' agora vem completo do controller
+  return prisma.senha.create({
+    data: data,
+  });
+};
 
-  /**
-   * REQUISITO 1: Criar nova senha
-   */
-  const create = async(data) => {
-    // -> [MUDANÇA] 'setor_destino' agora é 'setorDestino'
-    const { setorDestino, prioridade } = data;
-
-    let prefixo;
-    switch (prioridade) {
-      case Prioridade.PRIORIDADE: prefixo = 'P'; break;
-      case Prioridade.PLUSEIGHTY: prefixo = 'E'; break;
-      case Prioridade.COMUM:
-      default: prefixo = 'C'; break;
-    }
-
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-
-    const ultimaSenhaDoDia = await prisma.senha.findFirst({
-      where: {
-        prioridade: prioridade,
-        // -> [MUDANÇA] 'data_emissao' agora é 'dataEmissao'
-        dataEmissao: { gte: hoje },
-      },
-      // -> [MUDANÇA] 'data_emissao' agora é 'dataEmissao'
-      orderBy: { dataEmissao: 'desc' },
-    });
-
-    let novoNumero = 1;
-    if (ultimaSenhaDoDia) {
-      const numeroAnterior = parseInt(ultimaSenhaDoDia.senha.substring(1));
-      novoNumero = numeroAnterior + 1;
-    }
-
-    const numeroFormatado = novoNumero.toString().padStart(3, '0');
-    const novaSenhaStr = `${prefixo}${numeroFormatado}`;
-
-    return prisma.senha.create({
+/**
+ * REQUISITO 2: Chamar próxima senha
+ * (Agora é um DAO de transação: recebe o idSenha do controller)
+ */
+const callNext = async (idSenha, idGuiche) => {
+  // O controller fez a lógica de "findNext"
+  // O service apenas executa a transação de "atendimento"
+  return prisma.$transaction(async (tx) => {
+    const senhaChamada = await tx.senha.update({
+      where: { idSenha: idSenha },
       data: {
-        // -> [MUDANÇA] 'setor_destino' agora é 'setorDestino'
-        setorDestino: setorDestino,
-        prioridade: prioridade,
-        senha: novaSenhaStr,
-        status: StatusSenha.AGUARDANDO,
-        // -> [MUDANÇA] 'setor_atual' agora é 'setorAtual'
-        // O schema já tem um default, mas setar aqui garante a regra de negócio
-        setorAtual: setorDestino, 
+        status: StatusSenha.EM_ATENDIMENTO,
+        idGuicheAtendente: idGuiche,
       },
-    });
-  }
-
-  /**
-   * REQUISITO 2: Chamar próxima senha
-   */
-  // -> [MUDANÇA] 'id_guiche' agora é 'idGuiche'
-  const callNext = async(idGuiche, setor) =>{
-    
-    return prisma.$transaction(async (tx) => {
-      
-      const proximaSenha = await tx.senha.findFirst({
-        where: {
-          status: StatusSenha.AGUARDANDO,
-          // -> [MUDANÇA] 'setor_atual' agora é 'setorAtual'
-          setorAtual: setor,
-        },
-        orderBy: [
-          { prioridade: 'desc' }, 
-          // -> [MUDANÇA] 'data_emissao' agora é 'dataEmissao'
-          { dataEmissao: 'asc' },
-        ],
-      });
-
-      if (!proximaSenha) {
-        throw new Error('Nenhuma senha aguardando neste setor.');
-      }
-
-      const senhaChamada = await tx.senha.update({
-        // -> [MUDANÇA] 'id_senha' agora é 'idSenha'
-        where: { idSenha: proximaSenha.idSenha },
-        data: {
-          status: StatusSenha.EM_ATENDIMENTO,
-          // -> [MUDANÇA] 'id_guiche' agora é 'idGuicheAtendente'
-          idGuicheAtendente: idGuiche,
-        },
-        // -> [MUDANÇA] 'guiche' (relação) agora é 'guicheAtendente'
-        include: { guicheAtendente: true },
-      });
-
-      await tx.historico.create({
-        data: {
-          // -> [MUDANÇA] 'id_guiche' agora é 'idGuiche'
-          idGuiche: idGuiche,
-          // -> [MUDANÇA] 'id_senha' agora é 'idSenha'
-          idSenha: proximaSenha.idSenha, 
-        }
-      });
-
-      return senhaChamada;
-    });
-  }
-
-  /**
-   * Concluir um atendimento
-   */
-  const complete = async (id_senha) => {
-    return prisma.senha.update({
-      // -> [MUDANÇA] 'id_senha' agora é 'idSenha'
-      where: { idSenha: Number(id_senha) },
-      data: {
-        status: StatusSenha.CONCLUIDO,
-        // -> [MUDANÇA] 'data_conclusao' agora é 'dataConclusao'
-        dataConclusao: new Date(),
-      },
-    });
-  }
-
-  /**
-   * Buscar por ID
-   */
-  const getById = async (id_senha) => {
-    return prisma.senha.findUnique({
-      // -> [MUDANÇA] 'id_senha' agora é 'idSenha'
-      where: { idSenha: Number(id_senha) },
-      // -> [MUDANÇA] 'guiche' (relação) agora é 'guicheAtendente'
       include: { guicheAtendente: true },
     });
-  }
 
-  /**
-   * Listar todos com filtros
-   */
-  const getAll = async (status, setor) => {
-    const where = {};
-    if (status) where.status = status;
-    // -> [MUDANÇA] 'setor_atual' agora é 'setorAtual'
-    if (setor) where.setorAtual = setor;
-
-    return prisma.senha.findMany({
-      where: where,
-      // -> [MUDANÇA] 'data_emissao' agora é 'dataEmissao'
-      orderBy: { dataEmissao: 'desc' },
+    await tx.historico.create({
+      data: {
+        idGuiche: idGuiche,
+        idSenha: idSenha,
+      },
     });
-  }
+
+    return senhaChamada;
+  });
+};
+
+/**
+ * Concluir um atendimento (ou qualquer update)
+ * (Agora é um DAO de update genérico)
+ */
+const complete = async (idSenha, data) => {
+  // O controller decide o que será atualizado (o 'data')
+  return prisma.senha.update({
+    where: { idSenha: Number(idSenha) },
+    data: data,
+  });
+};
+
+/**
+ * Buscar por ID
+ * (Já era um DAO)
+ */
+const getById = async (idSenha) => {
+  return prisma.senha.findUnique({
+    where: { idSenha: Number(idSenha) },
+    include: { guicheAtendente: true },
+  });
+};
+
+/**
+ * Listar todos com filtros
+ * (Agora é um DAO de busca genérico: recebe where, orderBy e take)
+ */
+const getAll = async (where, orderBy, take) => {
+  return prisma.senha.findMany({
+    where: where,
+    orderBy: orderBy,
+    take: take, // 'take' é usado para limitar resultados (ex: 'pegar só 1')
+  });
+};
+const remove = async (idSenha) => {
+  return prisma.senha.delete({
+    where: { idSenha: Number(idSenha) },
+  });
+};
 
 module.exports = {
   create,
@@ -154,4 +88,5 @@ module.exports = {
   complete,
   getById,
   getAll,
+  remove,
 };
