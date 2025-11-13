@@ -1,4 +1,4 @@
-const { create, callNext, complete, getAll, getById, remove } = require('../services/senhaService'); // Nome do arquivo mudou
+const { create, callNext, complete, getAll, getById, remove } = require('../repositories/senhaDao'); // Nome do arquivo mudou
 const { Prioridade, StatusSenha } = require('@prisma/client');
 
 /**

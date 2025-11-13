@@ -6,7 +6,7 @@ const {
   createSetorModel,
   updateSetorModel,
   deleteSetorModel,
-} = require("../services/setorService");
+} = require("../repositories/setorDao");
 
 // helper simples pra padronizar try/catch em rotas async
 const asyncHandler = (fn) => (req, res, next) =>
