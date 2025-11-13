@@ -4,7 +4,7 @@ const {
   createUserModel,
   updateUserModel,
   deleteUserModel,
-} = require("../services/userService");
+} = require("../repositories/userDao");
 
 const getAllUsersHandler = async (req, res) => {
   try {
