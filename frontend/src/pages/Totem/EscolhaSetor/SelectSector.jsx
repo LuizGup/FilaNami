@@ -11,13 +11,16 @@ const SelectSector = () => {
 
     const handleSectorSelection = (sectorTitle) => {
         console.log(`Setor escolhido: ${sectorTitle}. Iniciando geração de senha...`);
-        // Lógica final para geração de senha
-        // Exemplo: navigate('/ticket/gerado'); 
+        
+        // 🔥 Redireciona para /showkey
+        navigate('/showkey', {
+            state: { selectedSector: sectorTitle }
+        });
     };
 
     const handleGoBack = () => {
-        // Volta para a tela de seleção de serviço (o '/toten' do seu código anterior)
-        navigate('/toten'); 
+        // Volta para a tela de seleção de serviços
+        navigate('/toten');
     };
     
     return (
@@ -39,7 +42,7 @@ const SelectSector = () => {
                 </div>
                 
                 <h1 className="display-6 fw-bold text-dark">Fila NAMI</h1>
-                <p className="lead text-secondary">Por favor, selecione o **setor de destino**</p>
+                <p className="lead text-secondary">Por favor, selecione o <strong>setor de destino</strong></p>
             </div>
 
             {/* Cartão "Retirar Sangue" */}
