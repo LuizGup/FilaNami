@@ -5,15 +5,9 @@
 
 /* Card gigante "A015" */
 .senha-atual-card {
-  width: 100%;
-  max-width: 500px; /* Limita a largura do card */
   padding: 40px 20px;
-  margin-top: 1rem;
-  border-radius: 20px;
   background-color: #f8f9fa; /* Um cinza bem claro */
   border: 1px solid #dee2e6;
-  text-align: center;
-  font-weight: 700; /* bold */
   font-size: 10rem; /* Tamanho gigante */
   line-height: 1; /* Ajusta a altura da linha */
   
@@ -56,6 +50,10 @@
 .ultima-senha-card .card-title {
   font-size: 1.75rem;
   margin-bottom: 0; /* Remove margem do h5 */
+}
+
+.texto-senha-atual {
+  font-size: 4rem;
 }
 
 /* Ajustes para telas menores */
