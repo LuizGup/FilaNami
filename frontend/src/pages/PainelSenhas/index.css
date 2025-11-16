@@ -1,13 +1,6 @@
 /* Fundo principal da página */
 .painel-container {
-  background-color: #ffffff;
   overflow: hidden; /* Impede barras de rolagem desnecessárias */
-}
-
-/* Título "Senha Atual" */
-.painel-title {
-  font-size: 3rem;
-  font-weight: 300; /* 'light' */
 }
 
 /* Card gigante "A015" */

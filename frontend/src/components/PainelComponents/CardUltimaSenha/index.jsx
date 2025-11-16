@@ -5,7 +5,7 @@ function CardUltimaSenha({ numero }) {
   return (
     <div className="ultima-senha-card card shadow-sm text-center">
       <div className="card-body">
-        <h5 className="card-title text-primary fw-bold">
+        <h5 className="card-title text-secondary-emphasis">
           {numero}
         </h5>
       </div>
