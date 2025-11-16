@@ -1,11 +1,6 @@
 import { useState, useEffect } from 'react';
 import { io } from "socket.io-client"; // Importa o socket.io-client
-
-import {
-  getAllSenhas,
-  chamarProximaSenha,
-  concluirSenha
-} from '../../../services/senhaService';
+import api from '../../../services/api';
 
 import NavbarFuncionario from "../../../components/FuncionarioComponents/NavbarFuncionario";
 import CardSenha from "../../../components/FuncionarioComponents/CardSenha";
@@ -18,12 +13,14 @@ function GerenciarSenhas() {
 
   const fetchSenhas = async () => {
     try {
-      const data = await getAllSenhas();
+      const resp = await api.get('/senhas');
+      const data = resp.data || [];
       setSenhas(data);
       setLastUpdated(new Date().toLocaleTimeString('pt-BR'));
       console.log("Senhas iniciais carregadas:", data);
     } catch (error) {
       console.error("Erro ao buscar senhas:", error);
+      setSenhas([]);
     }
   };
 
@@ -67,7 +64,9 @@ function GerenciarSenhas() {
   // Handlers (sem 'fetchSenhas')
   const handleChamarProximo = async () => {
     try {
-      await chamarProximaSenha();
+      // Alguns backends exigem idGuiche e setor. Usamos valores padrão não intrusivos.
+      const resp = await api.post('/senhas/chamar', { idGuiche: 1, setor: 'Atendimento' });
+      console.log('Chamar próximo resposta:', resp.data);
     } catch (error) {
       console.error("Erro no 'handleChamarProximo':", error);
     }
@@ -75,7 +74,8 @@ function GerenciarSenhas() {
 
   const handleConcluir = async (idSenha) => {
     try {
-      await concluirSenha(idSenha);
+      const resp = await api.put(`/senhas/${idSenha}/concluir`);
+      console.log('Concluir resposta:', resp.data);
     } catch (error) {
       console.error(`Erro ao concluir senha ${idSenha}:`, error);
     }
@@ -106,7 +106,7 @@ function GerenciarSenhas() {
       <div className="container-fluid mt-4" style={{ paddingLeft: '2rem', paddingRight: '2rem' }}>
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h2>Status Senha</h2>
-          <span className="last-updated">Real-time updates enabled</span>
+          <span className="last-updated">{`Atualizado: ${lastUpdated}`}</span>
         </div>
 
         <div className="row g-4">
