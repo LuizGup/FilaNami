@@ -1,0 +1,182 @@
+/* Reset básico e fundo da página */
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa; /* Um cinza bem claro */
+}
+
+.historico-page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Cabeçalho superior */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/*
+ *
+ * ATUALIZAÇÕES DE ESTILO AQUI
+ *
+*/
+.left-header-section {
+  display: flex;
+  align-items: center;
+}
+
+.return-button-top {
+  background: none;
+  border: none;
+  font-size: 1.5em; /* Aumenta o tamanho da seta */
+  color: #666; /* Cor cinza mais suave */
+  cursor: pointer;
+  margin-right: 15px; /* Espaço entre o botão e o logo */
+  padding: 0; /* Remove padding padrão */
+  line-height: 1; /* Alinha verticalmente melhor */
+  display: flex; /* Para alinhar o ícone perfeitamente */
+  align-items: center;
+  justify-content: center;
+}
+
+.return-button-top:hover {
+  color: #007bff; /* Cor ao passar o mouse */
+}
+
+/* O logo-section agora está dentro de left-header-section */
+.logo-section {
+  display: flex;
+  align-items: center;
+}
+
+/* Manteve como estava, apenas para o contexto */
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background-color: #007bff; /* Cor placeholder */
+  border-radius: 8px;
+  margin-right: 12px;
+}
+
+.app-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 1.15em;
+}
+/* FIM DAS ATUALIZAÇÕES DE ESTILO */
+
+
+.user-section {
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  padding: 8px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 20px;
+  margin-right: 15px;
+  font-size: 0.9em;
+  width: 220px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #6c757d; /* Cor placeholder */
+  border-radius: 50%;
+}
+
+/* Conteúdo Principal */
+.main-content {
+  padding: 30px;
+  flex-grow: 1;
+  max-width: 1200px; /* Limita a largura do conteúdo */
+  margin: 0 auto;
+  width: 100%;
+}
+
+.page-title {
+  font-size: 1.8em;
+  color: #222;
+  margin-bottom: 25px; /* Margem original do título */
+  font-weight: 600;
+}
+
+/* Wrapper da Lista (o "card" branco grande) */
+.password-list-wrapper {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden; /* Para os cantos arredondados funcionarem com a lista */
+}
+
+/* Cabeçalho da Lista (PASSWORD NUMBER, etc) */
+.list-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr; /* 4 colunas */
+  background-color: #f7f9fa; /* Fundo do cabeçalho */
+  padding: 15px 25px;
+  border-bottom: 1px solid #e0e0e0;
+  font-weight: 600;
+  color: #666;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.header-item {
+  padding: 0 10px;
+}
+
+
+
+/* Rodapé da Lista (Paginação) */
+.list-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  border-top: 1px solid #e0e0e0;
+  background-color: #fff;
+  color: #666;
+  font-size: 0.9em;
+}
+
+.pagination button {
+  background-color: #e9ecef;
+  border: 1px solid #dee2e6;
+  padding: 8px 15px;
+  margin-left: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  color: #495057;
+  transition: background-color 0.2s;
+}
+
+.pagination button:hover {
+  background-color: #d8dde2;
+}
+
+.pagination button.active {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+.pagination button.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -1,0 +1,59 @@
+.card-senha {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr; /* Ajuste conforme a largura desejada para cada coluna */
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  align-items: center;
+  font-size: 0.95em;
+  color: #555;
+}
+
+.card-senha:last-child {
+  border-bottom: none;
+}
+
+.card-item {
+  padding: 0 10px;
+}
+
+.password-number {
+  font-weight: 600;
+  color: #333;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.status-completed .status-dot {
+  background-color: #28a745; /* Verde */
+}
+
+.status-completed {
+  color: #28a745;
+}
+
+.status-pending .status-dot {
+  background-color: #ffc107; /* Amarelo */
+}
+
+.status-pending {
+  color: #ffc107;
+}
+
+.status-cancelled .status-dot {
+  background-color: #dc3545; /* Vermelho */
+}
+
+.status-cancelled {
+  color: #dc3545;
+}
