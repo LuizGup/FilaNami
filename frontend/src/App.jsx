@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import SelectService from "./pages/Totem/EscolhaPrioridade/SelectService";
 import GerenciarSenhas from "./pages/Funcionario/GerenciarSenhas";
 import SelectSector from "./pages/Totem/EscolhaSetor/SelectSector";
@@ -10,9 +10,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<h1>Página Inicial</h1>} />
         <Route path="/login" element={<Login />} />
-        <Route path="/login" element={<h1>Página de Login</h1>} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/sign-up" element={<h1>Página de Registro</h1>} />
         <Route path="/user" element={<h1>Página do Funcionario</h1>} />
         <Route path="/user/gerenciar" element={<GerenciarSenhas />} />
@@ -20,8 +19,8 @@ function App() {
         <Route path="/sector" element={<SelectSector />} />
         <Route path="/painel" element={<PainelSenhas />} />
         <Route path="/admin" element={<h1>Página do Admin</h1>} />
-        <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
         <Route path="/showkey" element={<ShowKey />} />
+        <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
       </Routes>
     </BrowserRouter>
   );
