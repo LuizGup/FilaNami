@@ -1,5 +1,7 @@
-import React from 'react';
-
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../../services/authService';
+import './Login.css';
 
 // Vamos hardcodar as cores, já que não estamos usando o .css
 const styles = {
@@ -33,31 +35,61 @@ const styles = {
 };
 
 function Login() {
-  // Usando <> (Fragment) como no seu exemplo
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      await login(email, password);
+      // Redireciona para dashboard após login bem-sucedido
+      navigate('/user/gerenciar');
+    } catch (err) {
+      setError(err.response?.data?.error || 'Erro ao fazer login. Tente novamente.');
+      console.error('Erro de login:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <section 
-        // d-flex, align-items-center, justify-content-center (do Bootstrap)
         className="d-flex align-items-center justify-content-center" 
         style={styles.wrapper}
       >
-        {/* O card de login: w-100, bg-white, shadow-lg, d-flex, etc. */}
         <div 
           className="w-100 bg-white shadow-lg d-flex flex-column gap-4" 
           style={styles.container}
         >
           
-          {/* Cabeçalho */}
           <div className="text-center">
-            {/* Ícone removido, conforme pedido */}
             <h2 className="h2 fw-bold"> Login</h2>
             <p className="text-muted" style={{marginTop: "0.5rem"}}>
             Acesso destinado ao NAMI
             </p>
           </div>
 
+          {/* Mensagem de erro */}
+          {error && (
+            <div className="alert alert-danger alert-dismissible fade show" role="alert">
+              {error}
+              <button 
+                type="button" 
+                className="btn-close" 
+                onClick={() => setError('')}
+              ></button>
+            </div>
+          )}
+
           {/* Formulário */}
-          <form className="d-flex flex-column gap-3" onSubmit={(e) => e.preventDefault()}>
+          <form className="d-flex flex-column gap-3" onSubmit={handleSubmit}>
             
             {/* Grupo do 1º Input (usando mb-3 do Bootstrap) */}
             <div className="mb-3">
@@ -69,7 +101,10 @@ function Login() {
                 id="employee-id"
                 placeholder="E-mail"
                 required
-                type="text"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={loading}
               />
             </div>
             
@@ -83,6 +118,9 @@ function Login() {
                 placeholder="Senha"
                 required
                 type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
               />
             </div>
 
@@ -92,8 +130,9 @@ function Login() {
                 // Classes do Bootstrap: btn, btn-primary, w-100, fw-bold
                 className="btn btn-primary w-100 fw-bold" 
                 type="submit"
+                disabled={loading}
               >
-                Login
+                {loading ? 'Autenticando...' : 'Login'}
               </button>
             </div>
           </form>
