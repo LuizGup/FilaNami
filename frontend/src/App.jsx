@@ -4,7 +4,7 @@ import GerenciarSenhas from "./pages/Funcionario/GerenciarSenhas";
 import SelectSector from "./pages/Totem/EscolhaSetor/SelectSector";
 import Login from "./pages/Login/index";
 import ShowKey from "./pages/Totem/MostrarSenha/ShowKey";
-import PainelSenha from "./pages/PainelSenha";
+import PainelSenhas from "./pages/PainelSenhas";
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
         <Route path="/user/gerenciar" element={<GerenciarSenhas />} />
         <Route path="/toten" element={<SelectService />} />
         <Route path="/sector" element={<SelectSector />} />
-        <Route path="/painel" element={<PainelSenha />} />
+        <Route path="/painel" element={<PainelSenhas />} />
         <Route path="/admin" element={<h1>Página do Admin</h1>} />
         <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
         <Route path="/showkey" element={<ShowKey />} />

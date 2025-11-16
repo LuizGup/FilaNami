@@ -1,0 +1,83 @@
+/* Fundo principal da página */
+.painel-container {
+  background-color: #ffffff;
+  overflow: hidden; /* Impede barras de rolagem desnecessárias */
+}
+
+/* Título "Senha Atual" */
+.painel-title {
+  font-size: 3rem;
+  font-weight: 300; /* 'light' */
+}
+
+/* Card gigante "A015" */
+.senha-atual-card {
+  width: 100%;
+  max-width: 500px; /* Limita a largura do card */
+  padding: 40px 20px;
+  margin-top: 1rem;
+  border-radius: 20px;
+  background-color: #f8f9fa; /* Um cinza bem claro */
+  border: 1px solid #dee2e6;
+  text-align: center;
+  font-weight: 700; /* bold */
+  font-size: 10rem; /* Tamanho gigante */
+  line-height: 1; /* Ajusta a altura da linha */
+  
+  /* Permite que o texto diminua em telas menores */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Coluna da direita */
+.info-card-wrapper {
+  width: 100%;
+}
+
+/* Cards azuis "Retirar Sangue" e "Guichê 2" */
+.info-card {
+  padding: 2rem;
+  border-radius: 15px;
+  font-size: 2.5rem;
+  font-weight: 600;
+  text-align: center;
+  
+  /* Garante que o texto não quebre feio */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Título "Últimas senhas" */
+.ultimas-senhas-title {
+  font-weight: 300;
+}
+
+/* CSS para o CardUltimaSenha (pode ir em CardUltimaSenha.css) */
+.ultima-senha-card {
+  border-radius: 10px;
+  border: 1px solid #dee2e6;
+}
+
+.ultima-senha-card .card-title {
+  font-size: 1.75rem;
+  margin-bottom: 0; /* Remove margem do h5 */
+}
+
+/* Ajustes para telas menores */
+@media (max-width: 991px) {
+  .painel-container .row {
+    height: auto; /* Remove vh-100 */
+  }
+  
+  .senha-atual-card {
+    font-size: 6rem; /* Diminui a fonte principal */
+    padding: 20px;
+  }
+  
+  .info-card {
+    font-size: 1.5rem;
+    padding: 1.5rem;
+  }
+}
