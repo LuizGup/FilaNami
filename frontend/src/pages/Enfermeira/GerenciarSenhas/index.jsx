@@ -1,14 +1,6 @@
 import React from 'react';
-import { Container, Row, Col, Card, Button, Navbar, Image, Badge } from 'react-bootstrap';
-import { 
-  Trophy, 
-  PersonWorkspace, 
-  CheckCircle, 
-  ArrowClockwise 
-} from 'react-bootstrap-icons';
 
 // DADOS MOCADOS (Apenas para preencher a tela como na imagem)
-// Na sua aplicação, você vai substituir isso pelos seus 'states' ou 'props'
 const MOCK_WAITING = [
   { id: 'A-123', estWait: '15 mins' },
   { id: 'A-124', estWait: '20 mins' },
@@ -18,7 +10,7 @@ const MOCK_WAITING = [
 const MOCK_COUNTERS = [
   { 
     id: 1, 
-    name: 'Guiche 1', 
+    name: 'Guichê 1', 
     tickets: [
       { id: 'B-045', counter: 'Counter 1', servingTime: '3m 12s' },
       { id: 'C-210', counter: 'Counter 2', servingTime: '1m 45s' },
@@ -26,7 +18,7 @@ const MOCK_COUNTERS = [
   },
   { 
     id: 2, 
-    name: 'Guiche 2', 
+    name: 'Guichê 2', 
     tickets: [
       { id: 'B-045', counter: 'Counter 1', servingTime: '3m 12s' },
       { id: 'C-210', counter: 'Counter 2', servingTime: '1m 45s' },
@@ -34,7 +26,7 @@ const MOCK_COUNTERS = [
   },
   { 
     id: 3, 
-    name: 'Guiche 3', 
+    name: 'Guichê 3', 
     tickets: [
       { id: 'B-045', counter: 'Counter 1', servingTime: '3m 12s' },
       { id: 'C-210', counter: 'Counter 2', servingTime: '1m 45s' },
@@ -42,7 +34,7 @@ const MOCK_COUNTERS = [
   },
   { 
     id: 4, 
-    name: 'Guiche 4', 
+    name: 'Guichê 4', 
     tickets: [
       { id: 'B-045', counter: 'Counter 1', servingTime: '3m 12s' },
       { id: 'C-210', counter: 'Counter 2', servingTime: '1m 45s' },
@@ -55,133 +47,130 @@ const MOCK_DONE = [
   { id: 'A-122', counter: 'Counter 3', completedAt: '10:30 AM' },
 ];
 
-function PasswordDashboard() {
-  // NOTA: Em uma aplicação real, os dados acima viriam de 'props' 
-  // ou de um 'useState' gerenciado pelo Socket.io/Axios.
-
+function GerenciarSenhasEnfermeira() {
   return (
     <div style={{ backgroundColor: '#f8f9fa', minHeight: '100vh', paddingBottom: '100px' }}>
       {/* 1. Header (Navbar) */}
-      <Navbar bg="white" expand="lg" className="shadow-sm">
-        <Container fluid className="px-4">
-          <Navbar.Brand href="#home">
-            <PersonWorkspace size={24} className="me-2" />
+      <nav className="navbar navbar-expand-lg bg-white shadow-sm">
+        <div className="container-fluid px-4">
+          <a className="navbar-brand" href="#home">
+            <i className="bi bi-person-workspace fs-5 me-2"></i>
             Gerenciamento de Senhas
-          </Navbar.Brand>
-          <Navbar.Toggle />
-          <Navbar.Collapse className="justify-content-end">
-            <Image 
+          </a>
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarUserContent" aria-controls="navbarUserContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse justify-content-end" id="navbarUserContent">
+            <img 
               src="https://via.placeholder.com/40" // Substitua pela foto do usuário
-              roundedCircle 
+              className="rounded-circle"
+              alt="User"
             />
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+          </div>
+        </div>
+      </nav>
 
       {/* 2. Conteúdo Principal (Dashboard) */}
-      <Container fluid className="p-4">
+      <div className="container-fluid p-4">
         
         {/* Título e Atualização */}
-        <Row className="mb-3 align-items-center">
-          <Col>
+        <div className="row mb-3 align-items-center">
+          <div className="col">
             <h2 className="mb-0">Status Senha</h2>
-          </Col>
-          <Col xs="auto" className="text-muted">
-            <ArrowClockwise size={14} className="me-1" />
+          </div>
+          <div className="col-auto text-muted">
+            <i className="bi bi-arrow-clockwise me-1"></i>
             Last updated: Just now
-          </Col>
-        </Row>
+          </div>
+        </div>
 
         {/* Colunas do Kanban */}
-        <Row>
+        <div className="row">
           {/* Coluna 1: Esperando */}
-          <Col lg={2} md={4} className="mb-3">
+          <div className="col-lg-2 col-md-4 mb-3">
             <h5 className="mb-3 text-secondary">
-              <Trophy size={20} className="me-2 text-warning" />
+              <i className="bi bi-trophy fs-5 me-2 text-warning"></i>
               Esperando
-              <Badge pill bg="light" text="dark" className="ms-2">
+              <span className="badge rounded-pill bg-light text-dark ms-2">
                 {MOCK_WAITING.length}
-              </Badge>
+              </span>
             </h5>
             {MOCK_WAITING.map(ticket => (
-              <Card key={ticket.id} className="mb-3 shadow-sm border-0">
-                <Card.Body className="p-3">
-                  <Card.Title className="h5 fw-bold mb-1">{ticket.id}</Card.Title>
-                  <Card.Text className="small text-muted">
-                    Est. wait: {ticket.estWait}
-                  </Card.Text>
-                </Card.Body>
-              </Card>
+              <div key={ticket.id} className="card mb-3 shadow-sm border-0">
+                <div className="card-body p-3">
+                  <h5 className="card-title h5 fw-bold mb-1">{ticket.id}</h5>
+                  <p className="card-text small text-muted">
+                      Tempo de Espera: {ticket.estWait}
+                  </p>
+                </div>
+              </div>
             ))}
-          </Col>
+          </div>
 
           {/* Colunas 2-5: Guiches */}
           {MOCK_COUNTERS.map(counter => (
-            <Col key={counter.id} lg={2} md={4} className="mb-3">
+            <div key={counter.id} className="col-lg-2 col-md-4 mb-3">
               <h5 className="mb-3 text-secondary">
-                <PersonWorkspace size={20} className="me-2 text-primary" />
+                <i className="bi bi-person-workspace fs-5 me-2 text-primary"></i>
                 {counter.name}
               </h5>
               {counter.tickets.map(ticket => (
-                <Card key={ticket.id + counter.id} className="mb-3 shadow-sm border-0">
-                  <Card.Body className="p-3">
-                    <Card.Title className="h5 fw-bold mb-1 text-primary">{ticket.id}</Card.Title>
-                    <Card.Text className="small text-muted mb-1">
+                <div key={ticket.id + counter.id} className="card mb-3 shadow-sm border-0">
+                  <div className="card-body p-3">
+                    <h5 className="card-title h5 fw-bold mb-1 text-primary">{ticket.id}</h5>
+                    <p className="card-text small text-muted mb-1">
                       {ticket.counter}
-                    </Card.Text>
-                    <Card.Text className="small text-dark fw-bold">
-                      Serving time: {ticket.servingTime}
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
+                    </p>
+                    <p className="card-text small text-dark fw-bold">
+                     Em Atendimento: {ticket.servingTime}
+                    </p>
+                  </div>
+                </div>
               ))}
-            </Col>
+            </div>
           ))}
 
           {/* Coluna 6: Feito */}
-          <Col lg={2} md={4} className="mb-3">
+          <div className="col-lg-2 col-md-4 mb-3">
             <h5 className="mb-3 text-secondary">
-              <CheckCircle size={20} className="me-2 text-success" />
+              <i className="bi bi-check-circle fs-5 me-2 text-success"></i>
               Feito
-              <Badge pill bg="light" text="dark" className="ms-2">
+              <span className="badge rounded-pill bg-light text-dark ms-2">
                 {MOCK_DONE.length}
-              </Badge>
+              </span>
             </h5>
             {MOCK_DONE.map(ticket => (
-              <Card key={ticket.id} className="mb-3 shadow-sm border-0">
-                <Card.Body className="p-3">
-                  <Card.Title className="h5 fw-bold mb-1">{ticket.id}</Card.Title>
-                  <Card.Text className="small text-muted">
-                    Completed at: {ticket.completedAt}
+              <div key={ticket.id} className="card mb-3 shadow-sm border-0">
+                <div className="card-body p-3">
+                  <h5 className="card-title h5 fw-bold mb-1">{ticket.id}</h5>
+                  <p className="card-text small text-muted">
+                    Atendido em: {ticket.completedAt}
                     <br />
                     {ticket.counter}
-                  </Card.Text>
-                </Card.Body>
-              </Card>
+                  </p>
+                </div>
+              </div>
             ))}
-          </Col>
-        </Row>
-
-        {/* 3. Botões de Ação */}
-        {/* Usamos 'className' para aplicar classes utilitárias do Bootstrap 
-          para posicionamento e espaçamento, como 'fixed-bottom'.
-        */}
-        <div className="fixed-bottom p-4">
-          <Row>
-            <Col className="d-flex justify-content-center gap-3">
-              <Button variant="primary" size="lg" className="shadow px-5 py-2">
-                Chamar senha
-              </Button>
-              <Button variant="primary" size="lg" className="shadow px-5 py-2">
-                Exame realizado
-              </Button>
-            </Col>
-          </Row>
+          </div>
         </div>
 
-      </Container>
+        {/* 3. Botões de Ação */}
+        <div className="fixed-bottom p-4">
+          <div className="row">
+            <div className="col d-flex justify-content-center gap-3">
+              <button className="btn btn-primary btn-lg shadow px-5 py-2">
+                Chamar senha
+              </button>
+              <button className="btn btn-primary btn-lg shadow px-5 py-2">
+                Exame realizado
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 }
 
-export default PasswordDashboard;
+export default GerenciarSenhasEnfermeira;
