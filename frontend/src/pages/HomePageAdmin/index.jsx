@@ -17,7 +17,7 @@ function HomePageAdmin() {
         <div className="mt-4">
           <RouteButton
             label="Histórico de Senhas"
-            to="/admin/historico"
+            to="/admin/historicoSenhas"
             icon={<i className="bi bi-card-list" />}
           />
         </div>
