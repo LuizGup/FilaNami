@@ -1,0 +1,128 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.modal-container {
+  background-color: #fff;
+  width: 450px;
+  max-width: 90%;
+  border-radius: 16px;
+  padding: 30px 40px;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: #e0e0e0;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 20px;
+  line-height: 30px;
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 2px;
+  transition: background-color 0.2s;
+}
+
+.close-btn:hover {
+  background-color: #d6d6d6;
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.modal-title {
+  font-size: 1.4em;
+  font-weight: 500;
+  color: #222;
+  margin: 0 0 5px 0;
+}
+
+.modal-subtitle {
+  font-size: 1.6em;
+  font-weight: 400;
+  color: #444;
+  margin: 0;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Grade de 2 colunas */
+  gap: 20px;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.option-btn {
+  background-color: #0a7cb9; /* Cor primária */
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+  outline: none;
+}
+
+.option-btn:hover {
+  background-color: #086a9e;
+  transform: translateY(-2px);
+}
+
+.option-btn.active {
+  background-color: #065a86;
+  box-shadow: 0 0 0 4px rgba(10, 124, 185, 0.3); /* Anel de foco externo */
+  transform: translateY(0);
+}
+
+.modal-footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.confirm-btn {
+  background-color: #0a7cb9;
+  color: white;
+  border: none;
+  padding: 10px 40px;
+  border-radius: 20px;
+  font-size: 1em;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.confirm-btn:hover {
+  background-color: #086a9e;
+}
+
+.confirm-btn.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
