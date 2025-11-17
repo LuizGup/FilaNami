@@ -6,6 +6,7 @@ import Login from "./pages/Login/index";
 import ShowKey from "./pages/Totem/MostrarSenha/ShowKey";
 import HistoricoSenhas from "./pages/Admin/HistoricoSenhas";
 import PainelSenhas from "./pages/PainelSenhas";
+import PasswordDashboard from "./pages/Enfermeira/GerenciarSenhas";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/sign-up" element={<h1>Página de Registro</h1>} />
         <Route path="/user" element={<h1>Página do Funcionario</h1>} />
         <Route path="/user/gerenciar" element={<GerenciarSenhas />} />
+        <Route path="/enfermeira/GerenciarSenhas" element={<PasswordDashboard />} />
         <Route path="/toten" element={<SelectService />} />
         <Route path="/sector" element={<SelectSector />} />
         <Route path="/painel" element={<PainelSenhas />} />

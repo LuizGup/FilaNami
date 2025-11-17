@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/authService';
-import './Login.css';
 
 // Vamos hardcodar as cores, já que não estamos usando o .css
 const styles = {
