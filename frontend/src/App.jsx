@@ -1,22 +1,31 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import SelectService from "./pages/Totem/EscolhaPrioridade/SelectService";
 import GerenciarSenhas from "./pages/Funcionario/GerenciarSenhas";
 import SelectSector from "./pages/Totem/EscolhaSetor/SelectSector";
 import Login from "./pages/Login/index";
 import HomePageAdmin from "./pages/HomePageAdmin";
+import ShowKey from "./pages/Totem/MostrarSenha/ShowKey";
+import HistoricoSenhas from "./pages/Admin/HistoricoSenhas";
+import PainelSenhas from "./pages/PainelSenhas";
+import PasswordDashboard from "./pages/Enfermeira/GerenciarSenhas";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<h1>Página Inicial</h1>} />
         <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/sign-up" element={<h1>Página de Registro</h1>} />
         <Route path="/user" element={<h1>Página do Funcionario</h1>} />
         <Route path="/user/gerenciar" element={<GerenciarSenhas />} />
+        <Route path="/enfermeira/GerenciarSenhas" element={<PasswordDashboard />} />
         <Route path="/toten" element={<SelectService />} />
         <Route path="/sector" element={<SelectSector />} />
         <Route path="/admin" element={<HomePageAdmin />} /> 
+        <Route path="/painel" element={<PainelSenhas />} />
+        <Route path="/admin/historicoSenhas" element={<HistoricoSenhas/>} />
+        <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
+        <Route path="/showkey" element={<ShowKey />} />
         <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
       </Routes>
     </BrowserRouter>
