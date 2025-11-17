@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './index.css';
 
 const SelectionModal = ({ 
   isOpen, 
@@ -12,7 +11,6 @@ const SelectionModal = ({
 }) => {
   const [selectedId, setSelectedId] = useState(null);
 
-  // Reseta a seleção quando o modal abre/fecha
   useEffect(() => {
     if (!isOpen) setSelectedId(null);
   }, [isOpen]);
@@ -21,42 +19,54 @@ const SelectionModal = ({
 
   const handleConfirm = () => {
     if (selectedId) {
-      // Encontra o objeto completo da opção selecionada
       const selectedOption = options.find(opt => opt.id === selectedId);
       onConfirm(selectedOption);
     }
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-container">
-        <button className="close-btn" onClick={onClose}>&times;</button>
-        
-        <div className="modal-header">
-          {title && <h2 className="modal-title">{title}</h2>}
-          {subtitle && <h3 className="modal-subtitle">{subtitle}</h3>}
-        </div>
+    // Fundo escuro e Modal visível
+    <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }} tabIndex="-1">
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content border-0 shadow-lg rounded-4 p-3">
+          
+          <div className="modal-header border-0 d-flex flex-column align-items-center position-relative">
+            <button type="button" className="btn-close position-absolute top-0 end-0 m-2" onClick={onClose}></button>
+            {title && <h5 className="modal-title fw-bold fs-4">{title}</h5>}
+            {subtitle && <h2 className="text-secondary fw-light mt-1">{subtitle}</h2>}
+          </div>
 
-        <div className="options-grid">
-          {options.map((option) => (
-            <button
-              key={option.id}
-              className={`option-btn ${selectedId === option.id ? 'active' : ''}`}
-              onClick={() => setSelectedId(option.id)}
+          <div className="modal-body">
+            <div className="row g-3">
+              {options.map((option) => (
+                <div className="col-6" key={option.id}>
+                  <button
+                    className={`btn w-100 py-3 fw-bold rounded-3 transition-all ${
+                      selectedId === option.id 
+                        ? 'btn-primary shadow' 
+                        : 'btn-info text-white' // Usando info/primary para simular o azul da imagem
+                    }`}
+                    style={{ backgroundColor: selectedId === option.id ? '#065a86' : '#0a7cb9', borderColor: 'transparent' }}
+                    onClick={() => setSelectedId(option.id)}
+                  >
+                    {option.label}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="modal-footer border-0 justify-content-center">
+            <button 
+              className="btn btn-primary rounded-pill px-5 py-2 fw-bold"
+              style={{ backgroundColor: '#0a7cb9', borderColor: '#0a7cb9' }}
+              onClick={handleConfirm}
+              disabled={!selectedId}
             >
-              {option.label}
+              {confirmText}
             </button>
-          ))}
-        </div>
+          </div>
 
-        <div className="modal-footer">
-          <button 
-            className={`confirm-btn ${!selectedId ? 'disabled' : ''}`} 
-            onClick={handleConfirm}
-            disabled={!selectedId}
-          >
-            {confirmText}
-          </button>
         </div>
       </div>
     </div>
@@ -64,7 +74,6 @@ const SelectionModal = ({
 };
 
 export default SelectionModal;
-
 
 /* 
 import SelectionModal from './Components/SelectionModal';
