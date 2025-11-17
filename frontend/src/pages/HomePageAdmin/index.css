@@ -1,0 +1,55 @@
+.homepage-admin-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f5f7fb;
+  display: flex;
+  flex-direction: column;
+}
+
+.homepage-admin-main {
+  flex: 1;
+  text-align: center;
+}
+
+.homepage-admin-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1f2933;
+}
+
+.homepage-admin-subtitle {
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  color: #6c757d;
+}
+
+.route-btn-admin {
+  padding-inline: 3rem;
+  padding-block: 0.9rem;
+  border-radius: 999px;
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgba(13, 110, 253, 0.35);
+}
+
+.route-btn-admin.btn-primary {
+  background-color: #0d98ff;
+  border-color: #0d98ff;
+}
+
+.route-btn-admin.btn-primary:hover {
+  background-color: #0b82d4;
+  border-color: #0b82d4;
+}
+
+.route-btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.homepage-admin-footer {
+  text-align: center;
+  padding: 12px 0;
+  font-size: 0.8rem;
+  color: #6c757d;
+}

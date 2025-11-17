@@ -3,6 +3,7 @@ import SelectService from "./pages/Totem/EscolhaPrioridade/SelectService";
 import GerenciarSenhas from "./pages/Funcionario/GerenciarSenhas";
 import SelectSector from "./pages/Totem/EscolhaSetor/SelectSector";
 import Login from "./pages/Login/index";
+import HomePageAdmin from "./pages/HomePageAdmin";
 import ShowKey from "./pages/Totem/MostrarSenha/ShowKey";
 import HistoricoSenhas from "./pages/Admin/HistoricoSenhas";
 import PainelSenhas from "./pages/PainelSenhas";
@@ -20,8 +21,8 @@ function App() {
         <Route path="/enfermeira/GerenciarSenhas" element={<PasswordDashboard />} />
         <Route path="/toten" element={<SelectService />} />
         <Route path="/sector" element={<SelectSector />} />
+        <Route path="/admin" element={<HomePageAdmin />} /> 
         <Route path="/painel" element={<PainelSenhas />} />
-        <Route path="/admin" element={<h1>Página do Admin</h1>} />
         <Route path="/admin/historicoSenhas" element={<HistoricoSenhas/>} />
         <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
         <Route path="/showkey" element={<ShowKey />} />
