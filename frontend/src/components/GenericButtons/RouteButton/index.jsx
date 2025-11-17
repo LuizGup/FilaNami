@@ -1,3 +1,4 @@
+import "./index.css";
 import { useNavigate } from "react-router-dom";
 
 function RouteButton({ label, to, icon }) {

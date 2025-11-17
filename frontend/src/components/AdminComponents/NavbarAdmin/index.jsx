@@ -1,4 +1,4 @@
-import "./NavbarAdmin.css";
+import "./index.css";
 
 function NavbarAdmin() {
   return (
