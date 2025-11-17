@@ -7,6 +7,7 @@ import HomePageAdmin from "./pages/HomePageAdmin";
 import ShowKey from "./pages/Totem/MostrarSenha/ShowKey";
 import HistoricoSenhas from "./pages/Admin/HistoricoSenhas";
 import PainelSenhas from "./pages/PainelSenhas";
+import HomePageEnfermeira from "./pages/Enfermeira/HomePageEnfermeira";
 import GerenciarSenhasEnfermeira from "./pages/Enfermeira/GerenciarSenhas";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/sign-up" element={<h1>Página de Registro</h1>} />
         <Route path="/user" element={<h1>Página do Funcionario</h1>} />
         <Route path="/user/gerenciar" element={<GerenciarSenhas />} />
+        <Route path="/enfermeira" element={<HomePageEnfermeira />} />
         <Route path="/enfermeira/GerenciarSenhas" element={<GerenciarSenhasEnfermeira />} />
         <Route path="/toten" element={<SelectService />} />
         <Route path="/sector" element={<SelectSector />} />
