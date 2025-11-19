@@ -1,6 +1,6 @@
 const prisma = require("../prisma"); // Ajuste o caminho se necessário
 
-const getAllGuichesModel = async () => {
+const findAllGuiches = async () => {
   const guiches = await prisma.Guiche.findMany({
     orderBy: {
       idGuiche: "asc",
@@ -9,7 +9,7 @@ const getAllGuichesModel = async () => {
   return guiches;
 };
 
-const getGuicheByIdModel = async (id) => {
+const findGuicheById = async (id) => {
   const guiche = await prisma.Guiche.findUnique({
     where: {
       idGuiche: id,
@@ -18,7 +18,7 @@ const getGuicheByIdModel = async (id) => {
   return guiche;
 };
 
-const createGuicheModel = async (numeroGuiche, senha, idSetor) => {
+const createGuiche = async (numeroGuiche, senha, idSetor) => {
   const newGuiche = await prisma.Guiche.create({
     data: {
       numeroGuiche,
@@ -29,7 +29,7 @@ const createGuicheModel = async (numeroGuiche, senha, idSetor) => {
   return newGuiche;
 };
 
-const updateGuicheModel = async (id, dataToUpdate) => {
+const updateGuiche = async (id, dataToUpdate) => {
   const updatedGuiche = await prisma.Guiche.update({
     where: {
       idGuiche: id,
@@ -41,7 +41,7 @@ const updateGuicheModel = async (id, dataToUpdate) => {
   return updatedGuiche;
 };
 
-const deleteGuicheModel = async (id) => {
+const deleteGuiche = async (id) => {
   await prisma.Guiche.delete({
     where: {
       idGuiche: id,
@@ -50,17 +50,9 @@ const deleteGuicheModel = async (id) => {
 };
 
 module.exports = {
-  getAllGuichesModel,
-  getGuicheByIdModel,
-  createGuicheModel,
-  updateGuicheModel,
-  deleteGuicheModel,
+  findAllGuiches,
+  findGuicheById,
+  createGuiche,
+  updateGuiche,
+  deleteGuiche,
 };
-
-
-// json exemplo de criar guiche:
-// {
-//   "numeroGuiche": 1,
-//   "senha": "senha123",
-//   "idSetor": 2
-// }
