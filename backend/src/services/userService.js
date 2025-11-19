@@ -1,8 +1,8 @@
 const {
-  getAllUsersModel,
-  getUserByIdModel,
-  createUserModel,
-  updateUserModel,
-  deleteUserModel,
+  findAllUsers,
+  findUserById,
+  createUser,
+  updateUser,
+  deleteUser,
 } = require("../repositories/userDao");
 

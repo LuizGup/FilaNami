@@ -1,8 +1,8 @@
 const {
-  getAllGuichesModel,
-  getGuicheByIdModel,
-  createGuicheModel,
-  updateGuicheModel,
-  deleteGuicheModel,
+  findAllGuiches,
+  findGuicheById,
+  createGuiche,
+  updateGuiche,
+  deleteGuiche,
 } = require("../repositories/guicheDao");
 

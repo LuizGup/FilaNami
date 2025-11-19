@@ -1,9 +1,8 @@
 // Controller de Setor (Express)
 const {
-  getAllSetoresModel,
-  getSetorByIdModel,
-  getSetorWithGuichesModel,
-  createSetorModel,
-  updateSetorModel,
-  deleteSetorModel,
+  findAllSetores,
+  findSetorById,
+  createSetor,
+  updateSetor,
+  deleteSetor,
 } = require("../repositories/setorDao");

@@ -1,8 +1,7 @@
 const { 
-  create, 
-  callNext, 
-  complete, 
-  getAll, 
-  getById, 
-  remove 
+  findAllSenhas,
+  findSenhaById,
+  createSenha,
+  updateSenha,
+  deleteSenha,
 } = require('../repositories/senhaDao');

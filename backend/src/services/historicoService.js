@@ -1,7 +1,7 @@
 const {
-  getAllHistoricosDao,
-  getHistoricoByIdDao,
-  createHistoricoDao,
-  updateHistoricoDao,
-  deleteHistoricoDao
+  findAllHistoricos,
+  findHistoricoById,
+  createHistorico,
+  updateHistorico,
+  deleteHistorico,
 } = require("../repositories/historicoDao");
