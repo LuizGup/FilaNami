@@ -1,13 +1,7 @@
-// ./src/services/senha.service.js
-
 const prisma = require('../prisma');
 const { StatusSenha } = require('@prisma/client');
 
-/**
- * REQUISITO 1: Criar nova senha
- * (Agora é um DAO puro: apenas insere os dados pré-calculados pelo controller)
- */
-const create = async (data) => {
+const createSenha = async (data) => {
   // O 'data' agora vem completo do controller
   return prisma.senha.create({
     data: data,
@@ -58,7 +52,7 @@ const complete = async (idSenha, data) => {
  * Buscar por ID
  * (Já era um DAO)
  */
-const getById = async (idSenha) => {
+const findSenhaById = async (idSenha) => {
   return prisma.senha.findUnique({
     where: { idSenha: Number(idSenha) },
     include: { guicheAtendente: true },
@@ -69,24 +63,24 @@ const getById = async (idSenha) => {
  * Listar todos com filtros
  * (Agora é um DAO de busca genérico: recebe where, orderBy e take)
  */
-const getAll = async (where, orderBy, take) => {
+const findAllSenhas = async (where, orderBy, take) => {
   return prisma.senha.findMany({
     where: where,
     orderBy: orderBy,
     take: take, // 'take' é usado para limitar resultados (ex: 'pegar só 1')
   });
 };
-const remove = async (idSenha) => {
+const deleteSenha = async (idSenha) => {
   return prisma.senha.delete({
     where: { idSenha: Number(idSenha) },
   });
 };
 
 module.exports = {
-  create,
+  createSenha,
   callNext,
   complete,
-  getById,
-  getAll,
-  remove,
+  findSenhaById,
+  findAllSenhas,
+  deleteSenha,
 };
