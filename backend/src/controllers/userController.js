@@ -6,7 +6,7 @@ const {
   removeUser,
 } = require("../services/userService");
 
-const getAllUsers = async (req, res) => {
+const getAllUsersHandler = async (req, res) => {
   try {
     const users = await getAllUsers();
     res.status(200).json(users);
@@ -15,7 +15,7 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-const getUserById = async (req, res) => {
+const getUserByIdHandler = async (req, res) => {
   const id = parseInt(req.params.id);
   try {
     const user = await getUserById(id);
@@ -29,7 +29,7 @@ const getUserById = async (req, res) => {
   }
 };
 
-const createUser = async (req, res) => {
+const createUserHandler = async (req, res) => {
   const { name, email, password, userType } = req.body;
 
   if (!name || !email || !password || !userType) {
@@ -44,7 +44,7 @@ const createUser = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {
+const updateUserHandler = async (req, res) => {
   const id = parseInt(req.params.id);
   const dataToUpdate = req.body;
 
@@ -59,7 +59,7 @@ const updateUser = async (req, res) => {
   }
 };
 
-const deleteUser = async (req, res) => {
+const deleteUserHandler = async (req, res) => {
   const id = parseInt(req.params.id);
   try {
     const success = await removeUser(id);
@@ -73,9 +73,9 @@ const deleteUser = async (req, res) => {
 };
 
 module.exports = {
-  getAllUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  deleteUser
+  getAllUsersHandler,
+  getUserByIdHandler,
+  createUserHandler,
+  updateUserHandler,
+  deleteUserHandler
 };
