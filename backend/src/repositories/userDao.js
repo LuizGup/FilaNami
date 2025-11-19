@@ -1,6 +1,6 @@
 const prisma = require("../prisma");
 
-const getAllUsersModel = async () => {
+const findAllUsers = async () => {
   const users = await prisma.Usuario.findMany({
     orderBy: {
       id: "asc",
@@ -9,7 +9,7 @@ const getAllUsersModel = async () => {
   return users;
 };
 
-const getUserByIdModel = async (id) => {
+const findUserById = async (id) => {
   const user = await prisma.Usuario.findUnique({
     where: {
       id: id,
@@ -18,7 +18,7 @@ const getUserByIdModel = async (id) => {
   return user;
 };
 
-const createUserModel = async (name, email, password, userType) => {
+const createUser = async (name, email, password, userType) => {
   const newUser = await prisma.Usuario.create({
     data: {
       name,
@@ -30,7 +30,7 @@ const createUserModel = async (name, email, password, userType) => {
   return newUser;
 };
 
-const updateUserModel = async (id, dataToUpdate) => {
+const updateUser = async (id, dataToUpdate) => {
   const updatedUser = await prisma.Usuario.update({
     where: {
       id: id,
@@ -42,7 +42,7 @@ const updateUserModel = async (id, dataToUpdate) => {
   return updatedUser;
 };
 
-const deleteUserModel = async (id) => {
+const deleteUser = async (id) => {
   await prisma.Usuario.delete({
     where: {
       id: id,
@@ -51,9 +51,9 @@ const deleteUserModel = async (id) => {
 };
 
 module.exports = {
-  getAllUsersModel,
-  getUserByIdModel,
-  createUserModel,
-  updateUserModel,
-  deleteUserModel
+  findAllUsers,
+  findUserById,
+  createUser,
+  updateUser,
+  deleteUser
 };
