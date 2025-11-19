@@ -1,31 +1,27 @@
-// Controller de Setor (Express)
 const {
-  getAllSetoresModel,
-  getSetorByIdModel,
-  getSetorWithGuichesModel,
-  createSetorModel,
-  updateSetorModel,
-  deleteSetorModel,
+  selectAllSetores,
+  selectSetorById,
+  selectSetorWithGuiches,
+  insertSetor,
+  updateSetor,
+  deleteSetor,
 } = require("../repositories/setorDao");
 
-// helper simples pra padronizar try/catch em rotas async
 const asyncHandler = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 
-/** GET /setores */
 const listSetores = asyncHandler(async (req, res) => {
-  const setores = await getAllSetoresModel();
+  const setores = await selectAllSetores();
   res.status(200).json({ ok: true, data: setores });
 });
 
-/** GET /setores/:id  (use ?includeGuiches=true para trazer relação) */
 const getSetor = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const includeGuiches = String(req.query.includeGuiches || "").toLowerCase() === "true";
 
   const setor = includeGuiches
-    ? await getSetorWithGuichesModel(id)
-    : await getSetorByIdModel(id);
+    ? await selectSetorWithGuiches(id)
+    : await selectSetorById(id);
 
   if (!setor) {
     return res.status(404).json({ ok: false, message: "Setor não encontrado" });
@@ -34,7 +30,6 @@ const getSetor = asyncHandler(async (req, res) => {
   res.status(200).json({ ok: true, data: setor });
 });
 
-/** POST /setores  { setor } */
 const createSetor = asyncHandler(async (req, res) => {
   const { setor } = req.body;
 
@@ -42,11 +37,10 @@ const createSetor = asyncHandler(async (req, res) => {
     return res.status(400).json({ ok: false, message: "Campo 'setor' é obrigatório" });
   }
 
-  const novo = await createSetorModel(setor.trim());
+  const novo = await insertSetor(setor.trim());
   res.status(201).json({ ok: true, data: novo });
 });
 
-/** PATCH /setores/:id  { setor? } */
 const updateSetor = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const payload = {};
@@ -66,29 +60,27 @@ const updateSetor = asyncHandler(async (req, res) => {
   }
 
   try {
-    const atualizado = await updateSetorModel(id, payload);
+    const atualizado = await updateSetor(id, payload);
     res.status(200).json({ ok: true, data: atualizado });
-  } catch (err) {
-    // P2025 já é tratado no model? Se não, tratamos aqui.
-    if (err?.code === "P2025") {
-      return res.status(404).json({ ok: false, message: "Setor não encontrado" });
-    }
-    throw err; // cai no error handler global
-  }
-});
-
-/** DELETE /setores/:id */
-const deleteSetor = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  try {
-    await deleteSetorModel(id);
   } catch (err) {
     if (err?.code === "P2025") {
       return res.status(404).json({ ok: false, message: "Setor não encontrado" });
     }
     throw err;
   }
-  res.status(204).send(); // sem corpo
+});
+
+const deleteSetor = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    await deleteSetor(id);
+  } catch (err) {
+    if (err?.code === "P2025") {
+      return res.status(404).json({ ok: false, message: "Setor não encontrado" });
+    }
+    throw err;
+  }
+  res.status(204).send();
 });
 
 module.exports = {
