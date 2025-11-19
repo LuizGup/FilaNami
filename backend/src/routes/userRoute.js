@@ -6,7 +6,7 @@ const {
   getUserByIdHandler,
   createUserHandler,
   updateUserHandler,
-  deleteUserHandler,
+  deleteUserHandler
 } = require("../controllers/userController");
 
 router.get("/", getAllUsersHandler);
