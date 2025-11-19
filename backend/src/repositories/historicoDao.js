@@ -1,6 +1,6 @@
 const prisma = require("../prisma");
 
-const findAllHistoricos = async () => {
+const selectAllHistoricos = async () => {
   const historicos = await prisma.Historico.findMany({
     orderBy: {
       idHistorico: "asc",
@@ -14,7 +14,7 @@ const findAllHistoricos = async () => {
   return historicos;
 };
 
-const findHistoricoById = async (id) => {
+const selectHistoricoById = async (id) => {
   const historico = await prisma.Historico.findUnique({
     where: { idHistorico: id },
     include: {
@@ -26,7 +26,7 @@ const findHistoricoById = async (id) => {
   return historico;
 };
 
-const createHistorico = async (idGuiche, idSenha) => {
+const insertHistorico = async (idGuiche, idSenha) => {
   const newHistorico = await prisma.Historico.create({
     data: {
       idGuiche,
@@ -55,9 +55,9 @@ const deleteHistorico = async (id) => {
 };
 
 module.exports = {
-  findAllHistoricos,
-  findHistoricoById,
-  createHistorico,
+  selectAllHistoricos,
+  selectHistoricoById,
+  insertHistorico,
   updateHistorico,
   deleteHistorico,
 };

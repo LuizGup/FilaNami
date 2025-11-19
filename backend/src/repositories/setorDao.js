@@ -1,20 +1,20 @@
 const prisma = require("../prisma");
 
-const findAllSetores = async () => {
+const selectAllSetores = async () => {
   const setores = await prisma.setor.findMany({
     orderBy: { idSetor: "asc" },
   });
   return setores;
 };
 
-const findSetorById = async (idSetor) => {
+const selectSetorById = async (idSetor) => {
   const setor = await prisma.setor.findUnique({
     where: { idSetor: Number(idSetor) },
   });
   return setor;
 };
 
-const createSetor = async (setor) => {
+const insertSetor = async (setor) => {
   const novoSetor = await prisma.setor.create({
     data: { setor },
   });
@@ -35,7 +35,7 @@ const deleteSetor = async (idSetor) => {
   });
 };
 
-const findSetorWithGuiches = async (idSetor) => {
+const selectSetorWithGuiches = async (idSetor) => {
   const setor = await prisma.setor.findUnique({
     where: { idSetor: Number(idSetor) },
     include: { guiches: true },
@@ -44,10 +44,10 @@ const findSetorWithGuiches = async (idSetor) => {
 };
 
 module.exports = {
-  findAllSetores,
-  findSetorById,
-  createSetor,
+  selectAllSetores,
+  selectSetorById,
+  insertSetor,
   updateSetor,
   deleteSetor,
-  findSetorWithGuiches,
+  selectSetorWithGuiches,
 };

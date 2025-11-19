@@ -1,15 +1,15 @@
 const {
-  getAllHistoricosDao,
-  getHistoricoByIdDao,
-  createHistoricoDao,
-  updateHistoricoDao,
-  deleteHistoricoDao
+  selectAllHistoricos,
+  selectHistoricoById,
+  insertHistorico,
+  updateHistorico,
+  deleteHistorico
 } = require("../repositories/historicoDao");
 
 // GET ALL
 const getAllHistoricos = async (req, res) => {
   try {
-    const historicos = await getAllHistoricosDao();
+    const historicos = await selectAllHistoricos();
     return res.status(200).json(historicos);
   } catch (error) {
     console.error("Erro ao buscar históricos:", error);
@@ -21,7 +21,7 @@ const getAllHistoricos = async (req, res) => {
 const getHistoricoById = async (req, res) => {
   try {
     const { id } = req.params;
-    const historico = await getHistoricoByIdDao(Number(id));
+    const historico = await selectHistoricoById(Number(id));
 
     if (!historico) {
       return res.status(404).json({ error: "Histórico não encontrado." });
@@ -35,7 +35,7 @@ const getHistoricoById = async (req, res) => {
 };
 
 // CREATE
-const createHistorico = async (req, res) => {
+const insertHistorico = async (req, res) => {
   try {
     const { idGuiche, idSenha } = req.body;
 
@@ -43,7 +43,7 @@ const createHistorico = async (req, res) => {
       return res.status(400).json({ error: "idGuiche e idSenha são obrigatórios." });
     }
 
-    const novoHistorico = await createHistoricoDao(idGuiche, idSenha);
+    const novoHistorico = await insertHistorico(idGuiche, idSenha);
     return res.status(201).json(novoHistorico);
   } catch (error) {
     console.error("Erro ao criar histórico:", error);
@@ -57,7 +57,7 @@ const updateHistorico = async (req, res) => {
     const { id } = req.params;
     const dataToUpdate = req.body;
 
-    const historicoAtualizado = await updateHistoricoDao(Number(id), dataToUpdate);
+    const historicoAtualizado = await updateHistorico(Number(id), dataToUpdate);
     return res.status(200).json(historicoAtualizado);
   } catch (error) {
     console.error("Erro ao atualizar histórico:", error);
@@ -75,7 +75,7 @@ const deleteHistorico = async (req, res) => {
   try {
     const { id } = req.params;
 
-    await deleteHistoricoDao(Number(id));
+    await deleteHistorico(Number(id));
 
     return res.status(204).send();
   } catch (error) {
@@ -92,7 +92,7 @@ const deleteHistorico = async (req, res) => {
 module.exports = {
   getAllHistoricos,
   getHistoricoById,
-  createHistorico,
+  insertHistorico,
   updateHistorico,
   deleteHistorico,
 };

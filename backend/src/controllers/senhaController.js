@@ -1,4 +1,4 @@
-const { create, callNext, complete, getAll, getById, remove } = require('../repositories/senhaDao'); // Nome do arquivo mudou
+const { createSenha, callNext, complete, selectAllSenhas, selectSenhaById, deleteSenha } = require('../repositories/senhaDao'); // Nome do arquivo mudou
 const { Prioridade, StatusSenha } = require('@prisma/client');
 
 /**
@@ -64,10 +64,10 @@ const createSenha = async (req, res) => {
         dataEmissao: { gte: hoje },
       };
 
-      // 3. Chama o DAO 'getAll' para verificar
+      // 3. Chama o DAO 'selectAllSenhas' para verificar
       // (O seu código original estava sem o 'SenhaService.', estou assumindo que
-      // a função 'getAll' é a do service)
-      const senhasExistentes = await getAll(whereCheck, {}, 1); // take: 1
+      // a função 'selectAllSenhas' é a do service)
+      const senhasExistentes = await selectAllSenhas(whereCheck, {}, 1); // take: 1
 
       // 4. Se não encontrou nenhuma (length 0), o número é válido
       if (senhasExistentes.length === 0) {
@@ -88,13 +88,13 @@ const createSenha = async (req, res) => {
       setorAtual: setorDestino,
     };
 
-    // 3. Chama o DAO 'create' para salvar
-    // (Também assumindo que 'create' é a função do service)
-    const novaSenha = await create(data);
+    // 3. Chama o DAO 'createSenha' para salvar
+    // (Também assumindo que 'createSenha' é a função do service)
+    const novaSenha = await createSenha(data);
 
     // Emissão do Socket.IO
     if (req.io) {
-      req.io.emit('senhaUpdate', { action: 'create', data: novaSenha });
+      req.io.emit('senhaUpdate', { action: 'createSenha', data: novaSenha });
     } else {
       console.error("CONTROLLER ERRO: 'req.io' está UNDEFINED!");
     }
@@ -131,8 +131,8 @@ const callNextSenha = async (req, res) => {
       { dataEmissao: 'asc' }, // A mais antiga primeiro
     ];
 
-    // 2. Chama o DAO 'getAll' genérico para buscar
-    const proximasSenhas = await getAll(where, orderBy, 1);
+    // 2. Chama o DAO 'selectAllSenhas' genérico para buscar
+    const proximasSenhas = await selectAllSenhas(where, orderBy, 1);
     const proximaSenha = proximasSenhas[0];
 
     // --- LÓGICA DE NEGÓCIO: Validação de Fila ---
@@ -200,7 +200,7 @@ const completeSenha = async (req, res) => {
 /**
  * GET /api/senhas
  */
-const getAllSenha = async (req, res) => {
+const selectAllSenhasSenha = async (req, res) => {
   try {
     const { status, setor } = req.query;
 
@@ -211,8 +211,8 @@ const getAllSenha = async (req, res) => {
 
     const orderBy = { dataEmissao: 'desc' };
 
-    // 1. Chama o DAO 'getAll' genérico
-    const senhas = await getAll(where, orderBy);
+    // 1. Chama o DAO 'selectAllSenhas' genérico
+    const senhas = await selectAllSenhas(where, orderBy);
     res.status(200).json(senhas);
   } catch (error) {
     res
@@ -224,12 +224,12 @@ const getAllSenha = async (req, res) => {
 /**
  * GET /api/senhas/:id
  */
-const getByIdSenha = async (req, res) => {
+const selectSenhaByIdSenha = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // 1. Chama o DAO 'getById'
-    const senha = await getById(Number(id));
+    // 1. Chama o DAO 'selectSenhaById'
+    const senha = await selectSenhaById(Number(id));
 
     // --- LÓGICA DE NEGÓCIO: Validação de existência ---
     if (!senha) {
@@ -247,9 +247,9 @@ const removeSenha = async (req, res) => {
     const { id } = req.params;
     const idNum = Number(id);
 
-    // 1. Chama o DAO 'remove'
+    // 1. Chama o DAO 'deleteSenha'
     // O Prisma retorna o objeto que foi deletado
-    const senhaDeletada = await remove(idNum);
+    const senhaDeletada = await deleteSenha(idNum);
 
     // --- LÓGICA DE NEGÓCIO: Emissão do Socket.IO ---
     if (req.io) {
@@ -263,7 +263,7 @@ const removeSenha = async (req, res) => {
       });
     } else {
       console.error(
-        "CONTROLLER ERRO: 'req.io' está UNDEFINED (em remove)!"
+        "CONTROLLER ERRO: 'req.io' está UNDEFINED (em deleteSenha)!"
       );
     }
 
@@ -285,7 +285,7 @@ module.exports = {
   createSenha,
   callNextSenha,
   completeSenha,
-  getAllSenha,
-  getByIdSenha,
+  selectAllSenhasSenha,
+  selectSenhaByIdSenha,
   removeSenha,
 };

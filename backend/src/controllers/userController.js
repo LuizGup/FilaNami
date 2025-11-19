@@ -1,14 +1,14 @@
 const {
-  findAllUsers,
-  findUserById,
-  createUser,
+  selectAllUsers,
+  selectUserById,
+  insertUser,
   updateUser,
   deleteUser,
 } = require("../repositories/userDao");
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await findAllUsers(); 
+    const users = await selectAllUsers(); 
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve users" });
@@ -18,7 +18,7 @@ const getAllUsers = async (req, res) => {
 const getUserById = async (req, res) => {
   const id = parseInt(req.params.id);
   try {
-    const user = await findUserById(id); 
+    const user = await selectUserById(id); 
     if (!user) {
       res.status(404).json({ error: "User not found" });
     } else {
@@ -29,7 +29,7 @@ const getUserById = async (req, res) => {
   }
 };
 
-const createUser = async (req, res) => {
+const insertUser = async (req, res) => {
   const { name, email, password, userType } = req.body;
 
   if (!name || !email || !password || !userType) {
@@ -37,7 +37,7 @@ const createUser = async (req, res) => {
   }
 
   try {
-    const newUser = await createUser(name, email, password, userType); 
+    const newUser = await insertUser(name, email, password, userType); 
     res.status(201).json(newUser);
   } catch (error) {
     res.status(500).json({ error: "Failed to create user" });
@@ -69,7 +69,7 @@ const deleteUser = async (req, res) => {
 module.exports = {
   getAllUsers,
   getUserById,
-  createUser,
+  insertUser,
   updateUser,
   deleteUser
 };

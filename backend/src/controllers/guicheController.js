@@ -1,14 +1,14 @@
 const {
-  getAllGuichesModel,
-  getGuicheByIdModel,
-  createGuicheModel,
-  updateGuicheModel,
-  deleteGuicheModel,
+  selectAllGuiches,
+  selectGuicheById,
+  insertGuiche,
+  updateGuiche,
+  deleteGuiche,
 } = require("../repositories/guicheDao"); // Ajuste o caminho se o nome for guiche.model.js
 
 const getAllGuichesHandler = async (req, res) => {
   try {
-    const guiches = await getAllGuichesModel();
+    const guiches = await selectAllGuiches();
     res.status(200).json(guiches);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve guiches" });
@@ -25,7 +25,7 @@ const getGuicheByIdHandler = async (req, res) => {
   }
 
   try {
-    const guiche = await getGuicheByIdModel(id);
+    const guiche = await selectGuicheById(id);
     if (!guiche) {
       res.status(404).json({ error: "Guiche not found" });
     } else {
@@ -36,7 +36,7 @@ const getGuicheByIdHandler = async (req, res) => {
   }
 };
 
-const createGuicheHandler = async (req, res) => {
+const insertGuicheHandler = async (req, res) => {
   // Campos do modelo Guiche
   const { numeroGuiche, senha, idSetor } = req.body;
 
@@ -50,7 +50,7 @@ const createGuicheHandler = async (req, res) => {
   }
 
   try {
-    const newGuiche = await createGuicheModel(numeroGuiche, senha, idSetor);
+    const newGuiche = await insertGuiche(numeroGuiche, senha, idSetor);
     res.status(201).json(newGuiche);
   } catch (error) {
     res.status(500).json({ error: "Failed to create guiche" });
@@ -67,7 +67,7 @@ const updateGuicheHandler = async (req, res) => {
   }
 
   try {
-    const updatedGuiche = await updateGuicheModel(id, dataToUpdate);
+    const updatedGuiche = await updateGuiche(id, dataToUpdate);
     res.status(200).json(updatedGuiche);
   } catch (error) {
     res.status(500).json({ error: "Failed to update guiche" });
@@ -83,7 +83,7 @@ const deleteGuicheHandler = async (req, res) => {
   }
 
   try {
-    await deleteGuicheModel(id);
+    await deleteGuiche(id);
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ error: "Failed to delete guiche" });
@@ -93,7 +93,7 @@ const deleteGuicheHandler = async (req, res) => {
 module.exports = {
   getAllGuichesHandler,
   getGuicheByIdHandler,
-  createGuicheHandler,
+  insertGuicheHandler,
   updateGuicheHandler,
   deleteGuicheHandler,
 };

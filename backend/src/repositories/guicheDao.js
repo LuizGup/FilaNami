@@ -1,6 +1,6 @@
 const prisma = require("../prisma");
 
-const findAllGuiches = async () => {
+const selectAllGuiches = async () => {
   const guiches = await prisma.Guiche.findMany({
     orderBy: {
       idGuiche: "asc",
@@ -9,7 +9,7 @@ const findAllGuiches = async () => {
   return guiches;
 };
 
-const findGuicheById = async (id) => {
+const selectGuicheById = async (id) => {
   const guiche = await prisma.Guiche.findUnique({
     where: {
       idGuiche: id,
@@ -18,7 +18,7 @@ const findGuicheById = async (id) => {
   return guiche;
 };
 
-const createGuiche = async (numeroGuiche, senha, idSetor) => {
+const insertGuiche = async (numeroGuiche, senha, idSetor) => {
   const newGuiche = await prisma.Guiche.create({
     data: {
       numeroGuiche,
@@ -50,9 +50,9 @@ const deleteGuiche = async (id) => {
 };
 
 module.exports = {
-  findAllGuiches,
-  findGuicheById,
-  createGuiche,
+  selectAllGuiches,
+  selectGuicheById,
+  insertGuiche,
   updateGuiche,
   deleteGuiche,
 };

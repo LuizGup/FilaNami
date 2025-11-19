@@ -52,7 +52,7 @@ const complete = async (idSenha, data) => {
  * Buscar por ID
  * (Já era um DAO)
  */
-const findSenhaById = async (idSenha) => {
+const selectSenhaById = async (idSenha) => {
   return prisma.senha.findUnique({
     where: { idSenha: Number(idSenha) },
     include: { guicheAtendente: true },
@@ -63,7 +63,7 @@ const findSenhaById = async (idSenha) => {
  * Listar todos com filtros
  * (Agora é um DAO de busca genérico: recebe where, orderBy e take)
  */
-const findAllSenhas = async (where, orderBy, take) => {
+const selectAllSenhas = async (where, orderBy, take) => {
   return prisma.senha.findMany({
     where: where,
     orderBy: orderBy,
@@ -80,7 +80,7 @@ module.exports = {
   createSenha,
   callNext,
   complete,
-  findSenhaById,
-  findAllSenhas,
+  selectSenhaById,
+  selectAllSenhas,
   deleteSenha,
 };

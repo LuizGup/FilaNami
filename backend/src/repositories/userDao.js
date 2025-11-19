@@ -1,6 +1,6 @@
 const prisma = require("../prisma");
 
-const findAllUsers = async () => {
+const selectAllUsers = async () => {
   const users = await prisma.Usuario.findMany({
     orderBy: {
       id: "asc",
@@ -9,7 +9,7 @@ const findAllUsers = async () => {
   return users;
 };
 
-const findUserById = async (id) => {
+const selectUserById = async (id) => {
   const user = await prisma.Usuario.findUnique({
     where: {
       id: id,
@@ -18,7 +18,7 @@ const findUserById = async (id) => {
   return user;
 };
 
-const createUser = async (name, email, password, userType) => {
+const insertUser = async (name, email, password, userType) => {
   const newUser = await prisma.Usuario.create({
     data: {
       name,
@@ -51,9 +51,9 @@ const deleteUser = async (id) => {
 };
 
 module.exports = {
-  findAllUsers,
-  findUserById,
-  createUser,
+  selectAllUsers,
+  selectUserById,
+  insertUser,
   updateUser,
   deleteUser
 };
