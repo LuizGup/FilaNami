@@ -1,7 +1,6 @@
-const prisma = require("../prisma"); // ajuste o caminho se necessário
+const prisma = require("../prisma");
 
-// GET ALL
-const getAllHistoricosDao = async () => {
+const findAllHistoricos = async () => {
   const historicos = await prisma.Historico.findMany({
     orderBy: {
       idHistorico: "asc",
@@ -15,8 +14,7 @@ const getAllHistoricosDao = async () => {
   return historicos;
 };
 
-// GET BY ID
-const getHistoricoByIdDao = async (id) => {
+const findHistoricoById = async (id) => {
   const historico = await prisma.Historico.findUnique({
     where: { idHistorico: id },
     include: {
@@ -28,8 +26,7 @@ const getHistoricoByIdDao = async (id) => {
   return historico;
 };
 
-// CREATE
-const createHistoricoDao = async (idGuiche, idSenha) => {
+const createHistorico = async (idGuiche, idSenha) => {
   const newHistorico = await prisma.Historico.create({
     data: {
       idGuiche,
@@ -40,8 +37,7 @@ const createHistoricoDao = async (idGuiche, idSenha) => {
   return newHistorico;
 };
 
-// UPDATE
-const updateHistoricoDao = async (id, dataToUpdate) => {
+const updateHistorico = async (id, dataToUpdate) => {
   const updatedHistorico = await prisma.Historico.update({
     where: { idHistorico: id },
     data: {
@@ -52,17 +48,16 @@ const updateHistoricoDao = async (id, dataToUpdate) => {
   return updatedHistorico;
 };
 
-// DELETE
-const deleteHistoricoDao = async (id) => {
+const deleteHistorico = async (id) => {
   await prisma.Historico.delete({
     where: { idHistorico: id },
   });
 };
 
 module.exports = {
-  getAllHistoricosDao,
-  getHistoricoByIdDao,
-  createHistoricoDao,
-  updateHistoricoDao,
-  deleteHistoricoDao,
+  findAllHistoricos,
+  findHistoricoById,
+  createHistorico,
+  updateHistorico,
+  deleteHistorico,
 };
