@@ -1,30 +1,36 @@
-const userDao = require("../repositories/userDao");
+const {
+  selectAllUsers,
+  selectUserById,
+  insertUser,
+  updateUser,
+  deleteUser
+} = require("../repositories/userDao");
 
 const getAllUsers = async () => {
-  return await userDao.findAllUsers();
+  return await selectAllUsers();
 };
 
 const getUserById = async (id) => {
-  const user = await userDao.findUserById(id);
+  const user = await selectUserById(id);
   return user;
 };
 
 const createUser = async (name, email, password, userType) => {
-  return await userDao.createUser(name, email, password, userType);
+  return await insertUser(name, email, password, userType);
 };
 
-const updateUser = async (id, dataToUpdate) => {
-  const userExists = await userDao.findUserById(id);
+const updateUserData = async (id, dataToUpdate) => {
+  const userExists = await selectUserById(id);
   if (!userExists) return null;
 
-  return await userDao.updateUser(id, dataToUpdate);
+  return await updateUser(id, dataToUpdate);
 };
 
-const deleteUser = async (id) => {
-  const userExists = await userDao.findUserById(id);
+const removeUser = async (id) => {
+  const userExists = await selectUserById(id);
   if (!userExists) return false;
 
-  await userDao.deleteUser(id);
+  await deleteUser(id);
   return true;
 };
 
@@ -32,6 +38,6 @@ module.exports = {
   getAllUsers,
   getUserById,
   createUser,
-  updateUser,
-  deleteUser,
+  updateUserData,
+  removeUser,
 };

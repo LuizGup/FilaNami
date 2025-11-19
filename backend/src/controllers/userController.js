@@ -1,14 +1,14 @@
 const {
-  selectAllUsers,
-  selectUserById,
-  insertUser,
-  updateUser,
-  deleteUser,
-} = require("../repositories/userDao");
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUserData,
+  removeUser,
+} = require("../services/userService");
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await selectAllUsers(); 
+    const users = await getAllUsers();
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve users" });
@@ -18,7 +18,7 @@ const getAllUsers = async (req, res) => {
 const getUserById = async (req, res) => {
   const id = parseInt(req.params.id);
   try {
-    const user = await selectUserById(id); 
+    const user = await getUserById(id);
     if (!user) {
       res.status(404).json({ error: "User not found" });
     } else {
@@ -29,7 +29,7 @@ const getUserById = async (req, res) => {
   }
 };
 
-const insertUser = async (req, res) => {
+const createUser = async (req, res) => {
   const { name, email, password, userType } = req.body;
 
   if (!name || !email || !password || !userType) {
@@ -37,7 +37,7 @@ const insertUser = async (req, res) => {
   }
 
   try {
-    const newUser = await insertUser(name, email, password, userType); 
+    const newUser = await createUser(name, email, password, userType);
     res.status(201).json(newUser);
   } catch (error) {
     res.status(500).json({ error: "Failed to create user" });
@@ -49,7 +49,10 @@ const updateUser = async (req, res) => {
   const dataToUpdate = req.body;
 
   try {
-    const updatedUser = await updateUser(id, dataToUpdate);
+    const updatedUser = await updateUserData(id, dataToUpdate);
+    if (!updatedUser) {
+        return res.status(404).json({ error: "User not found" });
+    }
     res.status(200).json(updatedUser);
   } catch (error) {
     res.status(500).json({ error: "Failed to update user" });
@@ -59,7 +62,10 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   const id = parseInt(req.params.id);
   try {
-    await deleteUser(id);
+    const success = await removeUser(id);
+    if (!success) {
+        return res.status(404).json({ error: "User not found" });
+    }
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ error: "Failed to delete user" });
@@ -69,7 +75,7 @@ const deleteUser = async (req, res) => {
 module.exports = {
   getAllUsers,
   getUserById,
-  insertUser,
+  createUser,
   updateUser,
   deleteUser
 };
