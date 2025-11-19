@@ -1,4 +1,4 @@
-const prisma = require("../prisma"); // Ajuste o caminho se necessário
+const prisma = require("../prisma");
 
 const findAllGuiches = async () => {
   const guiches = await prisma.Guiche.findMany({
