@@ -1,10 +1,8 @@
-// ./src/server.js
-
 const http = require('http');
 const { Server } = require("socket.io");
 const app = require('./app'); 
 
-const portaServidor = process.env.portaServidor || 3000;
+const portaServidor = process.env.PORTA_SERVIDOR || 3000;
 
 const userRoutes = require('./routes/userRoute');
 const senhaRoutes = require('./routes/senhaRoute');
