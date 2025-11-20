@@ -4,7 +4,7 @@ const { Prioridade, StatusSenha } = require('@prisma/client');
 /**
  * POST /api/senhas
  */
-const createSenha = async (req, res) => {
+const createSenhaHandler = async (req, res) => {
   try {
     let { setorDestino, prioridade } = req.body;
 
@@ -200,7 +200,7 @@ const completeSenha = async (req, res) => {
 /**
  * GET /api/senhas
  */
-const selectAllSenhasSenha = async (req, res) => {
+const getAllSenha = async (req, res) => {
   try {
     const { status, setor } = req.query;
 
@@ -224,7 +224,7 @@ const selectAllSenhasSenha = async (req, res) => {
 /**
  * GET /api/senhas/:id
  */
-const selectSenhaByIdSenha = async (req, res) => {
+const getByIdSenha = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -282,10 +282,10 @@ const removeSenha = async (req, res) => {
 };
 
 module.exports = {
-  createSenha,
+  createSenhaHandler,
   callNextSenha,
   completeSenha,
-  selectAllSenhasSenha,
-  selectSenhaByIdSenha,
+  getAllSenha,
+  getByIdSenha,
   removeSenha,
 };

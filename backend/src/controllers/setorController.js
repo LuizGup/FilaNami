@@ -10,12 +10,12 @@ const {
 const asyncHandler = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 
-const listSetores = asyncHandler(async (req, res) => {
+const listSetoresHandler = asyncHandler(async (req, res) => {
   const setores = await selectAllSetores();
   res.status(200).json({ ok: true, data: setores });
 });
 
-const getSetor = asyncHandler(async (req, res) => {
+const getSetorHandler = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const includeGuiches = String(req.query.includeGuiches || "").toLowerCase() === "true";
 
@@ -30,7 +30,7 @@ const getSetor = asyncHandler(async (req, res) => {
   res.status(200).json({ ok: true, data: setor });
 });
 
-const createSetor = asyncHandler(async (req, res) => {
+const createSetorHandler = asyncHandler(async (req, res) => {
   const { setor } = req.body;
 
   if (!setor || typeof setor !== "string" || !setor.trim()) {
@@ -41,7 +41,7 @@ const createSetor = asyncHandler(async (req, res) => {
   res.status(201).json({ ok: true, data: novo });
 });
 
-const updateSetor = asyncHandler(async (req, res) => {
+const updateSetorHandler = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const payload = {};
 
@@ -70,7 +70,7 @@ const updateSetor = asyncHandler(async (req, res) => {
   }
 });
 
-const deleteSetor = asyncHandler(async (req, res) => {
+const deleteSetorHandler = asyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
     await deleteSetor(id);
@@ -84,9 +84,9 @@ const deleteSetor = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
-  listSetores,
-  getSetor,
-  createSetor,
-  updateSetor,
-  deleteSetor,
+  listSetoresHandler,
+  getSetorHandler,
+  createSetorHandler,
+  updateSetorHandler,
+  deleteSetorHandler,
 };
