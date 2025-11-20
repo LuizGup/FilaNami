@@ -110,7 +110,7 @@ const createSenhaHandler = async (req, res) => {
 /**
  * POST /api/senhas/chamar
  */
-const callNextSenha = async (req, res) => {
+const callNextSenhaHandler = async (req, res) => {
   try {
     const { idGuiche, setor } = req.body;
 
@@ -167,7 +167,7 @@ const callNextSenha = async (req, res) => {
 /**
  * PUT /api/senhas/:id/concluir
  */
-const completeSenha = async (req, res) => {
+const completeSenhaHandler = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -200,7 +200,7 @@ const completeSenha = async (req, res) => {
 /**
  * GET /api/senhas
  */
-const getAllSenha = async (req, res) => {
+const getAllSenhaHandler = async (req, res) => {
   try {
     const { status, setor } = req.query;
 
@@ -224,7 +224,7 @@ const getAllSenha = async (req, res) => {
 /**
  * GET /api/senhas/:id
  */
-const getByIdSenha = async (req, res) => {
+const getByIdSenhaHandler = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -242,7 +242,7 @@ const getByIdSenha = async (req, res) => {
       .json({ error: 'Erro ao buscar senha.', details: error.message });
   }
 };
-const removeSenha = async (req, res) => {
+const removeSenhaHandler = async (req, res) => {
   try {
     const { id } = req.params;
     const idNum = Number(id);
@@ -283,9 +283,9 @@ const removeSenha = async (req, res) => {
 
 module.exports = {
   createSenhaHandler,
-  callNextSenha,
-  completeSenha,
-  getAllSenha,
-  getByIdSenha,
-  removeSenha,
+  callNextSenhaHandler,
+  completeSenhaHandler,
+  getAllSenhaHandler,
+  getByIdSenhaHandler,
+  removeSenhaHandler,
 };
