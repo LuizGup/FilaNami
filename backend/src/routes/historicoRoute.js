@@ -5,8 +5,8 @@ const {
   getAllHistoricos,
   getHistoricoById,
   createHistorico,
-  updateHistoricoHandler,
-  deleteHistoricoHandler,
+  updateHistorico,    
+  deleteHistorico,    
 } = require("../controllers/historicoController");
 
 // GET ALL
@@ -19,9 +19,9 @@ router.get("/:id", getHistoricoById);
 router.post("/", createHistorico);
 
 // UPDATE
-router.put("/:id", updateHistoricoHandler);
+router.put("/:id", updateHistorico);
 
 // DELETE
-router.delete("/:id", deleteHistoricoHandler);
+router.delete("/:id", deleteHistorico);
 
 module.exports = router;
