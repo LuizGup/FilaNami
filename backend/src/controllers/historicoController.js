@@ -3,7 +3,7 @@ const historicoService = require("../services/historicoService");
 
 
 // GET ALL
-const getAllHistoricos = async (req, res) => {
+const getAllHistoricosHandler = async (req, res) => {
   try {
     const historicos = await historicoService.getAllHistoricos();
     return res.status(200).json(historicos);
@@ -16,7 +16,7 @@ const getAllHistoricos = async (req, res) => {
 };
 
 // GET BY ID
-const getHistoricoById = async (req, res) => {
+const getHistoricoByIdHandler = async (req, res) => {
   try {
     const { id } = req.params;
     const historico = await historicoService.getHistorico(Number(id));
@@ -33,7 +33,7 @@ const getHistoricoById = async (req, res) => {
 };
 
 // CREATE
-const createHistorico = async (req, res) => {
+const createHistoricoHandler = async (req, res) => {
   try {
     const payload = req.body;
     const novoHistorico = await historicoService.createHistorico(payload);
@@ -47,7 +47,7 @@ const createHistorico = async (req, res) => {
 };
 
 // UPDATE
-const updateHistorico = async (req, res) => {
+const updateHistoricoHandler = async (req, res) => {
   try {
     const { id } = req.params;
     const dataToUpdate = req.body;
@@ -62,7 +62,7 @@ const updateHistorico = async (req, res) => {
 };
 
 // DELETE
-const deleteHistorico = async (req, res) => {
+const deleteHistoricoHandler = async (req, res) => {
   try {
     const { id } = req.params;
     await historicoService.deleteHistorico(Number(id));
@@ -76,9 +76,9 @@ const deleteHistorico = async (req, res) => {
 };
 
 module.exports = {
-  getAllHistoricos,
-  getHistoricoById,
-  createHistorico,
-  updateHistorico,
-  deleteHistorico,
+  getAllHistoricosHandler,
+  getHistoricoByIdHandler,
+  createHistoricoHandler,
+  updateHistoricoHandler,
+  deleteHistoricoHandler,
 };
