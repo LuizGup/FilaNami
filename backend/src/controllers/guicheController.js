@@ -36,7 +36,7 @@ const getGuicheByIdHandler = async (req, res) => {
   }
 };
 
-const insertGuicheHandler = async (req, res) => {
+const createGuicheHandler = async (req, res) => {
   // Campos do modelo Guiche
   const { numeroGuiche, senha, idSetor } = req.body;
 
@@ -93,7 +93,7 @@ const deleteGuicheHandler = async (req, res) => {
 module.exports = {
   getAllGuichesHandler,
   getGuicheByIdHandler,
-  insertGuicheHandler,
+  createGuicheHandler,
   updateGuicheHandler,
   deleteGuicheHandler,
 };

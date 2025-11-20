@@ -35,7 +35,7 @@ const getHistoricoById = async (req, res) => {
 };
 
 // CREATE
-const insertHistorico = async (req, res) => {
+const createHistorico = async (req, res) => {
   try {
     const { idGuiche, idSenha } = req.body;
 
@@ -52,7 +52,7 @@ const insertHistorico = async (req, res) => {
 };
 
 // UPDATE
-const updateHistorico = async (req, res) => {
+const updateHistoricoHandler = async (req, res) => {
   try {
     const { id } = req.params;
     const dataToUpdate = req.body;
@@ -71,7 +71,7 @@ const updateHistorico = async (req, res) => {
 };
 
 // DELETE
-const deleteHistorico = async (req, res) => {
+const deleteHistoricoHandler = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -92,7 +92,7 @@ const deleteHistorico = async (req, res) => {
 module.exports = {
   getAllHistoricos,
   getHistoricoById,
-  insertHistorico,
-  updateHistorico,
-  deleteHistorico,
+  createHistorico,
+  updateHistoricoHandler,
+  deleteHistoricoHandler,
 };
