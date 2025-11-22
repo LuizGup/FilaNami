@@ -6,7 +6,7 @@ const {
   deleteGuiche,
 } = require("../repositories/guicheDao"); // Ajuste o caminho se o nome for guiche.model.js
 
-const getAllGuichesHandler = async (req, res) => {
+const getAllGuiches = async (req, res) => {
   try {
     const guiches = await selectAllGuiches();
     res.status(200).json(guiches);
@@ -15,7 +15,7 @@ const getAllGuichesHandler = async (req, res) => {
   }
 };
 
-const getGuicheByIdHandler = async (req, res) => {
+const getGuiche = async (req, res) => {
   // CORREÇÃO: A sintaxe correta é 'const id = ...'
   const id = parseInt(req.params.id);
 
@@ -36,7 +36,7 @@ const getGuicheByIdHandler = async (req, res) => {
   }
 };
 
-const createGuicheHandler = async (req, res) => {
+const createGuiche = async (req, res) => {
   // Campos do modelo Guiche
   const { numeroGuiche, senha, idSetor } = req.body;
 
@@ -57,8 +57,7 @@ const createGuicheHandler = async (req, res) => {
   }
 };
 
-const updateGuicheHandler = async (req, res) => {
-  // CORREÇÃO: A sintaxe correta é 'const id = ...'
+const updateGuiche = async (req, res) => {
   const id = parseInt(req.params.id);
   const dataToUpdate = req.body;
 
@@ -74,7 +73,7 @@ const updateGuicheHandler = async (req, res) => {
   }
 };
 
-const deleteGuicheHandler = async (req, res) => {
+const deleteGuiche = async (req, res) => {
   // CORREÇÃO: A sintaxe correta é 'const id = ...'
   const id = parseInt(req.params.id);
 
@@ -91,9 +90,9 @@ const deleteGuicheHandler = async (req, res) => {
 };
 
 module.exports = {
-  getAllGuichesHandler,
-  getGuicheByIdHandler,
-  createGuicheHandler,
-  updateGuicheHandler,
-  deleteGuicheHandler,
+  getAllGuiches,
+  getGuicheById,
+  createGuiche,
+  updateGuiche,
+  deleteGuiche,
 };
