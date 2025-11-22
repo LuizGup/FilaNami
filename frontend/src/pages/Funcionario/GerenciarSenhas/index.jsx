@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import { io } from "socket.io-client"; // Importa o socket.io-client
-import api from '../../../services/api';
+
+import {
+  getAllSenhas,
+  chamarProximaSenha,
+  concluirSenha
+} from '../../../services/senhaService';
 
 import NavbarFuncionario from "../../../components/FuncionarioComponents/NavbarFuncionario";
 import CardSenha from "../../../components/FuncionarioComponents/CardSenha";
@@ -13,9 +18,8 @@ function GerenciarSenhas() {
 
   const fetchSenhas = async () => {
     try {
-      const resp = await api.get('/senhas');
-      const data = resp.data || [];
-      setSenhas(data);
+      const data = await getAllSenhas();
+      setSenhas(data || []);
       setLastUpdated(new Date().toLocaleTimeString('pt-BR'));
       console.log("Senhas iniciais carregadas:", data);
     } catch (error) {
@@ -24,16 +28,12 @@ function GerenciarSenhas() {
     }
   };
 
-  // useEffect ATUALIZADO (A SOLUÇÃO ESTÁ AQUI)
+
   useEffect(() => {
-    // 1. Conecta ao socket QUANDO o componente monta
+    
     const socket = io("http://localhost:3000"); 
-
-    // 2. Busca os dados iniciais
-    fetchSenhas();
-
-    // 3. Define o handler de atualização
-    const handleSenhaUpdate = (update) => {
+      fetchSenhas();
+      const handleSenhaUpdate = (update) => {
       const { action, data } = update;
       console.log("Socket: Recebeu evento 'senhaUpdate'", update);
 
@@ -48,25 +48,21 @@ function GerenciarSenhas() {
       }
     };
 
-    // 4. Começa a "escutar" o evento
+
     socket.on('senhaUpdate', handleSenhaUpdate);
 
-    // 5. FUNÇÃO DE LIMPEZA (A MÁGICA)
-    // Isso roda quando o componente "desmonta" (ou recarrega no dev)
     return () => {
       console.log("Desconectando socket...");
-      socket.off('senhaUpdate', handleSenhaUpdate); // Remove o listener
-      socket.disconnect(); // Desconecta o socket
+      socket.off('senhaUpdate', handleSenhaUpdate); 
     };
-  }, []); // O array vazio [] garante que isso rode apenas uma vez por montagem
+  }, []); 
 
 
-  // Handlers (sem 'fetchSenhas')
   const handleChamarProximo = async () => {
     try {
-      // Alguns backends exigem idGuiche e setor. Usamos valores padrão não intrusivos.
-      const resp = await api.post('/senhas/chamar', { idGuiche: 1, setor: 'Atendimento' });
-      console.log('Chamar próximo resposta:', resp.data);
+      const respData = await chamarProximaSenha();
+      console.log('Chamar próximo resposta:', respData);
+      fetchSenhas();
     } catch (error) {
       console.error("Erro no 'handleChamarProximo':", error);
     }
@@ -74,14 +70,15 @@ function GerenciarSenhas() {
 
   const handleConcluir = async (idSenha) => {
     try {
-      const resp = await api.put(`/senhas/${idSenha}/concluir`);
-      console.log('Concluir resposta:', resp.data);
+      const respData = await concluirSenha(idSenha);
+      console.log('Concluir resposta:', respData);
+      // Atualiza a lista após a conclusão
+      fetchSenhas();
     } catch (error) {
       console.error(`Erro ao concluir senha ${idSenha}:`, error);
     }
   };
 
-  // --- O resto do seu componente (filtros e JSX) permanece o mesmo ---
 
   const senhasEsperando = senhas.filter(
     (s) => s.status === "AGUARDANDO"
@@ -170,7 +167,7 @@ function GerenciarSenhas() {
                     numero={senha.senha}
                     status={senha.status}
                     tempo={`Concluída: ${formatarHora(senha.dataConclusao)}`}
-                    guicheLabel="Guichê"
+                    guicheLabel="Guichê:"
                     guicheValor={senha.idGuicheAtendente || 'N/A'}
                   />
                 ))}

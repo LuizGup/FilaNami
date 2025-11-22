@@ -1,33 +1,31 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../../services/authService';
+import api from '../../services/api';
 
-// Vamos hardcodar as cores, já que não estamos usando o .css
 const styles = {
-  // O wrapper que centraliza tudo
   wrapper: {
     minHeight: "100vh",
-    backgroundColor: "#f6f7f8", // Cor de fundo clara
-    padding: "1rem" // Para dar espaço em telas pequenas
+    backgroundColor: "#f6f7f8", 
+    padding: "1rem" 
   },
-  // O card de login
+ 
   container: {
     maxWidth: "28rem",
     padding: "2rem",
-    borderRadius: "1.5rem", // O 'rounded-xl'
+    borderRadius: "1.5rem", 
     backgroundColor: "#ffffff",
   },
-  // O input customizado
+  
   input: {
-    backgroundColor: "#e5e7eb", // Cor de fundo do input
+    backgroundColor: "#e5e7eb", 
   },
-  // O link "esqueci a senha"
+
   forgotLink: {
-    color: "#13a4ec", // Cor primária
+    color: "#13a4ec", 
     textDecoration: "none",
     fontWeight: "500"
   },
-  // Texto do rodapé
+ 
   footerText: {
     fontSize: "0.75rem",
   }
@@ -46,7 +44,16 @@ function Login() {
     setLoading(true);
 
     try {
-      await login(email, password);
+      const response = await api.post('/users', {
+        name: email.split('@')[0],
+        email,
+        password,
+        userType: 'DEFAULT_USER',
+      });
+
+      const user = response.data;
+      const USER_KEY = import.meta.env.VITE_USER_KEY || 'filaNami_user';
+      localStorage.setItem(USER_KEY, JSON.stringify(user));
       // Redireciona para dashboard após login bem-sucedido
       navigate('/user/gerenciar');
     } catch (err) {
