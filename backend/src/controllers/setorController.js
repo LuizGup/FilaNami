@@ -7,15 +7,15 @@ const {
   deleteSetor,
 } = require("../repositories/setorDao");
 
-const asyncHandler = (fn) => (req, res, next) =>
+const async = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 
-const listSetoresHandler = asyncHandler(async (req, res) => {
+const listSetores = asyncHandler(async (req, res) => {
   const setores = await selectAllSetores();
   res.status(200).json({ ok: true, data: setores });
 });
 
-const getSetorHandler = asyncHandler(async (req, res) => {
+const getSetor = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const includeGuiches = String(req.query.includeGuiches || "").toLowerCase() === "true";
 
@@ -30,7 +30,7 @@ const getSetorHandler = asyncHandler(async (req, res) => {
   res.status(200).json({ ok: true, data: setor });
 });
 
-const createSetorHandler = asyncHandler(async (req, res) => {
+const createSetor = asyncHandler(async (req, res) => {
   const { setor } = req.body;
 
   if (!setor || typeof setor !== "string" || !setor.trim()) {
@@ -41,7 +41,7 @@ const createSetorHandler = asyncHandler(async (req, res) => {
   res.status(201).json({ ok: true, data: novo });
 });
 
-const updateSetorHandler = asyncHandler(async (req, res) => {
+const updateSetor = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const payload = {};
 
@@ -70,7 +70,7 @@ const updateSetorHandler = asyncHandler(async (req, res) => {
   }
 });
 
-const deleteSetorHandler = asyncHandler(async (req, res) => {
+const deleteSetor = asyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
     await deleteSetor(id);
@@ -84,9 +84,9 @@ const deleteSetorHandler = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
-  listSetoresHandler,
-  getSetorHandler,
-  createSetorHandler,
-  updateSetorHandler,
-  deleteSetorHandler,
+  listSetores,
+  getSetor,
+  createSetor,
+  updateSetor,
+  deleteSetor,
 };
