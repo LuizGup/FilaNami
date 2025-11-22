@@ -6,7 +6,7 @@ const {
   deleteGuiche,
 } = require("../repositories/guicheDao"); // Ajuste o caminho se o nome for guiche.model.js
 
-const getAllGuiches = async (req, res) => {
+const getAllGuichesHandler = async (req, res) => {
   try {
     const guiches = await selectAllGuiches();
     res.status(200).json(guiches);
@@ -15,7 +15,7 @@ const getAllGuiches = async (req, res) => {
   }
 };
 
-const getGuiche = async (req, res) => {
+const getGuicheByIdHandler = async (req, res) => {
   // CORREÇÃO: A sintaxe correta é 'const id = ...'
   const id = parseInt(req.params.id);
 
@@ -36,7 +36,7 @@ const getGuiche = async (req, res) => {
   }
 };
 
-const createGuiche = async (req, res) => {
+const createGuicheHandler = async (req, res) => {
   // Campos do modelo Guiche
   const { numeroGuiche, senha, idSetor } = req.body;
 
@@ -57,7 +57,7 @@ const createGuiche = async (req, res) => {
   }
 };
 
-const updateGuiche = async (req, res) => {
+const updateGuicheHandler = async (req, res) => {
   const id = parseInt(req.params.id);
   const dataToUpdate = req.body;
 
@@ -73,7 +73,7 @@ const updateGuiche = async (req, res) => {
   }
 };
 
-const deleteGuiche = async (req, res) => {
+const deleteGuicheHandler = async (req, res) => {
   // CORREÇÃO: A sintaxe correta é 'const id = ...'
   const id = parseInt(req.params.id);
 
@@ -90,9 +90,9 @@ const deleteGuiche = async (req, res) => {
 };
 
 module.exports = {
-  getAllGuiches,
-  getGuicheById,
-  createGuiche,
-  updateGuiche,
-  deleteGuiche,
+  getAllGuichesHandler,
+  getGuicheByIdHandler,
+  createGuicheHandler,
+  updateGuicheHandler,
+  deleteGuicheHandler,
 };
