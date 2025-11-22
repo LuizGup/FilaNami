@@ -9,6 +9,7 @@ import HistoricoSenhas from "./pages/Admin/HistoricoSenhas";
 import PainelSenhas from "./pages/PainelSenhas";
 import HomePageEnfermeira from "./pages/Enfermeira/HomePageEnfermeira";
 import GerenciarSenhasEnfermeira from "./pages/Enfermeira/GerenciarSenhas";
+import Telainicial from "./pages/TelaInicial";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/sector" element={<SelectSector />} />
         <Route path="/admin" element={<HomePageAdmin />} /> 
         <Route path="/painel" element={<PainelSenhas />} />
+        <Route path="/telaInicial" element={<Telainicial />} />
         <Route path="/admin/historicoSenhas" element={<HistoricoSenhas/>} />
         <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
         <Route path="/showkey" element={<ShowKey />} />
