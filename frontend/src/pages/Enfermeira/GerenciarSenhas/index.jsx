@@ -1,6 +1,5 @@
 import React from 'react';
 
-// DADOS MOCADOS (Apenas para preencher a tela como na imagem)
 const MOCK_WAITING = [
   { id: 'A-123', estWait: '15 mins' },
   { id: 'A-124', estWait: '20 mins' },
@@ -70,10 +69,9 @@ function GerenciarSenhasEnfermeira() {
         </div>
       </nav>
 
-      {/* 2. Conteúdo Principal (Dashboard) */}
+   
       <div className="container-fluid p-4">
         
-        {/* Título e Atualização */}
         <div className="row mb-3 align-items-center">
           <div className="col">
             <h2 className="mb-0">Status Senha</h2>
@@ -84,9 +82,7 @@ function GerenciarSenhasEnfermeira() {
           </div>
         </div>
 
-        {/* Colunas do Kanban */}
         <div className="row">
-          {/* Coluna 1: Esperando */}
           <div className="col-lg-2 col-md-4 mb-3">
             <h5 className="mb-3 text-secondary">
               <i className="bi bi-trophy fs-5 me-2 text-warning"></i>
@@ -107,7 +103,6 @@ function GerenciarSenhasEnfermeira() {
             ))}
           </div>
 
-          {/* Colunas 2-5: Guiches */}
           {MOCK_COUNTERS.map(counter => (
             <div key={counter.id} className="col-lg-2 col-md-4 mb-3">
               <h5 className="mb-3 text-secondary">
@@ -130,7 +125,6 @@ function GerenciarSenhasEnfermeira() {
             </div>
           ))}
 
-          {/* Coluna 6: Feito */}
           <div className="col-lg-2 col-md-4 mb-3">
             <h5 className="mb-3 text-secondary">
               <i className="bi bi-check-circle fs-5 me-2 text-success"></i>
@@ -154,7 +148,6 @@ function GerenciarSenhasEnfermeira() {
           </div>
         </div>
 
-        {/* 3. Botões de Ação */}
         <div className="fixed-bottom p-4">
           <div className="row">
             <div className="col d-flex justify-content-center gap-3">
