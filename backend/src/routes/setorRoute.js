@@ -1,7 +1,7 @@
 const express = require("express");
 const {
-  listSetoresHandler,
-  getSetorHandler,
+  getAllSetoresHandler,
+  getSetorByIdHandler,
   createSetorHandler,
   updateSetorHandler,
   deleteSetorHandler,
@@ -9,8 +9,8 @@ const {
 
 const router = express.Router();
 
-router.get("/", listSetoresHandler);
-router.get("/:id", getSetorHandler);
+router.get("/", getAllSetoresHandler);
+router.get("/:id", getSetorByIdHandler);
 router.post("/", createSetorHandler);
 router.patch("/:id", updateSetorHandler);
 router.delete("/:id", deleteSetorHandler);
