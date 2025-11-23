@@ -61,7 +61,7 @@ function GerenciarSenhasEnfermeira() {
           </button>
           <div className="collapse navbar-collapse justify-content-end" id="navbarUserContent">
             <img 
-              src="https://via.placeholder.com/40" // Substitua pela foto do usuário
+              src="https://via.placeholder.com/40" 
               className="rounded-circle"
               alt="User"
             />
