@@ -213,9 +213,9 @@
 					"response": []
 				},
 				{
-					"name": "Atualizar Setor (PATCH)",
+					"name": "Atualizar Setor (PUT)",
 					"request": {
-						"method": "PATCH",
+						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
