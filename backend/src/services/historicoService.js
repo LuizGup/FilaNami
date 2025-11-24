@@ -72,7 +72,6 @@ const updateHistoricoService = async (id, dataToUpdate) => {
 
     return atualizado;
   } catch (error) {
-    // repassa erro do DAO (ex: Prisma P2025) ou embrulha genérico
     if (error && error.code) throw error;
     const err = new Error("Erro ao atualizar histórico.");
     err.cause = error;
@@ -90,7 +89,6 @@ const deleteHistoricoService = async (id) => {
   try {
     const result = await deleteHistorico(Number(id));
 
-    // Dependendo do DAO, result pode ser o objeto removido, um boolean, ou undefined/null
     if (result === null || result === undefined) {
       const err = new Error("Histórico não encontrado para exclusão.");
       err.status = 404;
