@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import SelectService from "./pages/Totem/EscolhaPrioridade/SelectService";
+import SelectService from "./pages/Totem/EscolhaPrioridade";
 import GerenciarSenhas from "./pages/Funcionario/GerenciarSenhas";
-import SelectSector from "./pages/Totem/EscolhaSetor/SelectSector";
+import SelectSector from "./pages/Totem/EscolhaSetor";
 import Login from "./pages/Login/index";
 import HomePageAdmin from "./pages/HomePageAdmin";
-import ShowKey from "./pages/Totem/MostrarSenha/ShowKey";
+import ShowKey from "./pages/Totem/MostrarSenha";
 import HistoricoSenhas from "./pages/Admin/HistoricoSenhas";
 import PainelSenhas from "./pages/PainelSenhas";
 import HomePageEnfermeira from "./pages/Enfermeira/HomePageEnfermeira";
