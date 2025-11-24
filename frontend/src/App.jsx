@@ -3,7 +3,7 @@ import SelectService from "./pages/Totem/EscolhaPrioridade";
 import GerenciarSenhas from "./pages/Funcionario/GerenciarSenhas";
 import SelectSector from "./pages/Totem/EscolhaSetor";
 import Login from "./pages/Login/index";
-import HomePageAdmin from "./pages/HomePageAdmin";
+import HomePageAdmin from "./pages/Admin/HomePageAdmin";
 import ShowKey from "./pages/Totem/MostrarSenha";
 import HistoricoSenhas from "./pages/Admin/HistoricoSenhas";
 import PainelSenhas from "./pages/PainelSenhas";

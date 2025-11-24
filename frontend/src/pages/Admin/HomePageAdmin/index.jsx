@@ -1,5 +1,5 @@
-import NavbarAdmin from "../../components/AdminComponents/NavbarAdmin";
-import RouteButton from "../../components/GenericButtons/RouteButton";
+import NavbarAdmin from "../../../components/AdminComponents/NavbarAdmin";
+import RouteButton from "../../../components/GenericButtons/RouteButton";
 
 import "./index.css";
 
