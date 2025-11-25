@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import CardSenha from '../../../components/admin/CardHistoricoSenhas';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Garantindo a importação (se já não tiver no index.js)
-
 const HistoricoSenhas = () => {
   const [passwords] = useState([
     { id: 1, passwordNumber: 'A123', generationTime: '10:00 AM', callTime: '10:15 AM', status: 'Completed' },
