@@ -3,6 +3,7 @@ import SelectService from "./pages/Totem/EscolhaPrioridade";
 import GerenciarSenhas from "./pages/Funcionario/GerenciarSenhas";
 import SelectSector from "./pages/Totem/EscolhaSetor";
 import Login from "./pages/Login/index";
+import LoginGuiche from "./pages/LoginGuiche";
 import HomePageAdmin from "./pages/Admin/HomePageAdmin";
 import ShowKey from "./pages/Totem/MostrarSenha";
 import HistoricoSenhas from "./pages/Admin/HistoricoSenhas";
@@ -17,6 +18,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/loginGui" element={<LoginGuiche />} />
         <Route path="/" element={<Telainicial />} />
         <Route path="/sign-up" element={<h1>Página de Registro</h1>} />
         <Route path="/user" element={<h1>Página do Funcionario</h1>} />

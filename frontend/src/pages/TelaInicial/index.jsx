@@ -28,7 +28,7 @@ const TelaInicial = () => {
       title: "Dashboard Funcionário",
       description: "Acesse para escolher um guichê",
       icon: "bi-person-badge",
-      path: "/HomeFuncionarioSenhas"
+      path: "/loginGui"
     },
     {
       id: 4,
