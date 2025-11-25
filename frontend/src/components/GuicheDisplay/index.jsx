@@ -1,5 +1,3 @@
-
-
 /**
  * Componente: GuicheDisplay
  * ...
@@ -19,10 +17,10 @@ const GuicheDisplay = ({ number, sector, onClick, variant = 'primary', isSelecte
     const cardClasses = `${baseClasses} ${selectionClass}`;
 
     return (
-        <div className="col-12 col-md-4 col-lg-3 mb-4">
+        <div className="col-12 col-md-6 col-lg-4 mb-4">  {/* Ajustado para ocupar mais espaço nas telas maiores */}
             <div 
                 className={cardClasses}
-                style={{ minHeight: '120px', cursor: 'pointer' }} 
+                style={{ minHeight: '150px', width: '160px', cursor: 'pointer' }}  // Ajustado para aumentar a largura do card
                 onClick={onClick}
             >
                 <div className="card-body d-flex flex-column justify-content-center p-3">
