@@ -9,6 +9,7 @@ import HistoricoSenhas from "./pages/Admin/HistoricoSenhas";
 import PainelSenhas from "./pages/PainelSenhas";
 import HomePageEnfermeira from "./pages/Enfermeira/HomePageEnfermeira";
 import GerenciarSenhasEnfermeira from "./pages/Enfermeira/GerenciarSenhas";
+import HomeFuncionario from "./pages/Funcionario/HomeFuncionario";
 import Telainicial from "./pages/TelaInicial";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/user" element={<h1>Página do Funcionario</h1>} />
         <Route path="/user/gerenciar" element={<GerenciarSenhas />} />
         <Route path="/enfermeira" element={<HomePageEnfermeira />} />
+        <Route path="/HomeFuncionarioSenhas" element={<HomeFuncionario />} />
         <Route path="/enfermeira/GerenciarSenhas" element={<GerenciarSenhasEnfermeira />} />
         <Route path="/toten" element={<SelectService />} />
         <Route path="/sector" element={<SelectSector />} />

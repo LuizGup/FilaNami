@@ -28,7 +28,7 @@ const TelaInicial = () => {
       title: "Dashboard Funcionário",
       description: "Acesse para escolher um guichê",
       icon: "bi-person-badge",
-      path: "/user/gerenciar"
+      path: "/HomeFuncionarioSenhas"
     },
     {
       id: 4,
@@ -41,17 +41,17 @@ const TelaInicial = () => {
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-light">
-      
-      <Header 
-        appName="Fila Nami" 
-        iconClass="bi-heart-pulse-fill" 
+
+      <Header
+        appName="Fila Nami"
+        iconClass="bi-heart-pulse-fill"
       />
 
       <main className="flex-grow-1 py-5">
         <div className="container" style={{ maxWidth: '970px' }}>
-            
-       
-          
+
+
+
           <div className="mb-5 px-2">
             <h1 className="display-5 fw-bold text-dark mb-2">Bem vindo!</h1>
             <p className="text-muted lead fs-6">Selecione uma opção para continuar:</p>
@@ -60,7 +60,7 @@ const TelaInicial = () => {
           <div className="row row-cols-1 row-cols-md-2 g-4">
             {menuOptions.map((option) => (
               <div className="col" key={option.id}>
-                <MenuCard 
+                <MenuCard
                   title={option.title}
                   description={option.description}
                   icon={`bi ${option.icon}`}
@@ -70,7 +70,7 @@ const TelaInicial = () => {
             ))}
           </div>
 
-        </div>  
+        </div>
       </main>
 
       <footer className="bg-light border-top py-4 mt-auto">
