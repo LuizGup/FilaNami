@@ -1,13 +1,18 @@
 import api from "./api";
 
-
-/**
- * Busca todas as senhas.
- * Rota: GET /api/senhas
- */
-export const getAllSenhas = async () => {
+export const createSenha = async (setorDestino, prioridade) => {
   try {
-    const response = await api.get('/senhas');
+    const response = await api.post('/senhas', { setorDestino, prioridade });
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao criar senha:", error);
+    throw error;
+  }
+};
+
+export const getAllSenhas = async (filters = {}) => {
+  try {
+    const response = await api.get('/senhas', { params: filters });
     return response.data;
   } catch (error) {
     console.error("Erro ao buscar senhas:", error);
@@ -15,15 +20,22 @@ export const getAllSenhas = async () => {
   }
 };
 
-/**
- * Chama a próxima senha da fila.
- * Rota: POST /api/senhas/chamar
- */
-export const chamarProximaSenha = async () => {
+export const getSenhaById = async (id) => {
   try {
-    // O backend 'callNext' deve encontrar a próxima senha e movê-la
-    // para "EM_ATENDIMENTO", retornando a senha que foi chamada.
-    const response = await api.post('/senhas/chamar');
+    const response = await api.get(`/senhas/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Erro ao buscar senha ${id}:`, error);
+    throw error;
+  }
+};
+
+export const chamarProximaSenha = async (idGuiche, setor) => {
+  try {
+      const response = await api.post('/senhas/chamar', { 
+      idGuiche, 
+      setor 
+    });
     return response.data;
   } catch (error) {
     console.error("Erro ao chamar próxima senha:", error);
@@ -31,17 +43,22 @@ export const chamarProximaSenha = async () => {
   }
 };
 
-/**
- * Conclui o atendimento de uma senha.
- * Rota: PUT /api/senhas/:id/concluir
- * @param {number} id O ID da senha a ser concluída.
- */
 export const concluirSenha = async (id) => {
   try {
-    const response = await api.put(`/senhas/${id}/concluir`);
+    const response = await api.put(`/senhas/${id}`, {});
     return response.data;
   } catch (error) {
     console.error(`Erro ao concluir senha ${id}:`, error);
+    throw error;
+  }
+};
+
+export const deleteSenha = async (id) => {
+  try {
+    const response = await api.delete(`/senhas/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Erro ao deletar senha ${id}:`, error);
     throw error;
   }
 };

@@ -6,13 +6,34 @@ const ShowKey = ({ ticket: propTicket }) => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // ticket pode vir por props, ou por navigate(..., { state: { ticket } })
-  const ticket = propTicket || (location.state && location.state.ticket) || 'AAXX';
+  // --- LÓGICA DE EXTRAÇÃO ---
+  // 1. Tenta pegar do state da navegação (o mais comum vindo do SelectService)
+  const stateTicket = location.state?.ticket;
+
+  // 2. Define o valor a ser exibido.
+  // Se 'stateTicket' for um objeto (vem do backend), pegamos .senha (ex: "C001")
+  // Se for apenas uma string (teste), usamos ela direto.
+  let displayValue = '----';
+  let setorInfo = '';
+  let prioridadeInfo = '';
+
+  if (stateTicket) {
+    if (typeof stateTicket === 'object') {
+        displayValue = stateTicket.senha || 'ERRO';
+        setorInfo = stateTicket.setorDestino;
+        prioridadeInfo = stateTicket.prioridade;
+    } else {
+        displayValue = stateTicket;
+    }
+  } else if (propTicket) {
+      displayValue = propTicket;
+  }
+  // --------------------------
 
   const timeoutRef = useRef(null);
 
   useEffect(() => {
-    // voltar automatico em 5s
+    // Voltar automático para a tela inicial (/toten) em 5 segundos
     timeoutRef.current = setTimeout(() => navigate('/toten'), 5000);
     return () => clearTimeout(timeoutRef.current);
   }, [navigate]);
@@ -20,7 +41,7 @@ const ShowKey = ({ ticket: propTicket }) => {
   return (
     <div className="container-fluid bg-light min-vh-100 d-flex flex-column align-items-center justify-content-center p-4">
 
-      {/* cabeçalho */}
+      {/* Cabeçalho */}
       <div className="text-center mb-4">
         <div className="mb-3">
           <i className="bi bi-shield-fill-check text-primary fs-2"></i>
@@ -29,23 +50,35 @@ const ShowKey = ({ ticket: propTicket }) => {
         <p className="lead text-secondary">Por favor retire sua senha impressa.</p>
       </div>
 
-      {/* cartão central */}
+      {/* Cartão Central */}
       <div className="d-flex flex-column align-items-center">
         <div
-          className="bg-white rounded shadow-sm d-flex align-items-center justify-content-center"
-          style={{ width: 260, height: 260 }}
+          className="bg-white rounded shadow-sm d-flex flex-column align-items-center justify-content-center border"
+          style={{ width: 280, height: 280 }}
         >
-          <div style={{ fontSize: 72, fontWeight: 400, letterSpacing: 6 }}>{ticket}</div>
+          {/* Número da Senha */}
+          <div className="text-primary" style={{ fontSize: 80, fontWeight: 700, letterSpacing: 4, lineHeight: 1 }}>
+            {displayValue}
+          </div>
+          
+          {/* Detalhes extras (Opcional, mas ajuda o usuário) */}
+          {setorInfo && (
+             <span className="badge bg-light text-dark mt-3 border">
+                {setorInfo} • {prioridadeInfo}
+             </span>
+          )}
         </div>
 
-        {/* instruções */}
-        <div className="text-center mt-3">
-          <p className="mb-2 text-secondary">Sua senha foi gerada com sucesso.</p>
-          <div className="mt-2 text-muted small">Aguarde... você será redirecionado em 5 segundos.</div>
+        {/* Instruções */}
+        <div className="text-center mt-4">
+          <p className="mb-2 fw-bold text-success">
+            <i className="bi bi-check-circle-fill me-2"></i>
+            Senha gerada com sucesso!
+          </p>
         </div>
       </div>
 
-      {/* rodapé */}
+      {/* Rodapé */}
       <p className="mt-5 text-muted small">© 2024 NAMI. Todos os direitos reservados.</p>
     </div>
   );
