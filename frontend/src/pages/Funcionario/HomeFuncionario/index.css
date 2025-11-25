@@ -1,0 +1,29 @@
+.homepage-enfermeira-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f7fb; /* fundo cinza claro */
+}
+
+.homepage-enfermeira-main {
+  flex: 1;
+  text-align: center;
+}
+
+.homepage-enfermeira-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1d2939;
+  margin-bottom: 0.5rem;
+}
+
+.homepage-enfermeira-subtitle {
+  font-size: 0.95rem;
+  color: #6b7280;
+}
+
+.homepage-enfermeira-footer {
+  font-size: 0.78rem;
+  text-align: center;
+  padding-bottom: 1.5rem;
+}
