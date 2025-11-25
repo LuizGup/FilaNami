@@ -43,11 +43,13 @@ const generateRandomUniqueTicket = async (prioridade) => {
 };
 
 const getAllSenhas = async (filters) => {
-  const { status, setor } = filters;
+  const { status, setor, idGuiche } = filters; 
   const where = {};
 
   if (status) where.status = status;
   if (setor) where.setorAtual = setor;
+  
+  if (idGuiche) where.idGuicheAtendente = Number(idGuiche); 
 
   return await selectAllSenhas(where, { dataEmissao: 'desc' });
 };
@@ -99,29 +101,89 @@ const removeSenha = async (id) => {
   return await deleteSenha(Number(id));
 };
 
-const callNextService = async (idGuiche, setor) => {
+const callNextService = async (idGuiche, setor, io) => {
   if (!idGuiche || !setor) {
     throw new Error('CAMPOS_OBRIGATORIOS: idGuiche e setor são obrigatórios.');
   }
 
-  const where = {
-    status: StatusSenha.AGUARDANDO,
-    setorAtual: setor,
-  };
+  console.log(`[CALL NEXT] Guichê ${idGuiche} chamando no setor ${setor}...`);
 
-  const orderBy = [
-    { prioridade: 'desc' },
-    { dataEmissao: 'asc' },
+  try {
+    const activeWhere = {
+        idGuicheAtendente: Number(idGuiche),
+        status: StatusSenha.EM_ATENDIMENTO
+    };
+    
+    const activeTickets = await selectAllSenhas(activeWhere, {}, 10); 
+
+    if (activeTickets.length > 0) {
+        for (const ticketAnterior of activeTickets) {
+            // Verifica se o paciente ainda tem que ir para outro lugar
+            const precisaEncaminhar = ticketAnterior.setorDestino && 
+                                      (ticketAnterior.setorDestino !== ticketAnterior.setorAtual);
+
+            if (precisaEncaminhar) {
+                // Encaminha
+                console.log(`➡️ Encaminhando ${ticketAnterior.senha}: ${ticketAnterior.setorAtual} -> ${ticketAnterior.setorDestino}`);
+                const senhaEncaminhada = await updateSenha(ticketAnterior.idSenha, {
+                    status: StatusSenha.AGUARDANDO,
+                    setorAtual: ticketAnterior.setorDestino,
+                    idGuicheAtendente: null
+                });
+                if (io) io.emit('senhaUpdate', { action: 'createSenha', data: senhaEncaminhada });
+            } 
+            else {
+                // Conclui
+                console.log(`✅ Concluindo atendimento de ${ticketAnterior.senha}`);
+                const senhaConcluida = await updateSenha(ticketAnterior.idSenha, {
+                    status: StatusSenha.CONCLUIDO,
+                    dataConclusao: new Date()
+                });
+                if (io) io.emit('senhaUpdate', { action: 'update', data: senhaConcluida });
+            }
+        }
+    }
+  } catch (err) {
+      console.error("Erro ao limpar guichê anterior:", err);
+  }
+
+  const ORDEM_DE_CHAMADA = [
+      Prioridade.PLUSEIGHTY,  
+      Prioridade.PRIORIDADE,  
+      Prioridade.COMUM        
   ];
 
-  const nextTickets = await selectAllSenhas(where, orderBy, 1);
-  const nextTicket = nextTickets[0];
+  let nextTicket = null;
+
+  for (const prioridadeAtual of ORDEM_DE_CHAMADA) {
+      const where = {
+          status: StatusSenha.AGUARDANDO,
+          setorAtual: String(setor),
+          prioridade: prioridadeAtual 
+      };
+
+      const orderBy = { dataEmissao: 'asc' };
+
+      const ticketsEncontrados = await selectAllSenhas(where, orderBy, 1);
+
+      if (ticketsEncontrados.length > 0) {
+          nextTicket = ticketsEncontrados[0];
+          console.log(`🎯 Encontrado ticket de prioridade ${prioridadeAtual}: ${nextTicket.senha}`);
+          break; 
+      }
+  }
 
   if (!nextTicket) {
     throw new Error('FILA_VAZIA: Nenhuma senha aguardando neste setor.');
   }
 
-  return await callNext(nextTicket.idSenha, Number(idGuiche));
+  console.log(`📢 Chamando ${nextTicket.senha} para Guichê ${idGuiche}`);
+  
+  const senhaChamada = await callNext(nextTicket.idSenha, Number(idGuiche));
+  
+  if (io) io.emit('senhaUpdate', { action: 'update', data: senhaChamada });
+
+  return senhaChamada;
 };
 
 module.exports = {

@@ -30,8 +30,10 @@ const callNextSenhaHandler = async (req, res) => {
   try {
     const { idGuiche, setor } = req.body;
 
-    const senhaChamada = await callNextService(idGuiche, setor);
+    // AQUI: Passamos 'req.io' como terceiro argumento
+    const senhaChamada = await callNextService(idGuiche, setor, req.io);
 
+    // Esse socket avisa sobre a NOVA senha (que entrou em atendimento)
     if (req.io) {
       req.io.emit('senhaUpdate', { action: 'update', data: senhaChamada });
     }
