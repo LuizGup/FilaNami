@@ -25,8 +25,7 @@ const SelectionModal = ({
   };
 
   return (
-    // Fundo escuro e Modal visível
-    <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }} tabIndex="-1">
+    <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1050 }} tabIndex="-1">
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content border-0 shadow-lg rounded-4 p-3">
           
@@ -44,9 +43,12 @@ const SelectionModal = ({
                     className={`btn w-100 py-3 fw-bold rounded-3 transition-all ${
                       selectedId === option.id 
                         ? 'btn-primary shadow' 
-                        : 'btn-info text-white' // Usando info/primary para simular o azul da imagem
+                        : 'btn-info text-white'
                     }`}
-                    style={{ backgroundColor: selectedId === option.id ? '#065a86' : '#0a7cb9', borderColor: 'transparent' }}
+                    style={{ 
+                        backgroundColor: selectedId === option.id ? '#065a86' : '#0a7cb9', 
+                        borderColor: 'transparent' 
+                    }}
                     onClick={() => setSelectedId(option.id)}
                   >
                     {option.label}
@@ -74,38 +76,3 @@ const SelectionModal = ({
 };
 
 export default SelectionModal;
-
-/* 
-import SelectionModal from './Components/SelectionModal';
-
-// ... dentro do seu componente pai ...
-
-const [modalOpen, setModalOpen] = useState(false);
-
-// Dados que você quer passar para o componente genérico
-const guicheOptions = [
-  { id: 1, label: 'Guiche 1' },
-  { id: 2, label: 'Guiche 2' },
-  { id: 3, label: 'Guiche 3' },
-  { id: 4, label: 'Guiche 4' },
-];
-
-return (
-  <>
-    <button onClick={() => setModalOpen(true)}>Chamar Senha</button>
-
-    <SelectionModal
-      isOpen={modalOpen}
-      onClose={() => setModalOpen(false)}
-      title="Chamar Senha"
-      subtitle="XX000"
-      options={guicheOptions}       // Passando as opções dinamicamente
-      confirmText="Chamar"          // Texto do botão dinâmico
-      onConfirm={(selectedItem) => {
-        console.log("Item selecionado:", selectedItem);
-        setModalOpen(false);
-      }}
-    />
-  </>
-);
-*/
