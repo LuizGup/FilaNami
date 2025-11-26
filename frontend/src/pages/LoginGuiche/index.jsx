@@ -1,25 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import GuicheDisplay from "../../components/GuicheDisplay";
-import { loginGuiche } from "../../services/guicheService";
-
-// Pode manter esse mock para exibição na tela
-const GUICHES_DISPONIVEIS = [
-    { id: 1, number: "Guichê 1", sector: "Atendimento", variant: "primary" },
-    { id: 2, number: "Guichê 2", sector: "Atendimento", variant: "primary" },
-    { id: 3, number: "Guichê 1", sector: "Exame de Sangue", variant: "primary" },
-];
+import { loginGuiche, getAllGuiches } from "../../services/guicheService";
 
 const LoginFuncionario = () => {
     const navigate = useNavigate();
+
     const [selectedGuicheId, setSelectedGuicheId] = useState(null);
+    const [guiches, setGuiches] = useState([]);
+    const [isLoadingGuiches, setIsLoadingGuiches] = useState(true);
+    const [guicheError, setGuicheError] = useState(null);
 
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
+
+    // 🔄 Buscar guichês reais do backend
+    useEffect(() => {
+        const fetchGuiches = async () => {
+            console.log("🔄 Buscando guichês do backend...");
+            try {
+                const data = await getAllGuiches();
+                console.log("✅ Guichês recebidos do backend (bruto):", data);
+
+                // Mapeia pro formato usado no componente visual
+                const mapeados = data.map((g) => ({
+                    id: g.idGuiche,
+                    number: `Guichê ${g.numeroGuiche}`,
+                    sector: g.setor?.setor || `Setor ${g.idSetor}`,
+                    variant: "primary",
+                }));
+
+                console.log("📦 Guichês mapeados para UI:", mapeados);
+                setGuiches(mapeados);
+                setGuicheError(null);
+            } catch (err) {
+                console.error("❌ Erro ao carregar guichês:", err);
+                setGuicheError("Erro ao carregar guichês. Tente novamente mais tarde.");
+            } finally {
+                setIsLoadingGuiches(false);
+            }
+        };
+
+        fetchGuiches();
+    }, []);
 
     const handleGuicheSelection = (guicheId) => {
         console.log("🔵 Selecionando guichê:", guicheId);
@@ -49,7 +76,6 @@ const LoginFuncionario = () => {
 
             console.log("📥 Resposta do backend:", result);
 
-            // Se quiser guardar o guichê logado em localStorage
             localStorage.setItem("guicheLogado", JSON.stringify(result));
 
             alert("Login no guichê realizado com sucesso!");
@@ -79,17 +105,35 @@ const LoginFuncionario = () => {
                     <p className="text-muted small mt-0">NAMI LOGIN</p>
                 </div>
 
+                {/* LISTA DE GUICHÊS */}
                 <div className="row justify-content-center mb-4">
-                    {GUICHES_DISPONIVEIS.map((guiche) => (
-                        <GuicheDisplay
-                            key={guiche.id}
-                            number={guiche.number}
-                            sector={guiche.sector}
-                            variant={guiche.variant}
-                            onClick={() => handleGuicheSelection(guiche.id)}
-                            isSelected={guiche.id === selectedGuicheId}
-                        />
-                    ))}
+                    {isLoadingGuiches && (
+                        <p className="text-muted text-center">Carregando guichês...</p>
+                    )}
+
+                    {!isLoadingGuiches && guicheError && (
+                        <p className="text-danger text-center">{guicheError}</p>
+                    )}
+
+                    {!isLoadingGuiches && !guicheError && guiches.length === 0 && (
+                        <p className="text-muted text-center">
+                            Nenhum guichê disponível no momento.
+                        </p>
+                    )}
+
+                    {/* 👇 Só mostra os 3 primeiros guichês */}
+                    {!isLoadingGuiches &&
+                        !guicheError &&
+                        guiches.slice(0, 3).map((guiche) => (
+                            <GuicheDisplay
+                                key={guiche.id}
+                                number={guiche.number}
+                                sector={guiche.sector}
+                                variant={guiche.variant}
+                                onClick={() => handleGuicheSelection(guiche.id)}
+                                isSelected={guiche.id === selectedGuicheId}
+                            />
+                        ))}
                 </div>
 
                 {/* FORM LOGIN */}
@@ -112,7 +156,7 @@ const LoginFuncionario = () => {
                         <button
                             type="submit"
                             className="btn btn-primary btn-lg"
-                            disabled={!selectedGuicheId}
+                            disabled={!selectedGuicheId || isLoadingGuiches || !!guicheError}
                         >
                             Login
                         </button>
