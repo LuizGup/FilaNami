@@ -1,44 +1,44 @@
+// frontend/src/services/guicheAuthService.js
 import api from "./api";
 
-// chave usada no localStorage só para o guichê logado
-const GUICHE_STORAGE_KEY = "guicheLogado";
+const GUICHE_TOKEN_KEY = "guiche_token";
+const GUICHE_INFO_KEY = "guiche_info";
 
-// Faz o login do guichê e salva os dados no localStorage
+// Faz login do guichê e salva token + info no localStorage
 export const loginGuiche = async (idGuiche, senha) => {
     try {
-        const response = await api.post("/guiches/auth/login", { idGuiche, senha });
-        // backend retorna: { idGuiche, numeroGuiche, idSetor, setor }
+        const response = await api.post("/guiches/auth/login", {
+            idGuiche,
+            senha,
+        });
 
-        if (response.data) {
-            localStorage.setItem(
-                GUICHE_STORAGE_KEY,
-                JSON.stringify(response.data)
-            );
+        const { token, guiche } = response.data || {};
+
+        if (token) {
+            localStorage.setItem(GUICHE_TOKEN_KEY, token);
+            localStorage.setItem(GUICHE_INFO_KEY, JSON.stringify(guiche));
         }
 
-        return response.data;
+        return { token, guiche };
     } catch (error) {
-        console.error("Erro no login do guichê:", error);
-        // mantém o padrão do userAuthService: repassar o erro pra tela tratar
+        console.error("Erro no login do guichê (front):", error);
         throw error;
     }
 };
 
-// Recupera o guichê logado do localStorage
 export const getGuicheLogado = () => {
-    const raw = localStorage.getItem(GUICHE_STORAGE_KEY);
+    const raw = localStorage.getItem(GUICHE_INFO_KEY);
     if (!raw) return null;
 
     try {
         return JSON.parse(raw);
     } catch {
-        // se der ruim no parse, limpa o storage pra não ficar lixo
-        localStorage.removeItem(GUICHE_STORAGE_KEY);
+        localStorage.removeItem(GUICHE_INFO_KEY);
         return null;
     }
 };
 
-// Faz logout do guichê
 export const logoutGuiche = () => {
-    localStorage.removeItem(GUICHE_STORAGE_KEY);
+    localStorage.removeItem(GUICHE_TOKEN_KEY);
+    localStorage.removeItem(GUICHE_INFO_KEY);
 };

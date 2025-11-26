@@ -1,9 +1,13 @@
 const prisma = require("../prisma");
 
 const selectAllGuiches = async () => {
+  // já traz o setor junto pra exibir no front
   const guiches = await prisma.Guiche.findMany({
     orderBy: {
       idGuiche: "asc",
+    },
+    include: {
+      setor: true,
     },
   });
   return guiches;
@@ -13,6 +17,9 @@ const selectGuicheById = async (id) => {
   const guiche = await prisma.Guiche.findUnique({
     where: {
       idGuiche: id,
+    },
+    include: {
+      setor: true,
     },
   });
   return guiche;
@@ -24,8 +31,8 @@ const selectGuicheProfileById = async (id) => {
       idGuiche: id,
     },
     select: {
-      idSetor,
-      numeroGuiche,
+      idSetor: true,
+      numeroGuiche: true,
     },
   });
   return guiche;
