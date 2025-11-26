@@ -1,4 +1,6 @@
 const prisma = require("../prisma");
+const bcrypt = require("bcryptjs");
+
 
 const selectAllUsers = async () => {
   const users = await prisma.Usuario.findMany({
@@ -19,11 +21,13 @@ const selectUserById = async (id) => {
 };
 
 const insertUser = async (name, email, password, userType) => {
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   const newUser = await prisma.Usuario.create({
     data: {
       name,
       email,
-      password,
+      password: hashedPassword,
       userType,
     },
   });
@@ -31,6 +35,10 @@ const insertUser = async (name, email, password, userType) => {
 };
 
 const updateUser = async (id, dataToUpdate) => {
+  if (dataToUpdate.password) {
+    dataToUpdate.password = await bcrypt.hash(dataToUpdate.password, 10);
+  }
+
   const updatedUser = await prisma.Usuario.update({
     where: {
       id: id,
