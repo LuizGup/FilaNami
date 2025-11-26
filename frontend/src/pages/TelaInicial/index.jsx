@@ -1,11 +1,6 @@
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-
 import { useNavigate } from 'react-router-dom';
-import Header from "../HeaderFilaNami/Header";
-import MenuCard from "../MenuCard/MenuCard";
-
+import Header from '../../components/HeaderFilaNami/Header';
+import MenuCard from '../../components/MenuCardTelaInicial/MenuCard';
 const TelaInicial = () => {
   const navigate = useNavigate();
   const menuOptions = [
