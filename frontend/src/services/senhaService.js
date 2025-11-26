@@ -43,22 +43,31 @@ export const chamarProximaSenha = async (idGuiche, setor) => {
   }
 };
 
-export const concluirSenha = async (id) => {
-  try {
-    const response = await api.put(`/senhas/${id}`, {});
-    return response.data;
-  } catch (error) {
-    console.error(`Erro ao concluir senha ${id}:`, error);
-    throw error;
-  }
-};
-
 export const deleteSenha = async (id) => {
   try {
     const response = await api.delete(`/senhas/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Erro ao deletar senha ${id}:`, error);
+    throw error;
+  }
+};
+export const getHistoricoDoGuiche = async (idGuiche) => {
+  try {
+    const response = await api.get(`/senhas/historico/${idGuiche}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Erro ao buscar histórico do guichê ${idGuiche}:`, error);
+    throw error;
+  }
+};
+export const concluirSenha = async (id) => {
+  try {
+    // Essa requisição vai cair no novo 'processarAtendimentoHandler'
+    const response = await api.put(`/senhas/${id}/concluir`, {}); 
+    return response.data;
+  } catch (error) {
+    console.error(`Erro ao concluir senha ${id}:`, error);
     throw error;
   }
 };
