@@ -22,20 +22,32 @@ const LoginFuncionario = () => {
     } = useForm();
 
     const handleGuicheSelection = (guicheId) => {
+        console.log("🔵 Selecionando guichê:", guicheId);
         setSelectedGuicheId(guicheId);
     };
 
     const onSubmit = async (data) => {
+        console.log("🔵 Iniciando login...");
+        console.log("➡ Senha digitada:", data.password);
+        console.log("➡ Guichê selecionado:", selectedGuicheId);
+
         if (!selectedGuicheId) {
+            console.warn("⚠ Nenhum guichê selecionado.");
             alert("Por favor, selecione um Guichê disponível para continuar.");
             return;
         }
 
+        const payload = {
+            idGuiche: selectedGuicheId,
+            senha: data.password,
+        };
+
+        console.log("📤 Payload enviado ao backend:", payload);
+
         try {
-            const result = await loginGuiche({
-                guicheId: selectedGuicheId,
-                password: data.password,
-            });
+            const result = await loginGuiche(payload);
+
+            console.log("📥 Resposta do backend:", result);
 
             // Se quiser guardar o guichê logado em localStorage
             localStorage.setItem("guicheLogado", JSON.stringify(result));
@@ -43,8 +55,13 @@ const LoginFuncionario = () => {
             alert("Login no guichê realizado com sucesso!");
             navigate("/HomeFuncionarioSenhas");
         } catch (error) {
-            console.error(error);
-            alert(error.message || "Erro ao fazer login no guichê.");
+            console.error("❌ ERRO NO LOGIN DO GUICHÊ:", error);
+
+            const message =
+                error?.error || error?.message || "Erro ao fazer login no guichê.";
+
+            console.log("❗ Mensagem exibida ao usuário:", message);
+            alert(message);
         }
     };
 

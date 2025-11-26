@@ -1,4 +1,4 @@
-const { selectGuicheForAuth } = require("../repositories/guicheAuthDao");
+const { selectGuicheById } = require("../repositories/guicheDao");
 
 const loginGuiche = async (idGuiche, senha) => {
     if (!idGuiche || !senha) {
@@ -9,7 +9,7 @@ const loginGuiche = async (idGuiche, senha) => {
         throw error;
     }
 
-    const guiche = await selectGuicheForAuth(idGuiche);
+    const guiche = await selectGuicheById(idGuiche);
 
     if (!guiche) {
         const error = new Error("Guichê não encontrado.");

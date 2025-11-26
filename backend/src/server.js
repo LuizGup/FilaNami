@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 app.use('/api/users', userRoutes);
 app.use('/api/senhas', senhaRoutes);
 app.use('/api/guiches', guicheRoutes);
-app.use("/guiches/auth", guicheAuthRoutes);
+app.use("/api/guiches/auth", guicheAuthRoutes);
 app.use('/api/setores', setorRoutes); 
 app.use('/api/historico', historicoRoutes); 
 
