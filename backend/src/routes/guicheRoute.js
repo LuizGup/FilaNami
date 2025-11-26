@@ -7,7 +7,7 @@ const {
   createGuicheHandler,
   updateGuicheHandler,
   deleteGuicheHandler,
-} = require("../controllers/guicheController"); // Ajuste o caminho se necessário
+} = require("../controllers/guicheController"); 
 
 router.get("/", getAllGuichesHandler);
 router.get("/:id", getGuicheByIdHandler);
