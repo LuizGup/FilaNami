@@ -39,7 +39,7 @@ const HistoricoSenhas = () => {
   useEffect(() => {
     const fetchHistorico = async () => {
       try {
-        // 1. Busca todos os dados da rota base
+        
         const response = await axios.get(API_URL); 
         const rawData = response.data;
 
