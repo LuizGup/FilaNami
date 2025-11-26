@@ -10,6 +10,7 @@ const guicheRoutes = require('./routes/guicheRoute');
 const setorRoutes = require('./routes/setorRoute');
 const historicoRoutes = require('./routes/historicoRoute');
 const userAuthRoutes = require('./routes/userAuthRoute');
+const guicheAuthRoutes = require("./routes/guicheAuthRoutes");
 
 const server = http.createServer(app);
 
@@ -29,8 +30,10 @@ app.use('/api/users', userRoutes);
 app.use('/api/auth', userAuthRoutes);
 app.use('/api/senhas', senhaRoutes);
 app.use('/api/guiches', guicheRoutes);
+app.use("/api/guiches/auth", guicheAuthRoutes);
 app.use('/api/setores', setorRoutes); 
 app.use('/api/historico', historicoRoutes); 
+
 
 app.get('/', (req, res) => {
   res.send('Rodando a API da Fila NAMI!');
