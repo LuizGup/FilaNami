@@ -2,6 +2,7 @@
 const {
   selectAllHistoricos,
   selectHistoricoById,
+  selectAllSenhasHistorico, 
   insertHistorico,
   updateHistorico,
   deleteHistorico,
@@ -9,8 +10,12 @@ const {
 
 
 const getAllHistoricos = async () => {
-  // delega para o DAO
   return await selectAllHistoricos();
+};
+
+// FUNÇÃO ADICIONADA
+const getAllSenhasHistorico = async () => {
+  return await selectAllSenhasHistorico();
 };
 
 const getHistorico = async (id) => {
@@ -39,8 +44,8 @@ const createHistorico = async ({ idGuiche, idSenha, ...rest }) => {
   }
 
   const payload = {
-    idGuiche,
-    idSenha,
+    idGuiche: Number(idGuiche),
+    idSenha: Number(idSenha),
     ...rest,
   };
 
@@ -63,13 +68,6 @@ const updateHistoricoService = async (id, dataToUpdate) => {
 
   try {
     const atualizado = await updateHistorico(Number(id), dataToUpdate);
-
-    if (!atualizado) {
-      const err = new Error("Histórico não encontrado para atualização.");
-      err.status = 404;
-      throw err;
-    }
-
     return atualizado;
   } catch (error) {
     if (error && error.code) throw error;
@@ -87,15 +85,8 @@ const deleteHistoricoService = async (id) => {
   }
 
   try {
-    const result = await deleteHistorico(Number(id));
-
-    if (result === null || result === undefined) {
-      const err = new Error("Histórico não encontrado para exclusão.");
-      err.status = 404;
-      throw err;
-    }
-
-    return result;
+    await deleteHistorico(Number(id));
+    return true;
   } catch (error) {
     if (error && error.code) throw error;
     const err = new Error("Erro ao deletar histórico.");
@@ -106,6 +97,7 @@ const deleteHistoricoService = async (id) => {
 
 module.exports = {
   getAllHistoricos,
+  getAllSenhasHistorico, // <--- ADICIONADO
   getHistorico,
   createHistorico,
   updateHistorico: updateHistoricoService,

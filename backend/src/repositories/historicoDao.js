@@ -26,12 +26,30 @@ const selectHistoricoById = async (id) => {
   return historico;
 };
 
-const insertHistorico = async (idGuiche, idSenha) => {
-  const newHistorico = await prisma.Historico.create({
-    data: {
-      idGuiche,
-      idSenha,
+const selectAllSenhasHistorico = async () => {
+  const historicos = await prisma.Historico.findMany({
+    orderBy: {
+      idHistorico: "asc",
     },
+
+    select: {
+      senha: {
+        select: {
+          dataEmissao: true,
+          senha: true,
+          dataConclusao: true,
+          status: true,
+        },
+      },
+    },
+  });
+
+  return historicos;
+};
+
+const insertHistorico = async (data) => {
+  const newHistorico = await prisma.Historico.create({
+    data,
   });
 
   return newHistorico;
@@ -49,14 +67,16 @@ const updateHistorico = async (id, dataToUpdate) => {
 };
 
 const deleteHistorico = async (id) => {
-  await prisma.Historico.delete({
+  const deleted = await prisma.Historico.delete({
     where: { idHistorico: id },
   });
+  return deleted;
 };
 
 module.exports = {
   selectAllHistoricos,
   selectHistoricoById,
+  selectAllSenhasHistorico, // <--- ADICIONADO
   insertHistorico,
   updateHistorico,
   deleteHistorico,

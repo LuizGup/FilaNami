@@ -15,7 +15,21 @@ const getAllHistoricosHandler = async (req, res) => {
   }
 };
 
-// GET BY ID
+
+const getAllSenhasHistoricoHandler = async (req, res) => {
+  try {
+    const senhasHistorico = await historicoService.getAllSenhasHistorico();
+    return res.status(200).json(senhasHistorico);
+  } catch (error) {
+    console.error("Erro ao buscar senhas do histórico:", error);
+    const status = error.status || 500;
+    const message = status === 500 ? "Erro interno ao buscar senhas." : error.message;
+    return res.status(status).json({ error: message });
+  }
+};
+
+
+
 const getHistoricoByIdHandler = async (req, res) => {
   try {
     const { id } = req.params;
@@ -77,6 +91,7 @@ const deleteHistoricoHandler = async (req, res) => {
 
 module.exports = {
   getAllHistoricosHandler,
+  getAllSenhasHistoricoHandler, 
   getHistoricoByIdHandler,
   createHistoricoHandler,
   updateHistoricoHandler,
