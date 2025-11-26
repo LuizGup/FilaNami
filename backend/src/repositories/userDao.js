@@ -20,6 +20,15 @@ const selectUserById = async (id) => {
   return user;
 };
 
+const selectUserByEmail = async (email) => {
+  const user = await prisma.Usuario.findUnique({
+    where: {
+      email: email,
+    },
+  });
+  return user;
+};
+
 const insertUser = async (name, email, password, userType) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -61,6 +70,7 @@ const deleteUser = async (id) => {
 module.exports = {
   selectAllUsers,
   selectUserById,
+  selectUserByEmail,
   insertUser,
   updateUser,
   deleteUser
