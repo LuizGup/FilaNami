@@ -1,76 +1,116 @@
-const { getAllGuiches, getGuicheById, createGuiche, updateGuicheData, removeGuiche } = require("../services/guicheService");
+const {
+  getAllGuiches,
+  getGuicheById,
+  getGuicheProfileById,
+  createGuiche,
+  updateGuicheData,
+  removeGuiche,
+} = require("../services/guicheService");
+
 
 const getAllGuichesHandler = async (req, res) => {
   try {
     const guiches = await getAllGuiches();
-    res.status(200).json(guiches);
+    return res.status(200).json(guiches);
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve guiches" });
+    console.error("[getAllGuichesHandler] Erro:", error);
+    return res.status(500).json({ error: "Failed to retrieve guiches" });
   }
 };
 
 const getGuicheByIdHandler = async (req, res) => {
-  const id = parseInt(req.params.id);
-
-  if (isNaN(id)) {
-    return res.status(400).json({ error: "Invalid ID format" });
-  }
-
   try {
-    const guiche = await getGuicheById(id);
+    const guiche = await getGuicheById(req.params.id);
     return res.status(200).json(guiche);
   } catch (error) {
-    if (error.message === "Guiche not found") {
+    console.error("[getGuicheByIdHandler] Erro:", error);
+
+    if (error.code === "VALIDATION_ERROR") {
+      return res.status(400).json({ error: error.message });
+    }
+
+    if (error.code === "GUICHE_NOT_FOUND") {
       return res.status(404).json({ error: error.message });
     }
-    res.status(500).json({ error: "Failed to retrieve guiche" });
+
+    return res.status(500).json({ error: "Failed to retrieve guiche" });
+  }
+};
+
+const getGuicheProfileByIdHandler = async (req, res) => {
+  try {
+    const guiche = await getGuicheProfileById(req.params.id);
+    return res.status(200).json(guiche);
+  } catch (error) {
+    console.error("[getGuicheProfileByIdHandler] Erro:", error);
+
+    if (error.code === "VALIDATION_ERROR") {
+      return res.status(400).json({ error: error.message });
+    }
+
+    if (error.code === "GUICHE_NOT_FOUND") {
+      return res.status(404).json({ error: error.message });
+    }
+
+    return res.status(500).json({ error: "Failed to retrieve guiche" });
   }
 };
 
 const createGuicheHandler = async (req, res) => {
   try {
     const newGuiche = await createGuiche(req.body);
-    res.status(201).json(newGuiche);
+    return res.status(201).json(newGuiche);
   } catch (error) {
-    if (error.message.includes("required")) {
+    console.error("[createGuicheHandler] Erro:", error);
+
+    if (error.code === "VALIDATION_ERROR" || error.message?.includes("required")) {
       return res.status(400).json({ error: error.message });
     }
-    res.status(500).json({ error: "Failed to create guiche" });
+
+    return res.status(500).json({ error: "Failed to create guiche" });
   }
 };
 
 const updateGuicheHandler = async (req, res) => {
-  const id = parseInt(req.params.id);
-  const dataToUpdate = req.body;
-
-  if (isNaN(id)) {
-    return res.status(400).json({ error: "Invalid ID format" });
-  }
-
   try {
-    const updatedGuiche = await updateGuicheData(id, dataToUpdate);
-    res.status(200).json(updatedGuiche);
+    const updatedGuiche = await updateGuicheData(req.params.id, req.body);
+    return res.status(200).json(updatedGuiche);
   } catch (error) {
-    res.status(500).json({ error: "Failed to update guiche" });
+    console.error("[updateGuicheHandler] Erro:", error);
+
+    if (error.code === "VALIDATION_ERROR") {
+      return res.status(400).json({ error: error.message });
+    }
+
+    if (error.code === "GUICHE_NOT_FOUND") {
+      return res.status(404).json({ error: error.message });
+    }
+
+    return res.status(500).json({ error: "Failed to update guiche" });
   }
 };
 
 const deleteGuicheHandler = async (req, res) => {
-  const id = parseInt(req.params.id);
-
-  if (isNaN(id)) {
-    return res.status(400).json({ error: "Invalid ID format" });
-  }
-
   try {
-    await removeGuiche(id);
-    res.status(204).send();
+    await removeGuiche(req.params.id);
+    return res.status(204).send();
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete guiche" });
+    console.error("[deleteGuicheHandler] Erro:", error);
+
+    if (error.code === "VALIDATION_ERROR") {
+      return res.status(400).json({ error: error.message });
+    }
+
+    if (error.code === "GUICHE_NOT_FOUND") {
+      return res.status(404).json({ error: error.message });
+    }
+
+    return res.status(500).json({ error: "Failed to delete guiche" });
   }
 };
 
 module.exports = {
+  getGuicheProfileByIdHandler,
   getAllGuichesHandler,
   getGuicheByIdHandler,
   createGuicheHandler,

@@ -18,6 +18,19 @@ const selectGuicheById = async (id) => {
   return guiche;
 };
 
+const selectGuicheProfileById = async (id) => {
+  const guiche = await prisma.Guiche.findUnique({
+    where: {
+      idGuiche: id,
+    },
+    select: {
+      idSetor,
+      numeroGuiche,
+    },
+  });
+  return guiche;
+};
+
 const insertGuiche = async (numeroGuiche, senha, idSetor) => {
   const newGuiche = await prisma.Guiche.create({
     data: {
@@ -50,6 +63,7 @@ const deleteGuiche = async (id) => {
 };
 
 module.exports = {
+  selectGuicheProfileById,
   selectAllGuiches,
   selectGuicheById,
   insertGuiche,
