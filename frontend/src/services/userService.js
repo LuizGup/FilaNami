@@ -1,5 +1,15 @@
 import api from "./api";
 
+export const getUserProfile = async (id) => {
+  try {
+    const response = await api.get(`/auth/profile/${id}`); // Ajuste a rota conforme seu backend
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao buscar perfil:", error);
+    throw error;
+  }
+};
+
 export const getAllUsers = async () => {
   try {
     const response = await api.get('/users');

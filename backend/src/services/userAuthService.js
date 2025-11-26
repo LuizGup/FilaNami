@@ -1,12 +1,13 @@
 const {
-  selectUserById,
+  selectUserByEmail, // MUDANÇA: Importar a função correta
   insertUser,
-} = require("../repositories/userDao");
+} = require("../repositories/userDao"); // Ajuste o caminho se necessário
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const login = async (email, password) => {
-  const usuario = await selectUserById(email);
+  // MUDANÇA: Usar selectUserByEmail em vez de selectUserById
+  const usuario = await selectUserByEmail(email);
 
   if (!usuario) {
     throw new Error('Credenciais inválidas');
@@ -39,7 +40,8 @@ const login = async (email, password) => {
 };
 
 const register = async (name, email, password, userType) => {
-  const existingUser = await selectUserById(email);
+  // MUDANÇA: Aqui também deve ser selectUserByEmail para verificar duplicidade
+  const existingUser = await selectUserByEmail(email);
   
   if (existingUser) {
     throw new Error('E-mail já cadastrado.');
@@ -47,12 +49,7 @@ const register = async (name, email, password, userType) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const newUser = await insertUser({
-    name,
-    email,
-    password: hashedPassword,
-    userType: userType || 'DEFAULT_USER',
-  });
+  const newUser = await insertUser(name, email, hashedPassword, userType || 'DEFAULT_USER');
 
   const { password: _, ...userWithoutPassword } = newUser;
   return userWithoutPassword;
