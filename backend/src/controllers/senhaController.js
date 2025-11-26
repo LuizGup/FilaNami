@@ -5,6 +5,10 @@ const {
   updateSenhaData,
   removeSenha,
   callNextService,
+  getHistoricoDoGuiche,
+  getHistoricoDoUsuario,
+  processarAtendimento,
+  getHistoricoPorGuiche,
 } = require('../services/senhaService');
 
 const createSenhaHandler = async (req, res) => {
@@ -107,7 +111,57 @@ const deleteSenhaHandler = async (req, res) => {
     res.status(500).json({ error: 'Erro ao deletar senha.', details: error.message });
   }
 };
+const getHistoricoGuicheHandler = async (req, res) => {
+  try {
+    // MUDANÇA AQUI: req.params em vez de req.query
+    const { idGuiche } = req.params;
 
+    if (!idGuiche) {
+      return res.status(400).json({ error: "ID do Guichê é obrigatório na URL." });
+    }
+
+    // Chama o service normalmente
+    const historico = await getHistoricoPorGuiche(idGuiche);
+
+    res.status(200).json(historico);
+  } catch (error) {
+    console.error("Controller Error:", error);
+    res.status(500).json({ error: 'Erro ao buscar histórico.', details: error.message });
+  }
+};
+
+const processarAtendimentoHandler = async (req, res) => {
+  try {
+    // O nome aqui 'id' TEM QUE SER IGUAL ao nome na rota (/:id/concluir)
+    const { id } = req.params; 
+
+    console.log("Controller recebeu ID:", id); // <--- Debug
+
+    if (!id) {
+        return res.status(400).json({ error: "ID da senha não fornecido na URL." });
+    }
+
+    // Chama o service passando o ID convertido para Número
+    const senhaProcessada = await processarAtendimento(Number(id));
+
+    // Emite o Socket para atualizar as telas
+    if (req.io) {
+      // Se virou AGUARDANDO, é como se tivesse "nascido" na outra fila (createSenha)
+      // Se virou CONCLUIDO, é um update
+      const action = senhaProcessada.status === 'AGUARDANDO' ? 'createSenha' : 'update';
+      
+      req.io.emit('senhaUpdate', { 
+        action: action, 
+        data: senhaProcessada 
+      });
+    }
+
+    res.status(200).json(senhaProcessada);
+  } catch (error) {
+    console.error("Erro ao processar atendimento:", error);
+    res.status(500).json({ error: 'Erro ao processar senha.', details: error.message });
+  }
+};
 module.exports = {
   getAllSenhasHandler,
   getSenhaByIdHandler,
@@ -115,4 +169,6 @@ module.exports = {
   updateSenhaHandler,
   deleteSenhaHandler,
   callNextSenhaHandler,
+  getHistoricoGuicheHandler,
+  processarAtendimentoHandler
 };
