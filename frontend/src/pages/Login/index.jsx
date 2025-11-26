@@ -1,155 +1,106 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../services/api';
+import { AuthContext } from '../../contexts/AuthContext'; // Importa o Contexto
 
 const styles = {
-  wrapper: {
-    minHeight: "100vh",
-    backgroundColor: "#f6f7f8", 
-    padding: "1rem" 
-  },
- 
-  container: {
-    maxWidth: "28rem",
-    padding: "2rem",
-    borderRadius: "1.5rem", 
-    backgroundColor: "#ffffff",
-  },
-  
-  input: {
-    backgroundColor: "#e5e7eb", 
-  },
-
-  forgotLink: {
-    color: "#13a4ec", 
-    textDecoration: "none",
-    fontWeight: "500"
-  },
- 
-  footerText: {
-    fontSize: "0.75rem",
-  }
+  wrapper: { minHeight: "100vh", backgroundColor: "#f6f7f8", padding: "1rem" },
+  container: { maxWidth: "28rem", padding: "2rem", borderRadius: "1.5rem", backgroundColor: "#ffffff" },
+  input: { backgroundColor: "#e5e7eb" },
+  footerText: { fontSize: "0.75rem" }
 };
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [localLoading, setLocalLoading] = useState(false); // Loading local do botão
   const [error, setError] = useState('');
+  
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext); // Pega a função login do contexto
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
+    setLocalLoading(true);
 
     try {
-      const response = await api.post('/users', {
-        name: email.split('@')[0],
-        email,
-        password,
-        userType: 'DEFAULT_USER',
-      });
-
-      const user = response.data;
-      const USER_KEY = import.meta.env.VITE_USER_KEY || 'filaNami_user';
-      localStorage.setItem(USER_KEY, JSON.stringify(user));
-      // Redireciona para dashboard após login bem-sucedido
+      // Usa a função do contexto (que chama o authService)
+      await login(email, password);
+      
+      // Se não der erro, redireciona
       navigate('/user/gerenciar');
     } catch (err) {
-      setError(err.response?.data?.error || 'Erro ao fazer login. Tente novamente.');
-      console.error('Erro de login:', err);
+      // Captura mensagem do backend ou erro genérico
+      const msg = err.response?.data?.error || 'Erro ao fazer login. Verifique suas credenciais.';
+      setError(msg);
     } finally {
-      setLoading(false);
+      setLocalLoading(false);
     }
   };
 
   return (
-    <>
-      <section 
-        className="d-flex align-items-center justify-content-center" 
-        style={styles.wrapper}
-      >
-        <div 
-          className="w-100 bg-white shadow-lg d-flex flex-column gap-4" 
-          style={styles.container}
-        >
+    <section className="d-flex align-items-center justify-content-center" style={styles.wrapper}>
+      <div className="w-100 bg-white shadow-lg d-flex flex-column gap-4" style={styles.container}>
+        
+        <div className="text-center">
+          <h2 className="h2 fw-bold">Login</h2>
+          <p className="text-muted" style={{marginTop: "0.5rem"}}>Acesso destinado ao NAMI</p>
+        </div>
+
+        {error && (
+          <div className="alert alert-danger alert-dismissible fade show" role="alert">
+            {error}
+            <button type="button" className="btn-close" onClick={() => setError('')}></button>
+          </div>
+        )}
+
+        <form className="d-flex flex-column gap-3" onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label className="visually-hidden" htmlFor="email">Email</label>
+            <input
+              className="form-control border-0" 
+              style={styles.input}
+              id="email"
+              placeholder="E-mail"
+              required
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={localLoading}
+            />
+          </div>
           
-          <div className="text-center">
-            <h2 className="h2 fw-bold"> Login</h2>
-            <p className="text-muted" style={{marginTop: "0.5rem"}}>
-            Acesso destinado ao NAMI
-            </p>
+          <div className="mb-3">
+            <label className="visually-hidden" htmlFor="password">Senha</label>
+            <input
+              className="form-control border-0"
+              style={styles.input}
+              id="password"
+              placeholder="Senha"
+              required
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={localLoading}
+            />
           </div>
 
-          {/* Mensagem de erro */}
-          {error && (
-            <div className="alert alert-danger alert-dismissible fade show" role="alert">
-              {error}
-              <button 
-                type="button" 
-                className="btn-close" 
-                onClick={() => setError('')}
-              ></button>
-            </div>
-          )}
+          <div>
+            <button 
+              className="btn btn-primary w-100 fw-bold" 
+              type="submit"
+              disabled={localLoading}
+            >
+              {localLoading ? 'Autenticando...' : 'Login'}
+            </button>
+          </div>
+        </form>
 
-          {/* Formulário */}
-          <form className="d-flex flex-column gap-3" onSubmit={handleSubmit}>
-            
-            {/* Grupo do 1º Input (usando mb-3 do Bootstrap) */}
-            <div className="mb-3">
-              <label className="visually-hidden" htmlFor="employee-id">Email</label>
-              <input
-                // Classe 'form-control' do Bootstrap + 'border-0' para tirar a borda
-                className="form-control border-0" 
-                style={styles.input} // Nosso estilo inline para a cor de fundo
-                id="employee-id"
-                placeholder="E-mail"
-                required
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={loading}
-              />
-            </div>
-            
-            {/* Grupo do 2º Input */}
-            <div className="mb-3">
-              <label className="visually-hidden" htmlFor="password">Password</label>
-              <input
-                className="form-control border-0"
-                style={styles.input}
-                id="password"
-                placeholder="Senha"
-                required
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={loading}
-              />
-            </div>
-
-            {/* Botão de Login */}
-            <div>
-              <button 
-                // Classes do Bootstrap: btn, btn-primary, w-100, fw-bold
-                className="btn btn-primary w-100 fw-bold" 
-                type="submit"
-                disabled={loading}
-              >
-                {loading ? 'Autenticando...' : 'Login'}
-              </button>
-            </div>
-          </form>
-
-          {/* Rodapé */}
-          <p className="text-center text-muted mb-0" style={styles.footerText}>
-            © 2025 Todos os direitos reservados ao NAMI.
-          </p>
-        </div>
-      </section>
-    </>
+        <p className="text-center text-muted mb-0" style={styles.footerText}>
+          © 2025 Todos os direitos reservados ao NAMI.
+        </p>
+      </div>
+    </section>
   );
 }
 
