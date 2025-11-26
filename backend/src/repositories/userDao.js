@@ -20,6 +20,21 @@ const selectUserById = async (id) => {
   return user;
 };
 
+const selectUserProfileById = async (id) => {
+  const user = await prisma.Usuario.findUnique({
+    where: {
+      id: id,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      userType: true,
+    },
+  });
+  return user;
+}
+
 const selectUserByEmail = async (email) => {
   const user = await prisma.Usuario.findUnique({
     where: {
@@ -70,6 +85,7 @@ const deleteUser = async (id) => {
 module.exports = {
   selectAllUsers,
   selectUserById,
+  selectUserProfileById,
   selectUserByEmail,
   insertUser,
   updateUser,

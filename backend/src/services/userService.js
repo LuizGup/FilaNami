@@ -1,6 +1,8 @@
 const {
   selectAllUsers,
   selectUserById,
+  selectUserProfileById,
+  selectUserByEmail,
   insertUser,
   updateUser,
   deleteUser
@@ -14,6 +16,16 @@ const getUserById = async (id) => {
   const user = await selectUserById(id);
   return user;
 };
+
+const getUserProfileById = async (id) => {
+  const userProfile = await selectUserProfileById(id);
+  return userProfile;
+};
+
+const getUserByEmail = async (email) => {
+  const user = await selectUserByEmail(email);
+  return user;
+}
 
 const createUser = async (name, email, password, userType) => {
   return await insertUser(name, email, password, userType);
@@ -37,6 +49,8 @@ const removeUser = async (id) => {
 module.exports = {
   getAllUsers,
   getUserById,
+  getUserProfileById,
+  getUserByEmail,
   createUser,
   updateUserData,
   removeUser,

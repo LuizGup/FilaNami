@@ -9,6 +9,7 @@ const senhaRoutes = require('./routes/senhaRoute');
 const guicheRoutes = require('./routes/guicheRoute');
 const setorRoutes = require('./routes/setorRoute');
 const historicoRoutes = require('./routes/historicoRoute');
+const userAuthRoutes = require('./routes/userAuthRoute');
 const guicheAuthRoutes = require("./routes/guicheAuthRoutes");
 
 const server = http.createServer(app);
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/users', userRoutes);
+app.use('/api/auth', userAuthRoutes);
 app.use('/api/senhas', senhaRoutes);
 app.use('/api/guiches', guicheRoutes);
 app.use("/api/guiches/auth", guicheAuthRoutes);
