@@ -1,11 +1,12 @@
-const prisma = require('../prisma');
+const {
+  selectUserById,
+  insertUser,
+} = require("../repositories/userDao");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const login = async (email, password) => {
-  const usuario = await prisma.usuario.findUnique({
-    where: { email },
-  });
+  const usuario = await selectUserById(email);
 
   if (!usuario) {
     throw new Error('Credenciais inválidas');
@@ -38,7 +39,7 @@ const login = async (email, password) => {
 };
 
 const register = async (name, email, password, userType) => {
-  const existingUser = await prisma.usuario.findUnique({ where: { email } });
+  const existingUser = await selectUserById(email);
   
   if (existingUser) {
     throw new Error('E-mail já cadastrado.');
@@ -46,13 +47,11 @@ const register = async (name, email, password, userType) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const newUser = await prisma.usuario.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-      userType: userType || 'DEFAULT_USER',
-    },
+  const newUser = await insertUser({
+    name,
+    email,
+    password: hashedPassword,
+    userType: userType || 'DEFAULT_USER',
   });
 
   const { password: _, ...userWithoutPassword } = newUser;

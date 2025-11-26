@@ -1,4 +1,4 @@
-const { login, register } = require('../services/auth.service');
+const { login, register } = require('../services/userAuthService');
 
 const loginHandler = async (req, res) => {
   const { email, password } = req.body;
