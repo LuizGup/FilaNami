@@ -1,3 +1,4 @@
+// src/controllers/guicheController.js
 const {
   getAllGuiches,
   getGuicheById,
@@ -7,13 +8,12 @@ const {
   removeGuiche,
 } = require("../services/guicheService");
 
-
 const getAllGuichesHandler = async (req, res) => {
   try {
     const guiches = await getAllGuiches();
     return res.status(200).json(guiches);
   } catch (error) {
-    console.error("[getAllGuichesHandler] Erro:", error);
+    console.error("[getAllGuichesHandler]", error);
     return res.status(500).json({ error: "Failed to retrieve guiches" });
   }
 };
@@ -23,12 +23,11 @@ const getGuicheByIdHandler = async (req, res) => {
     const guiche = await getGuicheById(req.params.id);
     return res.status(200).json(guiche);
   } catch (error) {
-    console.error("[getGuicheByIdHandler] Erro:", error);
+    console.error("[getGuicheByIdHandler]", error);
 
     if (error.code === "VALIDATION_ERROR") {
       return res.status(400).json({ error: error.message });
     }
-
     if (error.code === "GUICHE_NOT_FOUND") {
       return res.status(404).json({ error: error.message });
     }
@@ -42,17 +41,16 @@ const getGuicheProfileByIdHandler = async (req, res) => {
     const guiche = await getGuicheProfileById(req.params.id);
     return res.status(200).json(guiche);
   } catch (error) {
-    console.error("[getGuicheProfileByIdHandler] Erro:", error);
+    console.error("[getGuicheProfileByIdHandler]", error);
 
     if (error.code === "VALIDATION_ERROR") {
       return res.status(400).json({ error: error.message });
     }
-
     if (error.code === "GUICHE_NOT_FOUND") {
       return res.status(404).json({ error: error.message });
     }
 
-    return res.status(500).json({ error: "Failed to retrieve guiche" });
+    return res.status(500).json({ error: "Failed to retrieve guiche profile" });
   }
 };
 
@@ -61,9 +59,9 @@ const createGuicheHandler = async (req, res) => {
     const newGuiche = await createGuiche(req.body);
     return res.status(201).json(newGuiche);
   } catch (error) {
-    console.error("[createGuicheHandler] Erro:", error);
+    console.error("[createGuicheHandler]", error);
 
-    if (error.code === "VALIDATION_ERROR" || error.message?.includes("required")) {
+    if (error.code === "VALIDATION_ERROR") {
       return res.status(400).json({ error: error.message });
     }
 
@@ -76,12 +74,11 @@ const updateGuicheHandler = async (req, res) => {
     const updatedGuiche = await updateGuicheData(req.params.id, req.body);
     return res.status(200).json(updatedGuiche);
   } catch (error) {
-    console.error("[updateGuicheHandler] Erro:", error);
+    console.error("[updateGuicheHandler]", error);
 
     if (error.code === "VALIDATION_ERROR") {
       return res.status(400).json({ error: error.message });
     }
-
     if (error.code === "GUICHE_NOT_FOUND") {
       return res.status(404).json({ error: error.message });
     }
@@ -95,12 +92,11 @@ const deleteGuicheHandler = async (req, res) => {
     await removeGuiche(req.params.id);
     return res.status(204).send();
   } catch (error) {
-    console.error("[deleteGuicheHandler] Erro:", error);
+    console.error("[deleteGuicheHandler]", error);
 
     if (error.code === "VALIDATION_ERROR") {
       return res.status(400).json({ error: error.message });
     }
-
     if (error.code === "GUICHE_NOT_FOUND") {
       return res.status(404).json({ error: error.message });
     }
@@ -110,9 +106,9 @@ const deleteGuicheHandler = async (req, res) => {
 };
 
 module.exports = {
-  getGuicheProfileByIdHandler,
   getAllGuichesHandler,
   getGuicheByIdHandler,
+  getGuicheProfileByIdHandler,
   createGuicheHandler,
   updateGuicheHandler,
   deleteGuicheHandler,

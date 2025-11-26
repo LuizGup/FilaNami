@@ -32,7 +32,7 @@ export const createGuiche = async (guicheData) => {
 
 export const updateGuiche = async (id, guicheData) => {
     try {
-        const response = await api.put(`/guiches/${id}`, guicheData);
+        await api.put(`/guiches/${id}`, guicheData);
     } catch (error) {
         console.error(`Erro ao atualizar guichê ${id}:`, error);
         throw error;
@@ -46,18 +46,5 @@ export const deleteGuiche = async (id) => {
     } catch (error) {
         console.error(`Erro ao deletar guichê ${id}:`, error);
         throw error;
-    }
-};
-
-export const loginGuiche = async ({ idGuiche, senha }) => {
-    try {
-        const response = await api.post("/guiches/auth/login", {
-            idGuiche,
-            senha,
-        });
-        return response.data; // { idGuiche, numeroGuiche, idSetor }
-    } catch (error) {
-        console.error("Erro ao fazer login do guichê:", error);
-        throw error.response?.data || error;
     }
 };

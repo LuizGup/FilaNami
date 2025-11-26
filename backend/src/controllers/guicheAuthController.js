@@ -1,27 +1,33 @@
-const { loginGuiche } = require("../services/guicheAuthService");
+// src/controllers/guicheAuthController.js
+const { loginGuicheService } = require("../services/guicheAuthService");
 
 const loginGuicheHandler = async (req, res) => {
-    const { idGuiche, senha } = req.body;
-
     try {
-        const guicheData = await loginGuiche(idGuiche, senha);
-        return res.status(200).json(guicheData);
+        const { idGuiche, senha } = req.body;
+
+        console.log("🔵 [guicheAuthController] Body recebido:", {
+            idGuiche,
+            senhaRecebida: senha,
+        });
+
+        const result = await loginGuicheService(idGuiche, senha);
+
+        console.log("🟢 [guicheAuthController] Login OK, retornando resposta.");
+        return res.status(200).json(result);
     } catch (error) {
-        console.error("Erro ao autenticar guichê:", error.message);
+        console.error("❌ [guicheAuthController] Erro no login:", error);
 
         if (error.code === "VALIDATION_ERROR") {
             return res.status(400).json({ error: error.message });
         }
 
-        if (error.code === "GUICHE_NOT_FOUND") {
-            return res.status(404).json({ error: error.message });
-        }
-
-        if (error.code === "INVALID_CREDENTIALS") {
+        if (error.code === "GUICHE_NOT_FOUND" || error.code === "INVALID_CREDENTIALS") {
             return res.status(401).json({ error: error.message });
         }
 
-        return res.status(500).json({ error: "Erro ao autenticar guichê." });
+        return res
+            .status(500)
+            .json({ error: "Erro interno ao autenticar o guichê." });
     }
 };
 
