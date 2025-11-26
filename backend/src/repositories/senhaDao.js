@@ -10,9 +10,16 @@ const selectAllSenhas = async (where, orderBy, take) => {
 };
 
 const selectSenhaById = async (idSenha) => {
+  // Segurança extra: se chegar undefined aqui, o Prisma explode.
+  if (!idSenha) return null; 
+
   return prisma.senha.findUnique({
-    where: { idSenha: Number(idSenha) },
-    include: { guicheAtendente: true },
+    where: { 
+      idSenha: Number(idSenha) // Garante que é Int pro Prisma
+    },
+    include: {
+      guicheAtendente: true
+    }
   });
 };
 
@@ -35,21 +42,24 @@ const deleteSenha = async (idSenha) => {
   });
 };
 
-const callNext = async (idSenha, idGuiche) => {
+const callNext = async (idSenha, idGuiche, idAtendente) => {
   return prisma.$transaction(async (tx) => {
     const senhaChamada = await tx.senha.update({
       where: { idSenha: idSenha },
       data: {
-        status: StatusSenha.EM_ATENDIMENTO,
+        status: 'EM_ATENDIMENTO',
         idGuicheAtendente: idGuiche,
+        idUsuario: idAtendente, // <--- SALVA QUEM ESTÁ ATENDENDO
       },
       include: { guicheAtendente: true },
     });
 
+    // Opcional: Se quiser salvar no histórico também
     await tx.historico.create({
       data: {
         idGuiche: idGuiche,
         idSenha: idSenha,
+        // idUsuario: idAtendente // Se tiver essa coluna no historico
       },
     });
 
