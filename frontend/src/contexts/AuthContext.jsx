@@ -20,7 +20,6 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const response = await loginService(email, password);
-    console.log("Login bem-sucedido. Usuário recebido:", response.user);
     setUser(response.user);
     
     return response.user;
