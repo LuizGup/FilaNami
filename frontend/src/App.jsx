@@ -24,39 +24,70 @@ function App() {
           <Route path="/login-guiche" element={<LoginGuiche />} />
           <Route path="/" element={<Telainicial />} />
           <Route path="/sign-up" element={<h1>Página de Registro</h1>} />
-          <Route path="/user" element={<h1>Página do Funcionario</h1>} />
-          
+          <Route path="/tela-inicial" element={<Telainicial />} />
 
-          <Route path="/user/gerenciar"element={<GerenciarSenhas />}/>
-          <Route path="/enfermeira/gerenciar"element={<GerenciarSenhasEnfermeira />}/>
+          <Route
+            path="/user"
+            element={
+              <ProtectedRoute role="DEFAULT_USER" routeImProtecting="/user">
+                <HomeFuncionario />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user/gerenciar"
+            element={
+              <ProtectedRoute role="DEFAULT_USER" routeImProtecting="/user/gerenciar">
+                <GerenciarSenhas />
+              </ProtectedRoute>
+            }
+          />
 
-          <Route path="/enfermeira" element={<HomePageEnfermeira />} />
-          <Route path="/home-funcionario-senhas" element={<HomeFuncionario />} />
-          <Route path="/toten" element={<SelectService />} />
-          <Route path="/sector" element={<SelectSector />} />
-          
-          {/* Rotas Protegidas */}
+          <Route
+            path="/enfermeira"
+            element={
+              <ProtectedRoute role="DEFAULT_USER" routeImProtecting="/enfermeira">
+                <HomePageEnfermeira />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/enfermeira/gerenciar"
+            element={
+              <ProtectedRoute
+                role="DEFAULT_USER"
+                routeImProtecting="/enfermeira/gerenciar"
+              >
+                <GerenciarSenhasEnfermeira />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/admin"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute role="ADMIN" routeImProtecting="/admin">
                 <HomePageAdmin />
               </ProtectedRoute>
             }
           />
-          <Route path="/painel" element={<PainelSenhas />} />
-          <Route path="/tela-inicial" element={<Telainicial />} />
-          
           <Route
             path="/admin/historico-senhas"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute
+                role="ADMIN"
+                routeImProtecting="/admin/historico-senhas"
+              >
                 <HistoricoSenhas />
               </ProtectedRoute>
             }
           />
-          <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
+
+          <Route path="/toten" element={<SelectService />} />
+          <Route path="/sector" element={<SelectSector />} />
           <Route path="/showkey" element={<ShowKey />} />
+          <Route path="/painel" element={<PainelSenhas />} />
+
           <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
         </Routes>
       </AuthProvider>
