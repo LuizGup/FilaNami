@@ -29,7 +29,7 @@ function App() {
           <Route
             path="/user"
             element={
-              <ProtectedRoute routeImProtecting="/user">
+              <ProtectedRoute role="DEFAULT_USER" routeImProtecting="/user">
                 <HomeFuncionario />
               </ProtectedRoute>
             }
@@ -37,7 +37,7 @@ function App() {
           <Route
             path="/user/gerenciar"
             element={
-              <ProtectedRoute routeImProtecting="/user/gerenciar">
+              <ProtectedRoute role="DEFAULT_USER" routeImProtecting="/user/gerenciar">
                 <GerenciarSenhas />
               </ProtectedRoute>
             }
@@ -46,7 +46,7 @@ function App() {
           <Route
             path="/enfermeira"
             element={
-              <ProtectedRoute role="enfermeira" routeImProtecting="/enfermeira">
+              <ProtectedRoute role="DEFAULT_USER" routeImProtecting="/enfermeira">
                 <HomePageEnfermeira />
               </ProtectedRoute>
             }
@@ -55,7 +55,7 @@ function App() {
             path="/enfermeira/gerenciar"
             element={
               <ProtectedRoute
-                role="enfermeira"
+                role="DEFAULT_USER"
                 routeImProtecting="/enfermeira/gerenciar"
               >
                 <GerenciarSenhasEnfermeira />
@@ -66,7 +66,7 @@ function App() {
           <Route
             path="/admin"
             element={
-              <ProtectedRoute role="admin" routeImProtecting="/admin">
+              <ProtectedRoute role="ADMIN" routeImProtecting="/admin">
                 <HomePageAdmin />
               </ProtectedRoute>
             }
@@ -75,7 +75,7 @@ function App() {
             path="/admin/historico-senhas"
             element={
               <ProtectedRoute
-                role="admin"
+                role="ADMIN"
                 routeImProtecting="/admin/historico-senhas"
               >
                 <HistoricoSenhas />
