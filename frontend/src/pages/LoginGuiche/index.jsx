@@ -80,7 +80,7 @@ const LoginFuncionario = () => {
             console.log("🟢 [LoginGuiche] Login OK:", { token, guiche });
 
             alert("Login no guichê realizado com sucesso!");
-            navigate("/Home-Funcionario-Senhas");
+            navigate("/user");
         } catch (error) {
             console.error("❌ [LoginGuiche] Erro no login do guichê:", error);
 
