@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../contexts/AuthContext'; // Importa o Contexto
+import { AuthContext } from '../../contexts/AuthContext'; // Ajuste o caminho conforme sua estrutura
 
 const styles = {
   wrapper: { minHeight: "100vh", backgroundColor: "#f6f7f8", padding: "1rem" },
@@ -12,25 +12,31 @@ const styles = {
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [localLoading, setLocalLoading] = useState(false); // Loading local do botão
+  const [localLoading, setLocalLoading] = useState(false);
   const [error, setError] = useState('');
   
+  const { login } = useContext(AuthContext); 
+  
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext); // Pega a função login do contexto
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLocalLoading(true);
-
+    
     try {
-      // Usa a função do contexto (que chama o authService)
-      await login(email, password);
+      const usuarioLogado = await login(email, password);
       
-      // Se não der erro, redireciona
-      navigate('/user/gerenciar');
+      if (usuarioLogado.userType === 'ADMIN') {
+        navigate('/admin');
+      } else if (usuarioLogado.userType === 'DEFAULT_USER') {
+        navigate('/login-guiche');
+      } else {
+        navigate('/');
+      }
+
     } catch (err) {
-      // Captura mensagem do backend ou erro genérico
+      console.error(err);
       const msg = err.response?.data?.error || 'Erro ao fazer login. Verifique suas credenciais.';
       setError(msg);
     } finally {
