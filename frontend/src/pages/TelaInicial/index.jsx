@@ -30,7 +30,7 @@ const TelaInicial = () => {
       title: "Dashboard Admin",
       description: "Dashboard do administrador.",
       icon: "bi-gear-fill",
-      path: "/admin"
+      path: "/login"
     }
   ];
 
