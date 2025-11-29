@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useParams } from "react-router-dom";
+import { useState, useEffect, useCallback, useContext } from 'react';
 import { io } from "socket.io-client";
 import {
   getAllSenhas,
@@ -8,29 +9,32 @@ import {
   deleteSenha
 } from '../../../services/senhaService';
 
+import { AuthContext } from "../../../contexts/AuthContext";
+
 import NavbarFuncionario from "../../../components/FuncionarioComponents/NavbarFuncionario";
 import CardSenha from "../../../components/FuncionarioComponents/CardSenha";
 
 import "./index.css";
 
 function GerenciarSenhas() {
+  const { id } = useParams();
+  
+  const { user } = useContext(AuthContext);
+
   const [senhas, setSenhas] = useState([]);
   const [historicoBanco, setHistoricoBanco] = useState([]);
   const [lastUpdated, setLastUpdated] = useState("Carregando...");
   const [loading, setLoading] = useState(false);
 
-  // ID da senha selecionada para deletar
   const [selectedSenhaId, setSelectedSenhaId] = useState(null);
 
-  const MEU_GUICHE_ID = 1;
-  const MEU_USUARIO_ID = 1;
+  const MEU_USUARIO_ID = user?.id || null; 
   const MEU_SETOR = "Atendimento";
 
-  // ================== BUSCAR LISTA =====================
   const fetchSenhas = useCallback(async () => {
     try {
       const data = await getAllSenhas();
-      setSenhas(data || []);
+      setSenhas(data);
       setLastUpdated(new Date().toLocaleTimeString("pt-BR"));
     } catch (error) {
       console.error("Erro ao buscar senhas:", error);
@@ -38,15 +42,15 @@ function GerenciarSenhas() {
   }, []);
 
   const fetchHistorico = useCallback(async () => {
+    if (!id) return;
     try {
-      const data = await getHistoricoDoGuiche(MEU_GUICHE_ID);
+      const data = await getHistoricoDoGuiche(id);
       setHistoricoBanco(data || []);
     } catch (error) {
       console.error("Erro ao buscar histórico:", error);
     }
-  }, []);
+  }, [id]);
 
-  // ================== SOCKET =====================
   useEffect(() => {
     const socket = io("http://localhost:3000");
 
@@ -55,7 +59,6 @@ function GerenciarSenhas() {
 
     socket.on("senhaUpdate", ({ action }) => {
       fetchSenhas();
-
       if (action === "update") {
         setTimeout(() => fetchHistorico(), 200);
       }
@@ -64,7 +67,6 @@ function GerenciarSenhas() {
     return () => socket.disconnect();
   }, [fetchSenhas, fetchHistorico]);
 
-  // ================== AÇÕES =====================
   const handleChamarProximo = async () => {
     if (loading) return;
 
@@ -75,7 +77,7 @@ function GerenciarSenhas() {
 
     setLoading(true);
     try {
-      await chamarProximaSenha(MEU_GUICHE_ID, MEU_SETOR, MEU_USUARIO_ID);
+      await chamarProximaSenha(Number(id), MEU_SETOR, MEU_USUARIO_ID);
     } catch (error) {
       const msg = error.response?.data?.message || error.message;
       alert("Erro: " + msg);
@@ -86,12 +88,10 @@ function GerenciarSenhas() {
 
   const handleDeletarSenha = async (idSenha) => {
     if (loading) return;
-
     if (!idSenha) {
       alert("⚠️ Nenhuma senha selecionada para deletar!");
       return;
     }
-
     if (!confirm("❗ Confirmar exclusão desta senha?")) return;
 
     setLoading(true);
@@ -115,7 +115,6 @@ function GerenciarSenhas() {
       await concluirSenha(senha.idSenha);
 
       const ehConclusaoReal = senha.setorDestino === MEU_SETOR;
-
       if (ehConclusaoReal) {
         setTimeout(() => fetchHistorico(), 200);
       }
@@ -131,13 +130,12 @@ function GerenciarSenhas() {
       ? new Date(data).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })
       : "-";
 
-  // ================== FILTROS =====================
   const senhasEsperando = senhas.filter(
     (s) => s.status === "AGUARDANDO" && s.setorAtual === MEU_SETOR
   );
 
   const senhaAtualMesa = senhas.filter(
-    (s) => s.status === "EM_ATENDIMENTO" && Number(s.idGuicheAtendente) === MEU_GUICHE_ID
+    (s) => s.status === "EM_ATENDIMENTO" && Number(s.idGuicheAtendente) === Number(id)
   );
 
   const listaFeito = historicoBanco.filter(
@@ -152,7 +150,7 @@ function GerenciarSenhas() {
         <div className="d-flex justify-content-between align-items-center mb-3">
           <div>
             <h2>Gerenciamento de Atendimento</h2>
-            <small className="text-muted">Guichê {MEU_GUICHE_ID} • {MEU_SETOR}</small>
+            <small className="text-muted fw-bold">Operando Guichê {id} • {MEU_SETOR}</small>
           </div>
           <span className="last-updated badge bg-light text-dark border p-2">
             Atualizado: {lastUpdated}
@@ -161,7 +159,6 @@ function GerenciarSenhas() {
 
         <div className="row g-4">
 
-          {/* 1. ESPERANDO */}
           <div className="col-md-4">
             <div className="senha-coluna">
               <div className="coluna-header esperando">
@@ -197,16 +194,18 @@ function GerenciarSenhas() {
             </div>
           </div>
 
-          {/* 2. EM ATENDIMENTO */}
           <div className="col-md-4">
             <div className="senha-coluna border-primary">
               <div className="coluna-header em-atendimento">
-                ▶ Em Atendimento <span>{senhaAtualMesa.length}</span>
+                ▶ Meu Atendimento <span>{senhaAtualMesa.length}</span>
               </div>
 
               <div className="coluna-body">
                 {senhaAtualMesa.length === 0 ? (
-                  <div className="text-center text-muted mt-5">Guichê Livre</div>
+                  <div className="text-center text-muted mt-5">
+                     <i className="bi bi-person-workspace display-4 d-block mb-3"></i>
+                     Guichê Livre
+                  </div>
                 ) : (
                   senhaAtualMesa.map((senha) => (
                     <div key={senha.idSenha}>
@@ -234,7 +233,6 @@ function GerenciarSenhas() {
             </div>
           </div>
 
-          {/* 3. HISTÓRICO */}
           <div className="col-md-4">
             <div className="senha-coluna">
               <div className="coluna-header feito">
@@ -250,7 +248,7 @@ function GerenciarSenhas() {
                     status="CONCLUIDO"
                     tempo={`Fim: ${formatarHora(senha.dataConclusao)}`}
                     guicheLabel="Guichê:"
-                    guicheValor={MEU_GUICHE_ID}
+                    guicheValor={id}
                   />
                 ))}
               </div>
@@ -266,7 +264,7 @@ function GerenciarSenhas() {
           onClick={handleChamarProximo}
           disabled={loading || senhaAtualMesa.length > 0}
         >
-          Chamar Próximo
+          Chamar Próximo (Guichê {id})
         </button>
 
         <button className="btn btn-acao-secondary" disabled={loading}>

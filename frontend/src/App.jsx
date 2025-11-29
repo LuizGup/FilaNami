@@ -35,9 +35,9 @@ function App() {
             }
           />
           <Route
-            path="/user/gerenciar"
+            path="/user/gerenciar/:id"
             element={
-              <ProtectedRoute role="DEFAULT_USER" routeImProtecting="/user/gerenciar">
+              <ProtectedRoute role="DEFAULT_USER" routeImProtecting="/user/gerenciar/:id">
                 <GerenciarSenhas />
               </ProtectedRoute>
             }
@@ -52,11 +52,11 @@ function App() {
             }
           />
           <Route
-            path="/enfermeira/gerenciar"
+            path="/enfermeira/gerenciar/:id"
             element={
               <ProtectedRoute
                 role="DEFAULT_USER"
-                routeImProtecting="/enfermeira/gerenciar"
+                routeImProtecting="/enfermeira/gerenciar/:id"
               >
                 <GerenciarSenhasEnfermeira />
               </ProtectedRoute>

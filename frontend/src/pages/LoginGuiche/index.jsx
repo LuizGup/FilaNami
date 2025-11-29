@@ -6,14 +6,14 @@ import { getAllGuiches } from "../../services/guicheService";
 
 import { AuthContext } from "../../contexts/AuthContext";
 
-const LoginFuncionario = () => {
+const LoginGuiche = () => {
     const navigate = useNavigate();
     
     const { loginGuiche } = useContext(AuthContext);
 
     const [guiches, setGuiches] = useState([]);
     const [selectedGuicheId, setSelectedGuicheId] = useState(null);
-    const [tipoGuiche, setTipoGuiche] = useState("");
+    const [tipoGuiche, setTipoGuiche] = useState(null);
     const [loadingGuiches, setLoadingGuiches] = useState(true);
     const [errorGuiches, setErrorGuiches] = useState("");
 
@@ -26,6 +26,7 @@ const LoginFuncionario = () => {
     useEffect(() => {
         const fetchGuiches = async () => {
             try {
+                console.log("🔄 [LoginGuiche] Buscando guichês do backend...");
                 const data = await getAllGuiches();
                 setGuiches(data);
             } catch (error) {
@@ -39,9 +40,10 @@ const LoginFuncionario = () => {
         fetchGuiches();
     }, []);
 
-    const handleGuicheSelection = (guicheId, tipo) => {
+    const handleGuicheSelection = (guicheId, setorObjeto) => {
         setSelectedGuicheId(guicheId);
-        setTipoGuiche(tipo);
+        setTipoGuiche(setorObjeto);
+        console.log("➡️ [LoginGuiche] Guichê selecionado:", guicheId, setorObjeto);
     };
 
     const onSubmit = async (data) => {
@@ -56,17 +58,24 @@ const LoginFuncionario = () => {
                 data.password
             );
 
-            if(token && guiche) {
-                if (tipoGuiche === "Atendimento") {
-                    navigate("/user");
-                    return;
-                }
-    
-                if (tipoGuiche === "Exame de Sangue") {
-                    navigate("/enfermeira");
-                    return;
-                }
+            console.log("🟢 [LoginGuiche] Login OK no Contexto:", { token, guiche });
+
+            const nomeSetor = tipoGuiche?.setor; 
+            
+            console.log("➡️ [LoginGuiche] Redirecionando. Setor:", nomeSetor);
+
+            if (nomeSetor === "Atendimento") {
+                navigate(`/user/gerenciar/${selectedGuicheId}`);
+                return;
             }
+
+            if (nomeSetor === "Exame de Sangue") {
+                navigate(`/enfermeira/gerenciar/${selectedGuicheId}`);
+                return;
+            }
+
+            navigate(`/user/gerenciar/${selectedGuicheId}`);
+
         } catch (error) {
             console.error("❌ [LoginGuiche] Erro no login do guichê:", error);
 
@@ -113,7 +122,7 @@ const LoginFuncionario = () => {
                                 number={`Guichê ${guiche.numeroGuiche}`}
                                 sector={guiche.setor?.setor || "Setor"}
                                 variant="primary"
-                                onClick={() => handleGuicheSelection(guiche.idGuiche, guiche.setor?.setor || "")}
+                                onClick={() => handleGuicheSelection(guiche.idGuiche, guiche.setor)}
                                 isSelected={guiche.idGuiche === selectedGuicheId}
                             />
                         ))
@@ -154,4 +163,4 @@ const LoginFuncionario = () => {
     );
 };
 
-export default LoginFuncionario;
+export default LoginGuiche;
