@@ -48,6 +48,8 @@ export const AuthProvider = ({ children }) => {
     
     setGuiche(response.guiche);
 
+    console.log("🟢 [AuthContext] Guichê logado com sucesso:", response);
+
     return response;
   };
 

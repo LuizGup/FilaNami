@@ -1,14 +1,15 @@
 import api from "./api";
 
-// Faz o login e salva os dados no localStorage
+const USER_TOKEN_KEY = "user_token";
+const USER_INFO_KEY = "user_info";
+
 export const login = async (email, password) => {
   try {
     const response = await api.post("/auth/login", { email, password });
     
-    // O backend retorna { token, user }
     if (response.data.token) {
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem(USER_TOKEN_KEY, response.data.token);
+      localStorage.setItem(USER_INFO_KEY, JSON.stringify(response.data.user));
     }
     
     return response.data;
@@ -29,6 +30,7 @@ export const register = async (userData) => {
 };
 
 export const logout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
+
+  localStorage.removeItem(USER_TOKEN_KEY);
+  localStorage.removeItem(USER_INFO_KEY);
 };

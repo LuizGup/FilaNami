@@ -1,10 +1,8 @@
-// frontend/src/services/guicheAuthService.js
 import api from "./api";
 
 const GUICHE_TOKEN_KEY = "guiche_token";
 const GUICHE_INFO_KEY = "guiche_info";
 
-// Faz login do guichê e salva token + info no localStorage
 export const loginGuiche = async (idGuiche, senha) => {
     try {
         const response = await api.post("/guiches/auth/login", {

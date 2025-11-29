@@ -56,16 +56,17 @@ const LoginFuncionario = () => {
                 data.password
             );
 
-            if (tipoGuiche === "Atendimento") {
-                navigate("/user");
-                return;
+            if(token && guiche) {
+                if (tipoGuiche === "Atendimento") {
+                    navigate("/user");
+                    return;
+                }
+    
+                if (tipoGuiche === "Exame de Sangue") {
+                    navigate("/enfermeira");
+                    return;
+                }
             }
-
-            if (tipoGuiche === "Exame de Sangue") {
-                navigate("/enfermeira");
-                return;
-            }
-
         } catch (error) {
             console.error("❌ [LoginGuiche] Erro no login do guichê:", error);
 
