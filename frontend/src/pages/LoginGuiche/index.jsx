@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
 import GuicheDisplay from "../../components/GuicheDisplay";
 import { getAllGuiches } from "../../services/guicheService";
-import { loginGuiche } from "../../services/guicheAuthService";
+
+import { AuthContext } from "../../contexts/AuthContext";
 
 const LoginFuncionario = () => {
     const navigate = useNavigate();
+    
+    const { loginGuiche } = useContext(AuthContext);
 
     const [guiches, setGuiches] = useState([]);
     const [selectedGuicheId, setSelectedGuicheId] = useState(null);
+    const [tipoGuiche, setTipoGuiche] = useState("");
     const [loadingGuiches, setLoadingGuiches] = useState(true);
     const [errorGuiches, setErrorGuiches] = useState("");
 
@@ -20,26 +23,11 @@ const LoginFuncionario = () => {
         formState: { errors },
     } = useForm();
 
-    // 🔄 Carregar guichês do backend
     useEffect(() => {
         const fetchGuiches = async () => {
             try {
-                console.log("🔄 [LoginGuiche] Buscando guichês do backend...");
-
                 const data = await getAllGuiches();
-                console.log("🟢 [LoginGuiche] Guichês recebidos do backend:", data);
-
-                // Mantém só os 3 guichês desejados (1, 2 e 4)
-                const filtrados = data.filter((g) =>
-                    [1, 2, 4].includes(g.idGuiche)
-                );
-
-                console.log(
-                    "🧩 [LoginGuiche] Guichês filtrados (1,2,4):",
-                    filtrados
-                );
-
-                setGuiches(filtrados);
+                setGuiches(data);
             } catch (error) {
                 console.error("❌ [LoginGuiche] Erro ao carregar guichês:", error);
                 setErrorGuiches("Erro ao carregar guichês. Tente novamente mais tarde.");
@@ -51,22 +39,13 @@ const LoginFuncionario = () => {
         fetchGuiches();
     }, []);
 
-    // log a cada render pra debug
-    console.log("🧩 [LoginGuiche] guiches no estado:", guiches);
-    console.log("🧩 [LoginGuiche] quantidade de cards:", guiches.length);
-
-    const handleGuicheSelection = (guicheId) => {
-        console.log("🟦 [LoginGuiche] Guichê selecionado:", guicheId);
+    const handleGuicheSelection = (guicheId, tipo) => {
         setSelectedGuicheId(guicheId);
+        setTipoGuiche(tipo);
     };
 
     const onSubmit = async (data) => {
-        console.log("🔵 [LoginGuiche] Tentando login...");
-        console.log("➡ Guichê selecionado:", selectedGuicheId);
-        console.log("➡ Senha digitada:", data.password);
-
         if (!selectedGuicheId) {
-            console.warn("⚠ Nenhum guichê selecionado.");
             alert("Por favor, selecione um Guichê disponível para continuar.");
             return;
         }
@@ -77,10 +56,16 @@ const LoginFuncionario = () => {
                 data.password
             );
 
-            console.log("🟢 [LoginGuiche] Login OK:", { token, guiche });
+            if (tipoGuiche === "Atendimento") {
+                navigate("/user");
+                return;
+            }
 
-            alert("Login no guichê realizado com sucesso!");
-            navigate("/user");
+            if (tipoGuiche === "Exame de Sangue") {
+                navigate("/enfermeira");
+                return;
+            }
+
         } catch (error) {
             console.error("❌ [LoginGuiche] Erro no login do guichê:", error);
 
@@ -89,7 +74,6 @@ const LoginFuncionario = () => {
                 error?.message ||
                 "Erro ao fazer login no guichê. Verifique a senha.";
 
-            console.log("❗ [LoginGuiche] Mensagem exibida ao usuário:", msg);
             alert(msg);
         }
     };
@@ -108,14 +92,12 @@ const LoginFuncionario = () => {
                     <p className="text-muted small mt-0">NAMI LOGIN</p>
                 </div>
 
-                {/* ERRO AO CARREGAR GUICHÊS */}
                 {errorGuiches && (
                     <div className="alert alert-danger" role="alert">
                         {errorGuiches}
                     </div>
                 )}
 
-                {/* LISTA DE GUICHÊS (NÃO MOCADO) */}
                 <div className="row justify-content-center mb-4">
                     {loadingGuiches ? (
                         <p className="text-center text-muted">Carregando guichês...</p>
@@ -130,14 +112,13 @@ const LoginFuncionario = () => {
                                 number={`Guichê ${guiche.numeroGuiche}`}
                                 sector={guiche.setor?.setor || "Setor"}
                                 variant="primary"
-                                onClick={() => handleGuicheSelection(guiche.idGuiche)}
+                                onClick={() => handleGuicheSelection(guiche.idGuiche, guiche.setor?.setor || "")}
                                 isSelected={guiche.idGuiche === selectedGuicheId}
                             />
                         ))
                     )}
                 </div>
 
-                {/* FORM LOGIN */}
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="mb-3">
                         <input

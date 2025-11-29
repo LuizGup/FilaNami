@@ -17,7 +17,7 @@ function HomePageEnfermeira() {
         <div className="mt-4">
           <RouteButton
             label="Gerenciamento de Senhas"
-            to="/enfermeira/GerenciarSenhas"  
+            to="/enfermeira/gerenciar"  
             icon={<i className="bi bi-person" />}
           />
         </div>
