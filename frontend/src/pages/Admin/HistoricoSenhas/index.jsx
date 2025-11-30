@@ -1,96 +1,82 @@
 import React, { useState, useEffect, useCallback } from "react";
 import CardSenha from "../../../components/admin/CardHistoricoSenhas/index.jsx";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { getAllSenhasHistorico } from "../../../services/historicoService";
 import "./index.css";
 
-/**
- * Utilitários
- */
-const formatTime = (isoString) => {
-  if (!isoString) return "N/A";
-  const date = new Date(isoString);
-  return new Intl.DateTimeFormat("pt-BR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(date);
+const formatTime = (dateString) => {
+  if (!dateString) return "-";
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "-"; 
+    
+    return new Intl.DateTimeFormat("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(date);
+  } catch (error) {
+    return "-";
+  }
 };
 
 const mapStatusToFrontend = (status) => {
   const normalizedStatus = status ? status.toUpperCase() : "PENDENTE";
+  let statusText = "Pending";
+  let statusClass = "status-pending";
 
-  let statusText;
-  let statusClass;
-
-  switch (normalizedStatus) {
-    case "COMPLETADO":
-    case "CONCLUIDO":
-      statusText = "Concluído";
-      statusClass =
-        "bg-success bg-opacity-10 text-success border border-success border-opacity-25";
-      break;
-    case "CANCELADO":
-    case "EXPIRADO":
-      statusText = "Cancelado";
-      statusClass =
-        "bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25";
-      break;
-    case "EM_ATENDIMENTO":
-      statusText = "Em Atendimento";
-      statusClass =
-        "bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25";
-      break;
-    case "AGUARDANDO":
-    default:
-      statusText = "Aguardando";
-      statusClass =
-        "bg-secondary bg-opacity-10 text-dark border border-secondary border-opacity-25";
-      break;
+  if (["COMPLETADO", "CONCLUIDO", "FINALIZADO"].includes(normalizedStatus)) {
+    statusText = "Completed";
+    statusClass = "status-completed";
+  } else if (["CANCELADO", "EXPIRADO"].includes(normalizedStatus)) {
+    statusText = "Cancelled";
+    statusClass = "status-cancelled";
   }
-
+  
   return { statusText, statusClass };
 };
 
 const HistoricoSenhas = () => {
   const [passwords, setPasswords] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const fetchHistorico = useCallback(async () => {
     setLoading(true);
-    setError(null);
     try {
       const rawData = await getAllSenhasHistorico();
+      
+      const arrayData = Array.isArray(rawData) ? rawData : (rawData.content || []);
 
-      const flattened = (Array.isArray(rawData) ? rawData : [])
-        .map((item) => {
-          const senhaData = item.senha ? item.senha : item;
-          if (!senhaData) return null;
+      arrayData.sort((a, b) => {
+          const dateA = new Date(a.senha?.dataEmissao || a.dataEmissao || 0);
+          const dateB = new Date(b.senha?.dataEmissao || b.dataEmissao || 0);
+          return dateB - dateA; 
+      });
 
-          const statusMap = mapStatusToFrontend(senhaData.status);
+      const formattedData = arrayData.map((item, index) => {
+        const dados = item.senha ? item.senha : item;
+        
+        if (!dados) return null;
 
-          return {
-            id: senhaData.idSenha ?? `${senhaData.senha}-${Math.random()}`,
-            passwordNumber: senhaData.senha,
-            statusOriginal: senhaData.status
-              ? senhaData.status.toUpperCase()
-              : "AGUARDANDO",
-            generationTime: formatTime(senhaData.dataEmissao),
-            callTime: senhaData.dataConclusao
-              ? formatTime(senhaData.dataConclusao)
-              : "N/A",
-            statusText: statusMap.statusText,
-            statusClass: statusMap.statusClass,
-            raw: senhaData,
-          };
-        })
-        .filter(Boolean);
+        const numeroSenha = dados.senha || dados.numero || "---";
+        const dataGeracao = dados.dataEmissao || dados.data_emissao || dados.createdAt;
+        const dataChamada = dados.dataConclusao || dados.data_conclusao || dados.updatedAt;
+        const statusItem = dados.status;
 
-      setPasswords(flattened);
-      setLoading(false);
+        const { statusText, statusClass } = mapStatusToFrontend(statusItem);
+
+        return {
+          id: dados.id || dados.idSenha || index,
+          passwordNumber: numeroSenha, 
+          generationTime: formatTime(dataGeracao),
+          callTime: formatTime(dataChamada),
+          statusText,
+          statusClass,
+        };
+      }).filter(Boolean);
+
+      setPasswords(formattedData);
     } catch (err) {
-      console.error("Erro ao buscar histórico:", err);
-      setError("Não foi possível carregar o histórico. Verifique o serviço de API.");
+      console.error("Erro ao carregar histórico:", err);
+    } finally {
       setLoading(false);
     }
   }, []);
@@ -99,80 +85,83 @@ const HistoricoSenhas = () => {
     fetchHistorico();
   }, [fetchHistorico]);
 
-  // Filtro automático (SEM campo de busca)
-  const filtered = passwords;
-
-  const senhasAguardandoECancelado = filtered.filter(
-    (p) =>
-      p.statusOriginal !== "COMPLETADO" &&
-      p.statusOriginal !== "CONCLUIDO" &&
-      p.statusOriginal !== "EM_ATENDIMENTO"
-  );
-
-  const senhasEmAtendimento = filtered.filter(
-    (p) => p.statusOriginal === "EM_ATENDIMENTO"
-  );
-
-  const senhasConcluidas = filtered.filter(
-    (p) =>
-      p.statusOriginal === "COMPLETADO" ||
-      p.statusOriginal === "CONCLUIDO"
-  );
-
-  const renderColuna = (titulo, lista, corHeader) => (
-    <div className="col-md-4">
-      <div className="card border-0 shadow-sm rounded-3 overflow-hidden h-100">
-        <div className={`card-header text-white fw-bold ${corHeader} py-3 px-4`}>
-          {titulo} <span className="badge bg-white text-dark ms-2">{lista.length}</span>
-        </div>
-        <div className="card-body p-0" style={{ maxHeight: "70vh", overflowY: "auto" }}>
-          {lista.length === 0 ? (
-            <div className="p-4 text-center text-muted small">Nenhum registro encontrado.</div>
-          ) : (
-            lista.map((password) => <CardSenha key={password.id} {...password} />)
-          )}
-        </div>
-      </div>
-    </div>
-  );
-
-  if (loading) {
-    return (
-      <div className="min-vh-100 d-flex justify-content-center align-items-center">
-        <div className="spinner-border text-primary" role="status"></div>
-        <span className="ms-2">Carregando histórico...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return <div className="p-5 text-center text-danger">Erro ao carregar: {error}</div>;
-  }
+  const handleExportPDF = () => {
+    console.log("Exportando PDF...");
+  };
 
   return (
-    <div className="min-vh-100 bg-light d-flex flex-column">
-      <header className="bg-white shadow-sm py-3 px-4 d-flex justify-content-between align-items-center border-bottom">
-        <div className="d-flex align-items-center">
-          <button
-            className="btn btn-link text-decoration-none text-secondary fs-4 p-0 me-3 d-flex align-items-center"
-            onClick={() => window.history.back()}
-          >
-            &larr;
+    <div className="historico-page-container">
+      <header className="page-header">
+        <div className="left-header-section">
+          <button className="return-button-top" onClick={() => window.history.back()}>
+            <i className="bi bi-arrow-left"></i>
           </button>
-          <span className="fw-bold text-dark fs-5">Gerenciamento de Senhas - Histórico</span>
+          
+          <div className="logo-section">
+            <span className="app-name">Gerenciamento de Senhas</span>
+          </div>
         </div>
-
-        {/* REMOVIDO: campo de busca + botão atualizar */}
-        <div className="bg-secondary rounded-circle" style={{ width: "40px", height: "40px" }} />
       </header>
 
-      <main className="flex-grow-1 p-4 container-xl">
-        <h1 className="h2 fw-bold text-dark mb-4">Visão Histórica por Status</h1>
+      <main className="main-content">
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h1 className="page-title mb-0" style={{ fontSize: '1.5rem' }}>Histórico De Senhas</h1>
+          
+          <button 
+            className="btn btn-sm text-white d-flex align-items-center gap-2"
+            onClick={handleExportPDF}
+            style={{ 
+                backgroundColor: '#13A4EC', // Azul solicitado
+                borderColor: '#13A4EC',
+                borderRadius: '6px',
+                padding: '8px 16px',
+                fontWeight: '500'
+            }}
+          >
+             Exportar PDF
+          </button>
 
-        <div className="row g-4">
-          {renderColuna("⏳ Aguardando / Cancelado", senhasAguardandoECancelado, "bg-secondary")}
-          {renderColuna("▶️ Em Atendimento", senhasEmAtendimento, "bg-warning")}
-          {renderColuna("✅ Concluído", senhasConcluidas, "bg-success")}
+        </div>
+
+        <div className="password-list-wrapper">
+          <div className="list-header" style={{ 
+              display: 'grid', 
+              gridTemplateColumns: '1fr 1fr 1fr 1fr', 
+              padding: '15px 20px',
+              borderBottom: '1px solid #eee',
+              color: '#999',
+              fontSize: '0.75rem',
+              fontWeight: 'bold',
+              textTransform: 'uppercase'
+            }}>
+            <div>PASSWORD NUMBER</div>
+            <div>GENERATION TIME</div>
+            <div>CALL TIME</div>
+            <div>STATUS</div>
+          </div>
+
+          <div className="list-body">
+            {loading ? (
+              <div className="p-4 text-center">Carregando...</div>
+            ) : passwords.length === 0 ? (
+               <div className="p-4 text-center text-muted">Nenhum registro encontrado.</div>
+            ) : (
+              passwords.map((pass) => (
+                <CardSenha 
+                  key={pass.id}
+                  passwordNumber={pass.passwordNumber}
+                  generationTime={pass.generationTime}
+                  callTime={pass.callTime}
+                  statusText={pass.statusText}
+                  statusClass={pass.statusClass}
+                />
+              ))
+            )}
+          </div>
+          
+           <div className="p-3 text-muted small border-top">
+              Showing 1 to {passwords.length} entries
+           </div>
         </div>
       </main>
     </div>

@@ -1,11 +1,12 @@
 .card-senha {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr; /* Ajuste conforme a largura desejada para cada coluna */
+  grid-template-columns: 1fr 1fr 1fr 1fr; /* 4 colunas iguais */
   padding: 15px 20px;
   border-bottom: 1px solid #eee;
   align-items: center;
   font-size: 0.95em;
   color: #555;
+  background-color: white; /* Garante fundo branco */
 }
 
 .card-senha:last-child {
@@ -34,26 +35,41 @@
   margin-right: 8px;
 }
 
+/* Status Concluído */
 .status-completed .status-dot {
-  background-color: #28a745; /* Verde */
+  background-color: #28a745; 
 }
-
 .status-completed {
   color: #28a745;
+  background-color: rgba(40, 167, 69, 0.1); /* Fundo leve verde igual ao print */
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-flex; /* Para o background envolver o texto */
+  width: fit-content;
 }
 
+/* Status Pendente / Em Atendimento */
 .status-pending .status-dot {
-  background-color: #ffc107; /* Amarelo */
+  background-color: #ffc107;
 }
-
 .status-pending {
   color: #ffc107;
+  background-color: rgba(255, 193, 7, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-flex;
+  width: fit-content;
 }
 
+/* Status Cancelado */
 .status-cancelled .status-dot {
-  background-color: #dc3545; /* Vermelho */
+  background-color: #dc3545;
 }
-
 .status-cancelled {
   color: #dc3545;
+  background-color: rgba(220, 53, 69, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-flex;
+  width: fit-content;
 }
