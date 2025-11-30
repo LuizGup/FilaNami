@@ -10,7 +10,7 @@ import {
 import NavbarFuncionario from "../../../components/FuncionarioComponents/NavbarFuncionario";
 import SelectionModal from '../../../components/PopUps/PopUpGuiche';
 
-const SETOR_ATUAL = "Exame de Sangue";
+const SETOR_ATUAL = "Coleta de Sangue";
 const BOXES = [
   { id: 4, name: 'Guichê 1' },
   { id: 5, name: 'Guichê 2' },
