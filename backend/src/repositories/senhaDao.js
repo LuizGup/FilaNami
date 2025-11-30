@@ -37,9 +37,21 @@ const updateSenha = async (idSenha, data) => {
 };
 
 const deleteSenha = async (idSenha) => {
-  return prisma.senha.delete({
-    where: { idSenha: Number(idSenha) },
-  });
+  // O prisma.$transaction garante que as operações sejam feitas em ordem e com segurança
+  return await prisma.$transaction([
+    // 1. Primeiro, deleta todos os históricos vinculados a essa senha
+    prisma.historico.deleteMany({
+      where: {
+        idSenha: idSenha, // Certifique-se que o campo no model Historico se chama 'idSenha'
+      },
+    }),
+    // 2. Depois, deleta a senha
+    prisma.senha.delete({
+      where: {
+        idSenha: idSenha,
+      },
+    }),
+  ]);
 };
 
 const callNext = async (idSenha, idGuiche, idAtendente) => {
