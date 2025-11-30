@@ -12,7 +12,7 @@ export const createSenha = async (setorDestino, prioridade) => {
 
 export const getAllSenhas = async (filters = {}) => {
   try {
-    const response = await api.get('/senhas', { params: filters });
+    const response = await api.get('/senhas/', { params: filters });
     return response.data;
   } catch (error) {
     console.error("Erro ao buscar senhas:", error);
