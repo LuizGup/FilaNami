@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import CardSenha from "../../../components/admin/CardHistoricoSenhas/index.jsx";
 import { getAllSenhasHistorico } from "../../../services/historicoService";
+import { exportSenhasToPDF } from "../../../utils/pdfExporter"; 
 import "./index.css";
 
+// ----------------------------------------------------
+// FUNÇÕES AUXILIARES
+// ----------------------------------------------------
 const formatTime = (dateString) => {
   if (!dateString) return "-";
   try {
@@ -34,6 +38,9 @@ const mapStatusToFrontend = (status) => {
   return { statusText, statusClass };
 };
 
+// ----------------------------------------------------
+// COMPONENTE PRINCIPAL
+// ----------------------------------------------------
 const HistoricoSenhas = () => {
   const [passwords, setPasswords] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,13 +70,13 @@ const HistoricoSenhas = () => {
 
         const { statusText, statusClass } = mapStatusToFrontend(statusItem);
 
-        return {
-          id: dados.id || dados.idSenha || index,
-          passwordNumber: numeroSenha, 
-          generationTime: formatTime(dataGeracao),
-          callTime: formatTime(dataChamada),
-          statusText,
-          statusClass,
+       return {
+         id: dados.id || dados.idSenha || index,
+         passwordNumber: numeroSenha, 
+         generationTime: formatTime(dataGeracao),
+         callTime: formatTime(dataChamada),
+         statusText,
+         statusClass,
         };
       }).filter(Boolean);
 
@@ -85,8 +92,17 @@ const HistoricoSenhas = () => {
     fetchHistorico();
   }, [fetchHistorico]);
 
+  // ----------------------------------------------------
+  // ADIÇÃO — FUNÇÃO QUE EXPORTA PDF
+  // ----------------------------------------------------
   const handleExportPDF = () => {
-    console.log("Exportando PDF...");
+    if (passwords.length === 0) {
+        console.warn("Nenhum dado para exportar.");
+        return;
+    }
+
+    // 🔥 PASSANDO O SEU OBJETO JÁ FORMATADO
+    exportSenhasToPDF(passwords);
   };
 
   return (
@@ -110,8 +126,9 @@ const HistoricoSenhas = () => {
           <button 
             className="btn btn-sm text-white d-flex align-items-center gap-2"
             onClick={handleExportPDF}
+            disabled={loading || passwords.length === 0}
             style={{ 
-                backgroundColor: '#13A4EC', // Azul solicitado
+                backgroundColor: '#13A4EC', 
                 borderColor: '#13A4EC',
                 borderRadius: '6px',
                 padding: '8px 16px',
@@ -122,7 +139,7 @@ const HistoricoSenhas = () => {
           </button>
 
         </div>
-
+        
         <div className="password-list-wrapper">
           <div className="list-header" style={{ 
               display: 'grid', 
