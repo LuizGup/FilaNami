@@ -2,7 +2,10 @@ import "./index.css";
 import { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import { getAllSenhas } from "../../services/senhaService"; 
-import CardUltimaSenha from "../../components/PainelComponents/CardUltimaSenha";
+
+// --- LISTA DE BLOQUEIO ---
+// IDs reais do banco da enfermeira. O Painel vai IGNORAR o socket deles.
+const IDS_IGNORAR_DO_SOCKET = [4, 5, 6, 7]; 
 
 function PainelSenhas() {
   const [senhaAtual, setSenhaAtual] = useState(null);
@@ -14,8 +17,7 @@ function PainelSenhas() {
     return {
       id: dadosBackend.idSenha,
       numero: dadosBackend.senha,
-      // Aqui está o segredo: ele aceita o dado forçado pela enfermeira
-      servico: dadosBackend.setorAtual || dadosBackend.setorDestino,
+      servico: dadosBackend.setorAtual || dadosBackend.setorDestino, 
       local: `Guichê ${dadosBackend.idGuiche || dadosBackend.idGuicheAtendente || '??'}`
     };
   };
@@ -42,7 +44,6 @@ function PainelSenhas() {
 
       setSenhaAtual((prevAtual) => {
         if (prevAtual && prevAtual.numero === novaSenhaFormatada.numero) {
-           // Se forçado pelo botão da enfermeira, atualiza o timestamp para piscar a tela
            if (forcarAudio) return { ...novaSenhaFormatada, timestamp: Date.now() };
            return prevAtual;
         }
@@ -74,21 +75,30 @@ function PainelSenhas() {
 
   useEffect(() => {
     const socket = io("http://localhost:3000");
-    
-    // OUVINTE DO RÁDIO (Recebe os dados corrigidos da Enfermeira)
     const channel = new BroadcastChannel('fila_nami_channel');
 
     fetchDadosIniciais();
 
+    // 1. OUVINTE DO BACKEND
     socket.on('senhaUpdate', (update) => {
       if (update.action === 'update' && update.data.status === 'EM_ATENDIMENTO') {
+        
+        const idChegou = Number(update.data.idGuiche || update.data.idGuicheAtendente);
+        
+        // --- TRAVA DE SEGURANÇA ---
+        // Se for ID da enfermeira, PARE AQUI. Não toque som, não mostre nada.
+        if (IDS_IGNORAR_DO_SOCKET.includes(idChegou)) {
+            return; 
+        }
+
         processarNovaSenha(update.data, false);
       }
     });
 
+    // 2. OUVINTE DA GAMBIARRA (RÁDIO)
     channel.onmessage = (event) => {
         if (event.data.type === 'CHAMAR_NOVAMENTE') {
-            // Processa os dados que vieram "fake" da enfermeira com o nome certo
+            // Aqui chega o dado corrigido ("Guichê 1", "Coleta")
             processarNovaSenha(event.data.payload, true);
         }
     };
@@ -125,8 +135,21 @@ function PainelSenhas() {
           <h2 className="fw-bold text-secondary-emphasis mt-4">Últimas senhas</h2>
           <div className="row g-3 mt-2">
             {ultimasSenhas.length > 0
-              ? ultimasSenhas.map((senha, index) => (<div className="col-4" key={senha.id || index}><CardUltimaSenha numero={senha.numero} /></div>))
-              : [1, 2, 3].map((i) => (<div className="col-4" key={i}><CardUltimaSenha numero="---" /></div>))}
+              ? ultimasSenhas.map((senha, index) => (
+                  <div className="col-4" key={senha.id || index}>
+                    {/* CARD SIMPLES SUBSTITUINDO O COMPONENTE QUE NÃO EXISTE */}
+                    <div className="card shadow-sm border-0 text-center py-3">
+                        <h2 className="fw-bold text-secondary mb-0">{senha.numero}</h2>
+                    </div>
+                  </div>
+                ))
+              : [1, 2, 3].map((i) => (
+                  <div className="col-4" key={i}>
+                     <div className="card shadow-sm border-0 text-center py-3">
+                        <h2 className="fw-bold text-muted mb-0">---</h2>
+                    </div>
+                  </div>
+                ))}
           </div>
         </div>
       </div>

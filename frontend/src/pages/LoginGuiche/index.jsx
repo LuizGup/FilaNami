@@ -28,7 +28,24 @@ const LoginGuiche = () => {
             try {
                 console.log("🔄 [LoginGuiche] Buscando guichês do backend...");
                 const data = await getAllGuiches();
-                setGuiches(data);
+                
+                // --- INÍCIO DA GAMBIARRA DE FILTRO ---
+                // Pegamos todos os dados, mas filtramos manualmente apenas UM de cada tipo
+                
+                // 1. Acha o primeiro guichê de Atendimento
+                const atendimento = data.find(g => g.setor?.setor === "Atendimento");
+                
+                // 2. Acha o primeiro guichê de Exame (aceitando ambos os nomes pra garantir)
+                const enfermeira = data.find(g => g.setor?.setor === "Exame de Sangue" || g.setor?.setor === "Coleta de Sangue");
+
+                // 3. Monta a nova lista só com esses dois
+                const listaFiltrada = [];
+                if (atendimento) listaFiltrada.push(atendimento);
+                if (enfermeira) listaFiltrada.push(enfermeira);
+
+                setGuiches(listaFiltrada);
+                // --- FIM DA GAMBIARRA ---
+
             } catch (error) {
                 console.error("❌ [LoginGuiche] Erro ao carregar guichês:", error);
                 setErrorGuiches("Erro ao carregar guichês. Tente novamente mais tarde.");
@@ -69,7 +86,9 @@ const LoginGuiche = () => {
                 return;
             }
 
-            if (nomeSetor === "Exame de Sangue") {
+            // Ajustei aqui para aceitar tanto "Exame de Sangue" quanto "Coleta de Sangue"
+            // para garantir que a gambiarra funcione independente de como o banco retornou
+            if (nomeSetor === "Exame de Sangue" || nomeSetor === "Coleta de Sangue") {
                 navigate(`/enfermeira/gerenciar/${selectedGuicheId}`);
                 return;
             }

@@ -22,14 +22,11 @@ function GerenciarSenhasEnfermeira() {
   const [senhas, setSenhas] = useState([]);
   const [lastUpdated, setLastUpdated] = useState("Carregando...");
   
-  // CANAL DE RÁDIO (Para falar com o Painel sem depender do Backend)
-  const [radioChannel, setRadioChannel] = useState(null);
-
+  // Modais
   const [modalChamadaOpen, setModalChamadaOpen] = useState(false);
   const [modalDeletarOpen, setModalDeletarOpen] = useState(false);
   const [modalRechamarOpen, setModalRechamarOpen] = useState(false);
 
-  // --- 1. LÓGICA DE DADOS ---
   const fetchSenhas = useCallback(async () => {
     try {
       const data = await getAllSenhas();
@@ -41,13 +38,7 @@ function GerenciarSenhasEnfermeira() {
   }, []);
 
   useEffect(() => {
-    // 1. Conexão Socket (Para receber atualizações do banco)
     const socket = io("http://localhost:3000");
-    
-    // 2. Conexão Rádio (Para ENVIAR comandos ao painel)
-    const channel = new BroadcastChannel('fila_nami_channel');
-    setRadioChannel(channel);
-    
     fetchSenhas();
 
     socket.on('senhaUpdate', () => {
@@ -56,11 +47,10 @@ function GerenciarSenhasEnfermeira() {
 
     return () => {
       socket.disconnect();
-      channel.close();
     };
   }, [fetchSenhas]);
 
-  // --- 2. FILTROS ---
+  // Filtros
   const filaEspera = senhas.filter(s => s.status === 'AGUARDANDO' && s.setorAtual === SETOR_ATUAL);
   
   const emAtendimento = senhas.filter(s => 
@@ -75,36 +65,33 @@ function GerenciarSenhasEnfermeira() {
 
   const proximaSenhaTexto = filaEspera.length > 0 ? filaEspera[0].senha : "---";
 
-  // --- 3. LÓGICA DE ENVIO PARA O PAINEL (A MÁGICA) ---
+  // --- LÓGICA DE ENVIO "FAKE" PARA O PAINEL ---
   const enviarParaPainel = (ticket, boxId) => {
-    if (!radioChannel) return;
+    const channel = new BroadcastChannel('fila_nami_channel');
 
-    // Descobre o nome visual (Ex: "1" ao invés do ID "4")
     const boxEncontrado = BOXES.find(b => b.id === Number(boxId));
     const numeroVisual = boxEncontrado ? boxEncontrado.name.replace("Guichê ", "") : "?";
 
-    // Cria o objeto corrigido
     const dadosFake = {
         ...ticket,
-        setorAtual: SETOR_ATUAL,    // <--- FORÇA "Coleta de Sangue"
+        setorAtual: SETOR_ATUAL,    // Força "Coleta de Sangue"
         setorDestino: SETOR_ATUAL,  
-        idGuiche: numeroVisual      // <--- FORÇA "1", "2", etc.
+        idGuiche: numeroVisual      // Força "1", "2"...
     };
 
-    // Envia via Rádio (Painel recebe direto)
-    radioChannel.postMessage({ 
+    channel.postMessage({ 
         type: 'CHAMAR_NOVAMENTE', 
         payload: dadosFake 
     });
+    
+    // Fecha o canal rapidinho pra limpar memória
+    setTimeout(() => channel.close(), 100);
   };
-
-  // --- 4. HANDLERS ---
 
   const handleConfirmarChamada = async (option) => {
     setModalChamadaOpen(false);
     try {
       const novaSenha = await chamarProximaSenha(option.id, SETOR_ATUAL);
-      // Assim que a API responde, enviamos o sinal corrigido para o painel
       if (novaSenha) enviarParaPainel(novaSenha, option.id);
     } catch (error) {
       alert("Erro: " + (error.response?.data?.message || error.message));
@@ -142,7 +129,6 @@ function GerenciarSenhasEnfermeira() {
     }
   };
 
-  // --- 5. OPÇÕES MODAIS ---
   const opcoesChamada = BOXES.map(b => ({ id: b.id, label: b.name }));
 
   const opcoesRechamar = emAtendimento.map(s => {
