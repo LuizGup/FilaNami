@@ -88,7 +88,6 @@ function App() {
           <Route path="/sector" element={<SelectSector />} />
           <Route path="/showkey" element={<ShowKey />} />
           <Route path="/painel" element={<PainelSenhas />} />
-          <Route path="/gelado" element={<Gelado />} />
           <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
         </Routes>
       </AuthProvider>
