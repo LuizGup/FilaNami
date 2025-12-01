@@ -14,6 +14,7 @@ import HomePageEnfermeira from "./pages/Enfermeira/HomePageEnfermeira";
 import GerenciarSenhasEnfermeira from "./pages/Enfermeira/GerenciarSenhas";
 import HomeFuncionario from "./pages/Funcionario/HomeFuncionario";
 import Telainicial from "./pages/TelaInicial";
+import Gelado from "./pages/gelado";
 
 function App() {
   return (
@@ -87,7 +88,7 @@ function App() {
           <Route path="/sector" element={<SelectSector />} />
           <Route path="/showkey" element={<ShowKey />} />
           <Route path="/painel" element={<PainelSenhas />} />
-
+          <Route path="/gelado" element={<Gelado />} />
           <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
         </Routes>
       </AuthProvider>
