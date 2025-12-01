@@ -222,15 +222,18 @@ function GerenciarSenhas() {
       </div>
 
       <div className="botoes-acao-container mt-4">
-        <button className="btn btn-acao-primary" onClick={handleChamarProximo} disabled={loading || senhaAtualMesa.length > 0}>
+        <button className="btn btn-primary btn-lg px-4 fw-bold shadow-sm" onClick={handleChamarProximo} disabled={loading || senhaAtualMesa.length > 0}>
+          <i className="bi bi-megaphone-fill me-2"></i>
           Chamar Próximo (Guichê {id})
         </button>
 
-        <button className="btn btn-acao-secondary" onClick={handleChamarNovamente} disabled={loading || senhaAtualMesa.length === 0}>
+        <button className="btn btn-warning text-white btn-lg px-4 fw-bold shadow-sm" onClick={handleChamarNovamente} disabled={loading || senhaAtualMesa.length === 0}>
+          <i className="bi bi-arrow-repeat me-2"></i> 
           Chamar Novamente
         </button>
 
-        <button className="btn btn-acao-danger" onClick={handleDeletarSenha} disabled={loading || senhaAtualMesa.length === 0}>
+        <button className="btn btn-outline-danger btn-lg px-4 fw-bold shadow-sm" onClick={handleDeletarSenha} disabled={loading || senhaAtualMesa.length === 0}>
+          <i className="bi bi-trash me-2"></i>
           Cancelar Atendimento
         </button>
       </div>
