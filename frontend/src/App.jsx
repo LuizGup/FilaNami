@@ -14,7 +14,6 @@ import HomePageEnfermeira from "./pages/Enfermeira/HomePageEnfermeira";
 import GerenciarSenhasEnfermeira from "./pages/Enfermeira/GerenciarSenhas";
 import HomeFuncionario from "./pages/Funcionario/HomeFuncionario";
 import Telainicial from "./pages/TelaInicial";
-import Gelado from "./pages/gelado";
 
 function App() {
   return (
